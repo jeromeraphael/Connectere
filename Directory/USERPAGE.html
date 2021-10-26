@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #firstRowId{
+            background-color: #59afc9;
+        }
+        
+        table {
+            border: solid black 1px;
+        }
+
+        td {
+            border-right: solid black 1px;
+        }
+
+        th {
+            border-right: solid black 1px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #B6D6D5;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- We gonna get dat information from the database -->
+    <a href="..\dash.html">Connectere Dashboard</a>
+    <h1>User Information</h1>
+    <table rules="none">
+        <tr id="firstRowId">
+            <th>User</th>
+            <th>Date Joined</th>
+            <th>Department</th>
+            <th>Mentee</th>
+            <th>Mentor</th>
+            <th>Connections</th>
+        </tr>
+        <tr>
+            <td>Bob Smith</td>
+            <td>10/21/2021</td>
+            <td>Finance</td>
+            <td>Y</td>
+            <td>N</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>Michael Jones</td>
+            <td>9/15/2012</td>
+            <td>Marketing</td>
+            <td>Y</td>
+            <td>Y</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>Chris Holmes</td>
+            <td>3/29/2020</td>
+            <td>Information Security</td>
+            <td>N</td>
+            <td>Y</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>Joe Biden</td>
+            <td>6/20/2019</td>
+            <td>Management</td>
+            <td>N</td>
+            <td>N</td>
+            <td>5</td>
+        </tr>
+    </table>
+</body>
+
+</html>

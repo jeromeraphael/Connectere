@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: auto;
+            text-align: center;
+        }
+
+        th {
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        th:nth-child(odd), td:nth-child(odd) {
+            text-align: left;
+        }
+
+        button {
+            background-color: lightgreen;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Later: Implement Nav bar-->
+    <a href="..\dash.html">Connectere Dashboard</a>
+    <h1>Mentee/Mentor Search</h1>
+    <form>
+        <select name="searchInfo" id="xD">
+            <option value="Security">Security</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Finance">Finance</option>
+            <option value="Management">Management</option>
+            <option value="Communication">Communication</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+
+    <table>
+        <tr>
+            <th>Michael Jackson</th>
+            <th><button onclick='connect(this.id)' id="button1id">Connect</button></th>
+        </tr>
+        <tr>
+            <td>I like dancing, puppies, and singing.</td>
+        </tr>
+
+        <tr>
+            <th>Michael Jordan</th>
+            <th><button onclick='connect(this.id)' id="button2id">Connect</button></th>
+        </tr>
+        <tr>
+            <td>I like to play basketball</td>
+        </tr>
+
+        <tr>
+            <th>Joe Biden</th>
+            <th><button onclick='connect(this.id)' id="button3id">Connect</button></th>
+        </tr>
+        <tr>
+            <td>I like being the president of the united states.</td>
+        </tr>
+    </table>
+
+    <script>
+        function connect(button){
+
+            x = document.getElementById(button).textContent;
+            
+            if (document.getElementById(button).textContent == "Connect"){
+                alert("Your request has been sent. You may rescind your request at any time.")
+                document.getElementById(button).innerHTML = "Revoke";
+                document.getElementById(button).style.backgroundColor = "lightblue";
+            }
+            else{
+                document.getElementById(button).innerHTML = "Connect";
+                document.getElementById(button).style.backgroundColor = "lightgreen";
+            }
+        
+
+
+        }
+    </script>
+</body>
+</html>
