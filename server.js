@@ -57,14 +57,26 @@ app.get('/users', (req, res) => {
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body
-  let sql = `INSERT INTO users (username, password) VALUES (?, ?)`
+  let sql = `INSERT INTO Users(password, firstName, lastName, email, department, role, goals, idealRelationship, openToNewConnections, reasonForUse) VALUES (?, ?, ?, ?, ?, ?,  ?, ?, ?, ?);`
    
-  pool.query(sql, [req.body.username, req.body.password], (err, results) => {
-    if (err) {
-      res.send({accountCreated: false, error: err}); 
-    }
-    else res.send({accountCreated: true});  
-  });
+  pool.query(sql, [req.body.password, req.body.firstName, req.body.lastName, req.body.email, req.body.department, req.body.role, req.body.goals, req.body.idealRelationship, 
+      req.body.openToNewConnections, req.body.reasonForUse], (err, results) => {
+      if (err) {
+        res.send({accountCreated: false, error: err}); 
+      }
+      else {
+        console.log(`${req.body} was inserted`)
+      }
+    }); 
+  
+    switch req.body.mentorStatus {
+    case "Mentor": 
+      pool.query(`INSERT INTO Mentors VALUES (mentorId) SELECT userId FROM Users ORDER BY userId LIMIT 1`);
+      break; 
+    case "Mentee": 
+      pool.query(`INSERT INTO Mentees VALUES (menteeId) SELECT userId FROM Users ORDER BY userId LIMIT 1`); 
+      break; 
+  } 
     
   // querying the new information that has been just added and logging it
   // to the console so we can know what we are seeing
