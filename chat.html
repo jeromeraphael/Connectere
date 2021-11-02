@@ -17,9 +17,31 @@
         </div>
     </div>
     <script>
-        let userId = 1
+        let userId = 3
+        let userName = 'Ben Jackman'; 
         let form = document.getElementById('msg-form'); 
         let chatDisplay = document.getElementById('chat-display-box'); 
+        let chatMessage = document.getElementById('input'); 
+
+        const parseMySQLDate = (mysqldate) => {
+            console.log(mysqldate); 
+            let t = mysqldate.split(/[- :]/); 
+            console.log(t)
+            let date = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5])); 
+            return mysqldate.slice(0, 10); 
+        }
+
+        const addNewChatMessage = (senderId, newMessage) => {
+            let messageDiv = document.createElement('div'); 
+            let message = document.createElement('span'); 
+            let sender = document.createElement('span'); 
+            sender.className = 'mesage-sender'; 
+            sender.textContent = `${senderId}: ` 
+            messageDiv.appendChild(sender);
+            message.textContent = newMessage; 
+            messageDiv.appendChild(message); 
+            chatDisplay.append(messageDiv); 
+        }
 
         const getChatHistory = (relationship) => {
             fetch(`/${relationship}/chats`, {
@@ -30,16 +52,19 @@
                 })
                 .then(chats => chats.json())
                 .then(chats => {
-                    for (let i = 0; i < chats.length; i++) {
-                        let messageDiv = document.createElement('div'); 
-                        let message = document.createElement('span'); 
-                        let sender = document.createElement('span'); 
-                        sender.className = 'mesage-sender'; 
-                        sender.textContent = chats[i]['Sender'] + ': '; 
-                        messageDiv.appendChild(sender);
-                        message.textContent = chats[i]['chatContent']; 
-                        messageDiv.appendChild(message); 
-                        chatDisplay.append(messageDiv); 
+                    for (let i = 0; i < chats.length; i++) {                        
+                        addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent']); 
+                        // let messageDiv = document.createElement('div'); 
+                        // let message = document.createElement('span'); 
+                        // let sender = document.createElement('span'); 
+                        // sender.className = 'mesage-sender'; 
+                        // // sender.textContent = `(${parseMySQLDate(chats[i]['timeSent'])}) ${chats[i]['Sender']}: ` 
+                        // sender.textContent = `${chats[i]['Sender']}: ` 
+                        // messageDiv.appendChild(sender);
+                        // message.textContent = chats[i]['chatContent']; 
+                        // messageDiv.appendChild(message); 
+                        // chatDisplay.append(messageDiv); 
+                        // chatMessage.innerHTML = ''; 
                     }
                 }); 
         }
@@ -53,19 +78,36 @@
                 })
                 .then(relationships => relationships.json())
                 .then(relationships => {
-                    localStorage.setItem('relationships', relationships);
-                    getChatHistory(relationships[0]); 
+                    console.log(relationships); 
+                    localStorage.setItem('relationships', JSON.stringify(relationships));
+                    getChatHistory(relationships[0]['relationshipId']); 
                 }); 
+        }
+
+        const sendChat = (relationshipId, userId, message) => {
+            console.log(relationshipId + ' ' + userId + ' ' + message);
+            fetch('/save-chat', {
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin', 
+                method: "POST", 
+                body: JSON.stringify({
+                    'relationshipId': relationshipId, 
+                    'userId': userId, 
+                    'message': message
+                })
+            })
+            .then(addNewChatMessage(userId, message));
         }
 
         getRelationships(userId); 
 
         form.addEventListener('submit', e => {
             e.preventDefault(); 
-            let chatMessage = document.getElementById('input'); 
+            let relationshipId = JSON.parse(localStorage.getItem("relationships"))[0]['relationshipId']; 
             if (input.value) {
-
-                console.log(localStorage.getItem('relationships')); 
+                sendChat(relationshipId, userId, input.value);  
             }
         })
     </script>

@@ -49,10 +49,10 @@ app.get('/:relationship/chats', (req, res) => {
 }); 
 
 app.post('/save-chat', (req, res) => {
-  let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent)`; 
-  pool.query(sql, [req.body.relationshipId, req.body.senderId, req.body.chatContent], (err, results) => {
+  let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`; 
+  pool.query(sql, [req.body.relationshipId, req.body.userId, req.body.message], (err, results) => {
     if (err) throw err; 
-    console.log(`Relationship (${req.body.relationshipId}) ${req.body.senderId}: ${req.body.chatContent}`); 
+    console.log(`Relationship (${req.body.relationshipId}) ${req.body.userId}: ${req.body.message}`); 
   });
 })
 
@@ -64,7 +64,6 @@ app.get('/:userId/relationships', (req, res) => {
       JOIN Mentors mo on r.mentorId = mo.mentorId
       WHERE m.userId = ? OR mo.userId = ?`; 
     pool.query(sql, [req.params.userId, req.params.userId], (err, results) => {
-      console.log(sql); 
       if (err) throw err;
       res.json(results); 
       // res.send({relationships: results[0]['relationshipId']}); 
