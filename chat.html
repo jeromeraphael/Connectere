@@ -55,6 +55,7 @@
             message.textContent = newMessage; 
             messageDiv.appendChild(message); 
             chatDisplay.append(messageDiv); 
+            chatMessage.value = ''; 
         }
 
         const getChatHistory = (relationship) => {
