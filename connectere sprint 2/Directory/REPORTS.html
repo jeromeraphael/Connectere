@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: auto;
+            text-align: center;
+        }
+
+        .ban{
+            background-color: rgb(201, 13, 13);
+        }
+
+        .pardon{
+            background-color: lightblue;
+        }
+
+        option{
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>User Reports</h1>
+    <table>
+        <tr>
+            <th>Bob Smith</th>
+            <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
+        </tr>
+        <tr>
+            <td><select name="reports" id="reports">
+                <option value="harassment">Harassment</option>
+                <option value="harassment">Harassment</option>
+                <option value="offensiveLanguage">Offensive Language</option>
+                <option value="unhelpfulInformation">Unhelpful Information</option>
+            </select></td>
+            <td><button id="pardon1" class="1 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
+        </tr>
+
+        <tr>
+            <th>Jeff Jones</th>
+            <th><button id="ban2" class="2 ban" onclick="report(this.className, this.getAttribute('className'))">BAN</button></th>
+        </tr>
+        <tr>
+            <td><select name="reports" id="reports">
+                <option value="harassment">Harassment</option>
+                <option value="harassment">Harassment</option>
+                <option value="offensiveLanguage">Offensive Language</option>
+                <option value="unhelpfulInformation">Unhelpful Information</option>
+            </select></td>
+            <td><button id="pardon2" class="2 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
+        </tr>
+    </table>
+
+    <script>
+        function report(butClass, value){
+            document.getElementsByClassName(butClass).disabled;
+        }
+    </script>
+</body>
+</html>

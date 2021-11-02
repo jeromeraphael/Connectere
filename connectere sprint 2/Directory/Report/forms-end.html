@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Alien Abduction Order Form</title>
+	<link href="css/forms-end.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="wrapper">
+		<section>
+			<h1>Report Form</h1>
+			<p>Fill out the form below.</p>
+			
+				<fieldset>
+					<legend>Your contact information</legend>
+					<label for="name">Full Name </label>
+					<input type="text" id="name" name="name" autofocus>
+					<label for="phone">Phone Number</label>
+					<input type="tel" id="phone" name="phone" placeholder="Don't forget the area code!">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email">
+
+				</fieldset>
+				<fieldset>
+					<legend>About your Report </legend>
+					<label for="date">Incident date (Optional)</label>
+					<input type="date" id="date" name="date">
+					<label for="name">Mentor Name</label>
+					<input type="text" id="mentor" name="mentor">
+
+					<p>What are you reporting?</p>
+					<label>
+						<input type="radio" name="ufotype" value="classic" checked> Harassment, Bullying, Defamation and Threats
+					</label>
+					<label>
+						<input type="radio" name="ufotype" value="starwars"> Hateful Content
+					</label>
+					<label>
+						<input type="radio" name="ufotype" value="galactica"> Malicious and Deceptive Practices
+					</label>
+					<label>
+						<input type="radio" name="ufotype" value="startrek"> Personal, Confidential and Protected Health Information
+					</label>
+					<label>
+						<input type="radio" name="ufotype" value="any">Spam
+					</label>
+
+					<!--<label for="abtype">What type of abduction experience do you want?</label>
+					<select id="abtype" name="abtype">
+						<option selected>Select one...</option>
+						<option value="tour">Tour of the solar system</option>
+						<option value="dinner">Alien dinner and discussion</option>
+						<option value="dance">Alien dance lessons</option>
+						<option value="whales">Whale watching</option>
+					</select>-->
+
+					<P></P>
+
+					<label for="comments">Comments:</label>
+					<textarea id="comments" name="comments"></textarea>
+
+					<input id="send_to" type="hidden" name="send_to" value="yourEmailHere">
+					<button type="submit">Submit</button>
+				</fieldset>
+			</form>
+
+		</section>
+	
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #firstRowId{
+            background-color: #59afc9;
+        }
+        
+        table {
+            border: solid black 1px;
+        }
+
+        td {
+            border-right: solid black 1px;
+        }
+
+        th {
+            border-right: solid black 1px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #B6D6D5;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body onload="loadInfo()">
+    <!-- We gonna get dat information from the database -->
+    <a href="..\dash.html">Connectere Dashboard</a>
+    <div id="userCountDiv">
+        <h2>User Count</h2>
+    </div>
+    
+    <div id="mentorDiv">
+        <h2>Mentors</h2>
+        <table id="mentorTableId">
+        </table>
+    </div>
+    
+    <div id="menteeDiv">
+        <h2>Mentees</h2>
+        <table id="menteeTableId">
+        </table>
+    </div> 
+</body>
+
+
+
+<script text="text/javascript">
+// loadInfo is called when the page is loaded :v)
+const loadInfo = () => {
+
+        // fetching the data for user count and sending to JSON.
+        fetch('/users/count', {
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(count => count.json())
+
+        // adding the user count into the userCountDiv after the last child element
+        .then(count => {
+            console.log(count)
+            document.getElementById('userCountDiv').insertAdjacentHTML('beforeend', `<h2>${count[0]["count(firstName)"]}</h2>`);
+        })
+
+        // same thing as above
+        fetch('/users/mentors', {
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(mentors => mentors.json())
+
+        
+        // kinda similar to how the count is handled
+        // mentorRows finna get all the info from each mentor in the array, and is added into mentorTable
+        // mentorTable is then added after the last child of the existing mentor table....? <FIX BEFORE FINAL SPRINT NATHAN!!!!
+        .then(mentors => {
+            console.log(mentors)
+
+            let mentorRows = "";
+
+            for (let i = 0; i < mentors.length; i++) {
+              let mentor = mentors[i];
+              mentorRows += `<tr>
+                <th>${mentor.firstName}</th>
+                <th>${mentor.lastName}</th>
+                <th>${mentor.email}</th>
+                <th>${mentor.department}</th>
+                <th>${mentor.userId}</th>
+                <th>${mentor.mentorId}</th>
+              </tr>`
+            }
+
+            let mentorTable = `
+            <table>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>User ID</th>
+                    <th>Mentor ID</th>
+                </tr>
+                ${mentorRows}
+            </table>`
+            // FIX THIS BEFORE WE GOTTA TURN THIS IN NATHAN!
+            document.getElementById('mentorTableId').insertAdjacentHTML('beforeend', mentorTable);
+        })
+
+        // same as above :v)
+        fetch('/users/mentees', {
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(mentees => mentees.json())
+
+        .then(mentees => {
+            console.log(mentees)
+
+            let menteeRows = "";
+
+            for (let i = 0; i < mentees.length; i++) {
+              let mentee = mentees[i];
+              menteeRows += `<tr>
+                <th>${mentee.firstName}</th>
+                <th>${mentee.lastName}</th>
+                <th>${mentee.email}</th>
+                <th>${mentee.department}</th>
+                <th>${mentee.userId}</th>
+                <th>${mentee.menteeId}</th>
+              </tr>`
+            }
+
+            let menteeTable = `
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>User ID</th>
+                <th>Mentee ID</th>
+            </tr>
+            ${menteeRows}
+        </table>`
+
+            document.getElementById('menteeTableId').insertAdjacentHTML('beforeend', menteeTable);
+        })
+    }
+
+</script>
+</html>
