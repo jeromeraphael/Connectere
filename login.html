@@ -320,22 +320,27 @@
     <br>
     <br>
     <div class="cont">
-        <div class="form sign-in">
+        <form id="login-form" onsubmit="return false" class="form sign-in">
             <h2>CONNECTERE</h2>
             <label>
                 <span>Email</span>
-                <input id="emailId" name="email" type="email" required />
+                <input id="login-email" name="email" type="email" required />
             </label>
 
             <label>
                 <span>Password</span>
-                <input id="passwordId" name="password" type="password" required />
+                <input id="login-password" name="password" type="password" required />
             </label>
 
-            <p class="forgot-pass">Forgot password?</p>
-            <button onclick="signIn()" type="button" id="submitId" class="submit">Sign In</button>
+            <!-- <p class="forgot-pass">Forgot password?</p> -->
 
-        </div>
+            <button onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
+
+        </form>
+
+        <p id="login-failed">Login attempt <span id="login-failure-number"></span> failed</p>
+        <p id="login-disabled">You have tried to log in too many times. Login is now disabled.</p>
+
         <div class="sub-cont">
             <div class="img">
                 <div class="img__text m--up">
@@ -355,7 +360,7 @@
 
             <div class="form-sign-up">
                 <h2>Create your Connectere Account</h2>
-                <div class="signUpScroll">
+                <form id="create-account" class="signUpScroll">
                     <label>
                         <span>First Name</span>
                         <input type="text" required />
@@ -398,14 +403,14 @@
                     <label>
                         <table>
                             <tr>
-                              <td>Questions</td>
+                                <td>Questions</td>
                             </tr>
                         </table>
-                        
-                    </label>
-                </div>
 
-                <button onClick="signUp()" type="button" class="submit">Sign Up</button>
+                    </label>
+                </form>
+
+                <button onClick="addAccount()" type="button" class="submit">Sign Up</button>
 
             </div>
         </div>
@@ -414,7 +419,7 @@
     <script>
         "use strict";
 
-        function init(){
+        function init() {
             alert("Starting...");
         }
 
@@ -424,25 +429,97 @@
             document.querySelector('.cont').classList.toggle('s--signup');
         });
 
-        function signUp(){
-            console.log("Your account has been created.");
-        }
+        localStorage.clear();
+        let loginAttemptCount = 0;
+        // let createAccount = document.getElementById("create-account");
+        // createAccount.style.display = 'none';
 
-        function signIn(){
-            // Variables
-            let username = document.getElementById("emailId").value;
-            let password = document.getElementById("passwordId").value;
+        let loginFailed = document.getElementById('login-failed');
+        loginFailed.style.display = 'none';
 
-            console.log("Username: " + username);
-            console.log("Password: " + password);
+        let loginDisabled = document.getElementById('login-disabled');
+        loginDisabled.style.display = 'none';
 
-            if (username == "" && password == ""){
-                alert("Please enter company email and password to proceed.");
-            } else {
-                console.log("You're logged in!");
-                window.open('dash.html');
+        // Login
+        const validateLogin = async () =>  {
+            let email = document.getElementById('login-email').value;
+            localStorage.setItem('email', email);  
+
+            let password = document.getElementById('login-password').value; 
+            let response = await fetch('/validate-login', {
+                method: "POST", 
+                credentials: "same-origin", 
+                headers: {
+                    'Content-Type': 'application/json' 
+                }, 
+                body: JSON.stringify({'email': email, 'password': password})
+            });
+            
+            try {
+                let json = await response.json()
+                if (json['loginValid'] === true ) {
+                    localStorage.setItem('userId', json['userId']);
+                    localStorage.setItem('email', json['userName']);
+                    window.location.href = "http://localhost:4545/dashboard"
+                }
+                else {
+                    if (loginAttemptCount < 10) {
+                        alert("Invalid credentials.");
+                        wrongLoginPrompt(json); 
+                    }
+                    else {
+                        loginDisabled.style.display = '';
+                        document.getElementById('submit').disabled = true;
+                    }  
+                }
+                console.log(JSON.stringify(json)); 
+            }
+            catch (e) {
+                console.log(e); 
+                console.log('going to index.html'); 
             }
         }
+
+
+        // Submit
+        const addAccount = async () => {
+            let newUsername = document.getElementById('create-username').value;
+            let newPassword = document.getElementById('create-password').value;
+            let response = await fetch('/create-account', {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'username': newUsername, 'password': newPassword })
+            });
+            let accountSuccess = await response.json();
+            if (accountSuccess['accountCreated']) {
+                alert('Gnarly, bro! You have successfully created your QUIZKNOWS account. Use these credentials on your next log in.');
+            }
+        }
+
+
+
+
+
+
+        // function signIn(){
+        //     // Variables
+        //     let username = document.getElementById("emailId").value;
+        //     let password = document.getElementById("passwordId").value;
+
+        //     console.log("Username: " + username);
+        //     console.log("Password: " + password);
+
+        //     if (username == "" && password == ""){
+        //         alert("Please enter company email and password to proceed.");
+        //     } else {
+        //         console.log("You're logged in!");
+        //         window.open('dash.html');
+        //     }
+        // }
+
     </script>
 </body>
 

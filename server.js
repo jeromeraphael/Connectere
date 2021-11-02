@@ -23,6 +23,11 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html'); 
 }); 
 
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(__dirname + '/dash.html'); 
+})
+
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
 }); 
@@ -46,7 +51,7 @@ app.get('/:relationship/chats', (req, res) => {
 app.get('/users', (req, res) => {
   res.contentType('application/json');
    
-  pool.query('SELECT * FROM users', (err, rows) => {
+  pool.query('SELECT * FROM Users', (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
@@ -57,7 +62,7 @@ app.get('/users', (req, res) => {
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body
-  let sql = `INSERT INTO users (username, password) VALUES (?, ?)`
+  let sql = `INSERT INTO Users (username, password) VALUES (?, ?)`
    
   pool.query(sql, [req.body.username, req.body.password], (err, results) => {
     if (err) {
@@ -79,21 +84,27 @@ app.post('/validate-login', (req, res) => {
   // to set the content type so it sends correctly
   res.contentType('application/json'); 
   
-  let sql = `SELECT * FROM users WHERE username = ? AND password = ?`;
+  let sql = `SELECT * FROM Users WHERE email = ? AND password = ?`;
    
-  pool.query(sql, [req.body.username, req.body.password], (err, results) => {
+  pool.query(sql, [req.body.email, req.body.password], (err, results) => {
+
+    console.log("Email: " + req.body.email);
+    console.log("Password: " + req.body.password);
+    console.log("Results: " + results);
     if (String(err).length > 0 && err !== null) {
       console.log(`error: ${err}`); 
     }
     try {
       // if there are any results, the user exists in the database, so we reuse
       if (results.length === 0) {
+        console.log("You're out!");
         console.log(results); 
         res.send({loginValid: false}); 
       }
       else {
+        console.log("You're in the thing!");
         console.log(results); 
-        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['username']}); 
+        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email']}); 
       }
     } 
     catch (e) {
