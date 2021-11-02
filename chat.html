@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test chat</title>
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="chat-container">
+        <div id="chat-display-box"></div>
+        <div id="chat-input-box">
+            <form action="submit" id="msg-form">
+                <input type="text" id="input" placeholder="Send Chat Message">
+            </form>
+        </div>
+    </div>
+    <script>
+        let userId = 1
+        let form = document.getElementById('msg-form'); 
+        form.addEventListener('submit', e => {
+            e.preventDefault(); 
+            let chatMessage = document.getElementById('input'); 
+            if (input.value) {
+                fetch('/chat')
+            }
+        })
+    </script>
+</body>
+</html>

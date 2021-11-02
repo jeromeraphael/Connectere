@@ -23,6 +23,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html'); 
 }); 
 
+app.get('/chat', (req, res) => {
+    res.sendFile(__dirname + "/chat.html"); 
+}); 
+
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
 }); 
@@ -32,16 +36,32 @@ app.get('/admin/users', (req, res) => {
 }); 
 
 app.get('/:relationship/chats', (req, res) => {
-    let sql = `SELECT u.firstName, u.lastName, chatContent
+    let sql = `SELECT CONCAT(u.firstName, ' ',  u.lastName) AS "Sender", chatContent, relationshipId, c.timeSent
         FROM Chats c
         JOIN Users u 
             ON u.userId = c.senderId
         WHERE relationshipId = ?`;
     pool.query(sql, [req.params.relationship], (err, results) => {
         if (err) throw err; 
-        res.send({sender: `${results['u.firstName']} ${results['u.lastName']}`, chatContent: results['chatContent']}); 
+        res.send({sender: `${results['Sender']}`, chatContent: results['chatContent'], relationsihp: results['relationshipId'], timeSent: results['timeSent']}); 
     });  
 }); 
+
+app.get('/:userId/relationships', (req, res) => {
+    let sql = `SELECT r.relationshipId, m.userId, mo.userId
+      FROM Relationships r
+      JOIN Mentees m on r.menteeId = m.menteeId
+      JOIN Mentors mo on r.mentorId = mo.mentorId
+      WHERE r.mentorId = ? OR r.menteeId = ?`; 
+    pool.query(sql, [req.params.userId], (err, results) => {
+      if (err) throw err; 
+      res.send({relationships: results['relationshipId']}); 
+    })
+}); 
+
+app.get('/:user/chats'), (req, res) => {
+  let sql = `SELECT`
+}
 
 app.get('/users', (req, res) => {
   res.contentType('application/json');
