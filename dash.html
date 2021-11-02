@@ -34,11 +34,8 @@
 
 
         /* NAV STYLE */
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
         * {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             box-sizing: border-box;
         }
 
@@ -46,6 +43,7 @@
         .row {
             display: flex;
             max-width: fit-content;
+            
         }
 
         /* Left column (menu) */
@@ -53,11 +51,14 @@
             flex: 35%;
             padding: 15px 0;
             max-width: fit-content;
+            
+            
         }
 
         .left h2 {
             padding-left: 8px;
             padding: 1vh;
+            background-color: #B6D6D5;
         }
 
         /* Right column (page content) */
@@ -73,6 +74,7 @@
             font-size: 18px;
             padding: 11px;
             border: 1px solid #ddd;
+            background-color: #B6D6D5;
         }
 
         /* Style the navigation menu inside the left column */
@@ -80,18 +82,19 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
+            background-color: #B6D6D5;
             
         }
 
         #myMenu li a {
             padding: 12px;
             text-decoration: none;
-            color: black;
+            color: white;
             display: block
         }
 
         #myMenu li a:hover {
-            background-color: #eee;
+            background-color: #C9EDBE;
         }
     </style>
 </head>
@@ -175,18 +178,17 @@
         let searchList = document.getElementById("searchId");
         let reportList = document.getElementById("reportId");
         let logOut = document.getElementById("logOutId");
-        let general = document.getElementById("1");
-        let science = document.getElementById("2");
-        let math = document.getElementById("3");
 
         const redirectToPage = (userChoice) => {
           window.location.href = `http://localhost:4545/${userChoice}`
         }
 
-        // userList.addEventListener('click', () => {redirectToPage('userlist')});
+        userList.addEventListener('click', () => {redirectToPage('users')});
         searchList.addEventListener('click', () => {redirectToPage('search')});
-        reportList.addEventListener('click', () => {redirectToPage('reports')});
-        logOut.addEventListener('click', () => {redirectToPage('login')});
+        // For Sprint 3, only admin is allowed to access this.
+        reportList.addEventListener('click', () => {redirectToPage('admin/reports')});
+        // Goes back to login page
+        logOut.addEventListener('click', () => {redirectToPage('')});
   
         const categoryPick = async() => {
           let response = await fetch ('/pick', {
