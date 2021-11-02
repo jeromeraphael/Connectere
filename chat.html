@@ -5,14 +5,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>test chat</title>
+    <style>
+        .center {
+            margin: auto; 
+            display: table; 
+        }
+
+        .col-5 { width: 20vw; }
+        .col-2 { width: 50vw; }
+
+        #chat-display-box {
+            border: 2px solid black; 
+            margin-bottom: 2vh;
+            border-radius: 5px;  
+        }
+
+        #chat-input-box {
+            padding: 1vh; 
+            padding-left: 0;  
+            margin-top: 1vh; 
+        }
+
+        #input {
+            padding: 1vh; 
+            padding-left: 0; 
+            width: inherit; 
+            padding-right: 0; 
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Chat</h1>
-    <div id="chat-container">
-        <div id="chat-display-box"></div>
-        <div id="chat-input-box">
-            <form action="submit" id="msg-form" autocomplete="off">
-                <input type="text" id="input" placeholder="Send Chat Message">
+    <h1 class='center'>Chat</h1>
+    <div id="chat-container" class='center'>
+        <div id="chat-display-box" class='col-2'></div>
+        <div id="chat-input-box" class='col-2'>
+            <form action="submit" id="msg-form" autocomplete="off" class='col-2'>
+                <input type="text" id="input" placeholder="Send Chat Message" class='col-2'>
             </form>
         </div>
     </div>
@@ -53,6 +82,7 @@
             sender.textContent = `${senderId}: ` 
             messageDiv.appendChild(sender);
             message.textContent = newMessage; 
+            message.clasName = 'message-content'; 
             messageDiv.appendChild(message); 
             chatDisplay.append(messageDiv); 
             chatMessage.value = ''; 
@@ -102,8 +132,7 @@
                     'message': message
                 })
             })
-            .then(addNewChatMessage(userName, message))
-            .then(chatMessage.value = ''); 
+            .then(addNewChatMessage(userName, message));
         }
 
         getRelationships(userId); 
