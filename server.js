@@ -43,25 +43,34 @@ app.get('/:relationship/chats', (req, res) => {
         WHERE relationshipId = ?`;
     pool.query(sql, [req.params.relationship], (err, results) => {
         if (err) throw err; 
-        res.send({sender: `${results['Sender']}`, chatContent: results['chatContent'], relationsihp: results['relationshipId'], timeSent: results['timeSent']}); 
+        res.json(results); 
+        // res.send({sender: `${results['Sender']}`, chatContent: results['chatContent'], relationsihp: results['relationshipId'], timeSent: results['timeSent']}); 
     });  
 }); 
 
+app.post('/save-chat', (req, res) => {
+  let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent)`; 
+  pool.query(sql, [req.body.relationshipId, req.body.senderId, req.body.chatContent], (err, results) => {
+    if (err) throw err; 
+    console.log(`Relationship (${req.body.relationshipId}) ${req.body.senderId}: ${req.body.chatContent}`); 
+  });
+})
+
+
 app.get('/:userId/relationships', (req, res) => {
-    let sql = `SELECT r.relationshipId, m.userId, mo.userId
+    let sql = `SELECT r.relationshipId
       FROM Relationships r
       JOIN Mentees m on r.menteeId = m.menteeId
       JOIN Mentors mo on r.mentorId = mo.mentorId
-      WHERE r.mentorId = ? OR r.menteeId = ?`; 
-    pool.query(sql, [req.params.userId], (err, results) => {
-      if (err) throw err; 
-      res.send({relationships: results['relationshipId']}); 
+      WHERE m.userId = ? OR mo.userId = ?`; 
+    pool.query(sql, [req.params.userId, req.params.userId], (err, results) => {
+      console.log(sql); 
+      if (err) throw err;
+      res.json(results); 
+      // res.send({relationships: results[0]['relationshipId']}); 
     })
 }); 
 
-app.get('/:user/chats'), (req, res) => {
-  let sql = `SELECT`
-}
 
 app.get('/users', (req, res) => {
   res.contentType('application/json');
@@ -89,7 +98,7 @@ app.post('/create-account', (req, res) => {
       }
     }); 
   
-    switch req.body.mentorStatus {
+    switch (req.body.mentorStatus) {
     case "Mentor": 
       pool.query(`INSERT INTO Mentors VALUES (mentorId) SELECT userId FROM Users ORDER BY userId LIMIT 1`);
       break; 

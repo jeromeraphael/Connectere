@@ -19,11 +19,53 @@
     <script>
         let userId = 1
         let form = document.getElementById('msg-form'); 
+        let chatDisplay = document.getElementById('chat-display-box'); 
+
+        const getChatHistory = (relationship) => {
+            fetch(`/${relationship}/chats`, {
+                    credentials: 'same-origin', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(chats => chats.json())
+                .then(chats => {
+                    for (let i = 0; i < chats.length; i++) {
+                        let messageDiv = document.createElement('div'); 
+                        let message = document.createElement('span'); 
+                        let sender = document.createElement('span'); 
+                        sender.className = 'mesage-sender'; 
+                        sender.textContent = chats[i]['Sender'] + ': '; 
+                        messageDiv.appendChild(sender);
+                        message.textContent = chats[i]['chatContent']; 
+                        messageDiv.appendChild(message); 
+                        chatDisplay.append(messageDiv); 
+                    }
+                }); 
+        }
+
+        const getRelationships = (userId) => {
+            fetch(`/${userId}/relationships`, {
+                    credentials: 'same-origin', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(relationships => relationships.json())
+                .then(relationships => {
+                    localStorage.setItem('relationships', relationships);
+                    getChatHistory(relationships[0]); 
+                }); 
+        }
+
+        getRelationships(userId); 
+
         form.addEventListener('submit', e => {
             e.preventDefault(); 
             let chatMessage = document.getElementById('input'); 
             if (input.value) {
-                fetch('/chat')
+
+                console.log(localStorage.getItem('relationships')); 
             }
         })
     </script>
