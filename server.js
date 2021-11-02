@@ -27,6 +27,16 @@ app.get('/chat', (req, res) => {
     res.sendFile(__dirname + "/chat.html"); 
 }); 
 
+app.get('/users/:userId', (req, res) => {
+    let sql = `SELECT userId, CONCAT(firstName, ' ', lastName) as "Full Name", email
+               FROM Users
+               WHERE userId = ?`; 
+    pool.query(sql, [req.params.userId], (err, results) => {
+      if (err) throw err; 
+      res.json(results); 
+    })
+})
+
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
 }); 

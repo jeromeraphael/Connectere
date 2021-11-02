@@ -11,14 +11,13 @@
     <div id="chat-container">
         <div id="chat-display-box"></div>
         <div id="chat-input-box">
-            <form action="submit" id="msg-form">
+            <form action="submit" id="msg-form" autocomplete="off">
                 <input type="text" id="input" placeholder="Send Chat Message">
             </form>
         </div>
     </div>
     <script>
         let userId = 3
-        let userName = 'Ben Jackman'; 
         let form = document.getElementById('msg-form'); 
         let chatDisplay = document.getElementById('chat-display-box'); 
         let chatMessage = document.getElementById('input'); 
@@ -30,6 +29,21 @@
             let date = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5])); 
             return mysqldate.slice(0, 10); 
         }
+
+        const getUserData = (userId) => {
+            fetch(`users/${userId}`, {
+                credentials: 'same-origin', 
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(userData => userData.json())
+            .then(userData => localStorage.setItem("userData", JSON.stringify(userData))); 
+        }
+
+        getUserData(userId); 
+        let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
+        console.log(userName); 
 
         const addNewChatMessage = (senderId, newMessage) => {
             let messageDiv = document.createElement('div'); 
@@ -54,17 +68,6 @@
                 .then(chats => {
                     for (let i = 0; i < chats.length; i++) {                        
                         addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent']); 
-                        // let messageDiv = document.createElement('div'); 
-                        // let message = document.createElement('span'); 
-                        // let sender = document.createElement('span'); 
-                        // sender.className = 'mesage-sender'; 
-                        // // sender.textContent = `(${parseMySQLDate(chats[i]['timeSent'])}) ${chats[i]['Sender']}: ` 
-                        // sender.textContent = `${chats[i]['Sender']}: ` 
-                        // messageDiv.appendChild(sender);
-                        // message.textContent = chats[i]['chatContent']; 
-                        // messageDiv.appendChild(message); 
-                        // chatDisplay.append(messageDiv); 
-                        // chatMessage.innerHTML = ''; 
                     }
                 }); 
         }
@@ -98,7 +101,8 @@
                     'message': message
                 })
             })
-            .then(addNewChatMessage(userId, message));
+            .then(addNewChatMessage(userName, message))
+            .then(chatMessage.value = ''); 
         }
 
         getRelationships(userId); 
