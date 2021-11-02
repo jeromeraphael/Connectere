@@ -5,10 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: auto;
             text-align: center;
+            font-family: 'Inter', sans-serif;
         }
 
         th {
@@ -88,11 +93,9 @@
             for (let i = 0; i < mentees.length; i++) {
               let mentee = mentees[i];
               menteeRows += `<tr>
-                <th>${mentee.firstName} ${mentee.lastName}<th>
+                <th>${mentee.firstName} ${mentee.lastName} : ${mentee.department} Department<th>
                     <th><button onclick='sendInvite(this.id)' id='${i+1}' value='${i+1}'>Connect</button></th></tr>
-                    <tr><td>${mentee.reasonForUse}<td></tr>
-                    
-                    `
+                    <tr><td>${mentee.reasonForUse}<td></tr>`
             }
 
             let menteeTable = `
