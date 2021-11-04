@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Catagory</title>
+	<style>
+                table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 50%;
+        }
+        
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        h1 {
+            color: green;
+        }
+    </style>
+</head>
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+<body>
+
+	<center>
+        <h1>Mentor Search</h1>
+        <h3>
+          perform a real time search and find your mentor
+        </h3>
+        <b>Search the table for Mentor or Department: 
+          <input id="gfg" type="text" 
+                 placeholder="Search here">
+        </b>
+        <br>
+        <br>
+        <table>
+            <tr>
+                <th>Mentor</th>
+                <th>Department</th>
+                <th>Type</th>
+            </tr>
+            <tbody id="geeks">
+                <tr>
+                    <td>Michael Jackson</td>
+                    <td>Finance</td>
+                    <td>Mentor
+                    </td>
+                </tr>
+                <tr>
+                    <td>Snoop Dogg</td>
+                    <td>Technology</td>
+                    <td>Mentor</td>
+                </tr>
+                <tr>
+                    <td>Michael Jordan</td>
+                    <td>Security</td>
+                    <td>Mentor</td>
+                </tr>
+                <tr>
+                    <td>Elon Musk</td>
+                    <td>Blockchain</td>
+                    <td>Mentor</td>
+                </tr>
+            </tbody>
+        </table>
+	</center>
+
+	  <script>
+          $(document).ready(function() {
+            $("#gfg").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#geeks tr").filter(function() {
+                    $(this).toggle($(this).text()
+                    .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+      </script>
+
+
+
+</body>
+
+</html>

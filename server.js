@@ -27,6 +27,22 @@ app.get('/chat', (req, res) => {
     res.sendFile(__dirname + "/chat.html"); 
 }); 
 
+app.get('/dash.html', (req, res) => {
+    res.sendFile(__dirname + '/dash.html'); 
+}); 
+
+app.get('/Directory/menteeSearch.html', (req, res) => {
+    res.sendFile(__dirname + '/forms-end.html'); 
+});
+
+app.get('/Directory/REPORTS.html', (req, res) => {
+    res.sendFile(__dirname + '/Directory/REPORTS.html'); 
+}); 
+
+app.get('/login.html', (req, res) => {
+    res.sendfile(__dirname + '/login.html'); 
+}); 
+
 app.get('/users/:userId', (req, res) => {
     let sql = `SELECT userId, CONCAT(firstName, ' ', lastName) as "Full Name", email
                FROM Users
@@ -35,7 +51,39 @@ app.get('/users/:userId', (req, res) => {
       if (err) throw err; 
       res.json(results); 
     })
-})
+}); 
+
+app.post('/validate-login', (req, res) => {
+  // we are going to be sending a json back to the page, so we have to make sure
+  // to set the content type so it sends correctly
+  res.contentType('application/json'); 
+  
+  let sql = `SELECT * FROM Users WHERE email = ? AND password = ?`;
+   
+  pool.query(sql, [req.body.email, req.body.password], (err, results) => {
+    if (String(err).length > 0 && err !== null) {
+      console.log(`error: ${err}`); 
+    }
+    try {
+      // if there are any results, the user exists in the database, so we reuse
+      if (results.length === 0) {
+        console.log("You're out!");
+        console.log(results); 
+        res.send({loginValid: false}); 
+      }
+      else {
+        console.log("You're in the thing!");
+        console.log(results); 
+        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email']}); 
+      }
+    } 
+    catch (e) {
+      console.log(e); 
+      console.log('error with /validate-login'); 
+    } 
+  });
+  
+});
 
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
