@@ -66,7 +66,7 @@ app.get('/users/count', (req, res) => {
   }); 
 }); 
 
-// getting mentor information for the userpage
+// getting mentor information for the userpage 
 app.get('/users/mentors', (req, res) => {
   res.contentType('application/json');
   pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
