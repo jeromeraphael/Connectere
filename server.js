@@ -23,6 +23,14 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html'); 
 }); 
 
+// Create get request for admin page and pull from database
+
+// Create get request for mentor and mentee page and pull from database
+// Next iterations of get requests will require ID's to be passed in
+// Example: http:/localhost:4545/admin/dashboard.html
+// app.get('/admin/dashboard', (req, res) => {
+
+// })
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(__dirname + '/dash.html'); 

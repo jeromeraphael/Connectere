@@ -360,36 +360,36 @@
 
             <div class="form-sign-up">
                 <h2>Create your Connectere Account</h2>
-                <form id="create-account" class="signUpScroll">
+                <form id="create-account" class="signUpScroll" onsubmit="return false">
                     <label>
                         <span>First Name</span>
-                        <input type="text" required />
+                        <input id="firstNameId" name="firstname" type="text" required />
                     </label>
 
                     <label>
                         <span>Last Name</span>
-                        <input type="text" required />
+                        <input id="lastNameId" name="lastname" type="text" required />
                     </label>
 
                     <label>
                         <span>Email</span>
-                        <input type="email" required />
+                        <input input id="create-username" name="username" type="email" required />
                     </label>
 
                     <label>
 
                         <span>Password</span>
-                        <input type="password" required />
+                        <input id="create-password" name="password" type="password" required />
                     </label>
 
                     <label>
                         <span>Department</span>
-                        <input type="text" required />
+                        <input input id="departmentId" name="department"type="text" required />
                     </label>
 
                     <label>
                         <span>Role</span>
-                        <input type="text" required />
+                        <input input id="roleId" name="role" type="text" required />
                     </label>
 
                     <label>
@@ -418,6 +418,7 @@
 
     <script>
         "use strict";
+        // variables
 
         function init() {
             alert("Starting...");
@@ -483,19 +484,33 @@
 
         // Submit
         const addAccount = async () => {
+            // Email
             let newUsername = document.getElementById('create-username').value;
+            // Password
             let newPassword = document.getElementById('create-password').value;
+            // First Name
+            let firstName = document.getElementById('firstNameId').value;
+            // Last Name
+            let lastName = document.getElementById('lastNameId').value;
+            // Department
+            let department = document.getElementById('departmentId').value;
+            // Role
+            let role = document.getElementById('roleId').value;
+            // User Type
+            let userType = document.querySelector('input[name="userType"]:checked').value;
+            console.log(userType);
+
             let response = await fetch('/create-account', {
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 'username': newUsername, 'password': newPassword })
+                body: JSON.stringify({ 'email': newUsername, 'password': newPassword })
             });
             let accountSuccess = await response.json();
             if (accountSuccess['accountCreated']) {
-                alert('Gnarly, bro! You have successfully created your QUIZKNOWS account. Use these credentials on your next log in.');
+                alert(`Account created for ${firstName}`);
             }
         }
 
