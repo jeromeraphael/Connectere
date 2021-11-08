@@ -35,8 +35,21 @@ app.get('/Directory/menteeSearch.html', (req, res) => {
     res.sendFile(__dirname + '/forms-end.html'); 
 });
 
-app.get('/Directory/REPORTS.html', (req, res) => {
-    res.sendFile(__dirname + '/Directory/REPORTS.html'); 
+app.get('/Directory/reports', (req, res) => {
+    res.sendFile(__dirname + '/Directory/Report/reports.html'); 
+}); 
+
+app.post('/reports', (req, res) => {
+    let sql = `INSERT INTO Reports (reporterUserId, reportedUserId, reportDate, reportReason, comments)
+                VALUES (?, 
+                        (SELECT userId FROM Users WHERE CONCAT(firstName, ' ', lastName) = ?),
+                         ?, ?, ?);`
+    pool.query(sql, [req.body.reporterId, req.body.reportee, req.body.date, req.body.reason, req.body.comments], (err, results) => {
+      if (err) {
+        res.json({"status": "rejected", "error": "Invalid input. Please try again."});
+      }
+      res.json({"status": "accepted"}); 
+    });
 }); 
 
 app.get('/login.html', (req, res) => {
