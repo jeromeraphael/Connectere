@@ -86,6 +86,34 @@ app.get('/users/mentees', (req, res) => {
   }); 
 }); 
 
+// getting the count of invites
+app.get('/invites/count', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT count(inviteId) FROM Invites WHERE inviteId IS NOT NULL', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+
+// lol hopefully these are some good post requests :v)
+app.post('/send-invite', (req, res) => {
+  let sql = `INSERT INTO Invites(inviteId, inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?, ?)`
+  pool.query(sql, [req.body.inviteId, req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
+    if (err) throw err;
+    console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
+  })
+});
+
+app.post('/send-relationship', (req, res) => {
+  let sql = `INSERT INTO Relationships(relationshipId, inviteId, menteeId, mentorId, dateBegan, lifeCycleStatus) VALUES (?, ?, ?, ?, ?, ?)`
+  pool.query(sql, [req.body.relationshipId, req.body.inviteId, req.body.menteeId, req.body.mentorId, req.body.dateBegan, req.body.lifeCycleStatus], (err, results) => {
+    if (err) throw err;
+    console.log(`Relationship with ID ${req.body.relationshipId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`)
+  })
+})
+
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body

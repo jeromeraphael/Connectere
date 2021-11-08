@@ -78,6 +78,8 @@
     <script>
         "use strict;"
 
+        let invite = 2;
+
         const loadMentees = () => {
             fetch('/users/mentees', {
             credentials: "same-origin",
@@ -94,7 +96,7 @@
               let mentee = mentees[i];
               menteeRows += `<tr>
                 <th>${mentee.firstName} ${mentee.lastName} : ${mentee.department} Department<th>
-                    <th><button onclick='sendInvite(this.id)' id='${i+1}' value='${i+1}'>Connect</button></th></tr>
+                    <th><button onclick='sendInvite(this.id)' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></th></tr>
                     <tr><td>${mentee.reasonForUse}<td></tr>`
             }
 
@@ -102,6 +104,20 @@
             ${menteeRows}`
 
             document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', menteeTable);
+
+            //Getting count of invites
+            fetch('/invites/count', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(count => count.json())
+    
+            .then(count => {
+                invite += count[0]["count(inviteId)"];
+                console.log(invite)
+            })
+
         })
         }
 
@@ -109,18 +125,41 @@
             
             x = document.getElementById(button).textContent;
             
-            if (document.getElementById(button).textContent == "Connect"){
-                alert("Your request has been sent. You may rescind your request at any time.")
-                document.getElementById(button).innerHTML = "Revoke";
-                document.getElementById(button).style.backgroundColor = "lightblue";
-            }
-            else{
-                document.getElementById(button).innerHTML = "Connect";
-                document.getElementById(button).style.backgroundColor = "lightgreen";
-
-            }
-
+            // if (document.getElementById(button).textContent == "Connect"){
+                alert("Your request has been sent. You may rescind your request on your connections page.")
+                document.getElementById(button).disabled = true;
+                document.getElementById(button).style.backgroundColor = 'white';
+                document.getElementById(button).style.color = 'white';
+                document.getElementById(button).style.border = '2px solid white';
+            //     document.getElementById(button).style.backgroundColor = "lightblue";
+            // }
+            // else{
+            //     document.getElementById(button).innerHTML = "Connect";
+            //     document.getElementById(button).style.backgroundColor = "lightgreen";
+            // }
             console.log('The button is working, just need to post and change the database now :v)')
+            let today = new Date()
+            let todayText = '2021-11-06';
+                
+            fetch('/send-invite', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"inviteId": invite, "inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
+            });
+
+            console.log('Test')
+            // fetch('/send-relationship', {
+            //     credentials: "same-origin",
+            //     method: "POST",
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     // body: JSON.stringify({"relationshipId": 3, "inviteId": 3, "menteeId": Number(button), "mentorId": 1, "dateBegan": todayText, "lifeCycleStatus": 'Pending'})
+            // });
+
         }
     </script>
 </body>
