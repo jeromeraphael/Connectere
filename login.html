@@ -393,19 +393,29 @@
                     </label>
 
                     <label>
+                        <span><strong>TYPE OF ACCOUNT</strong></span>
                         <input type="radio" id="typeId" name="userType" value="Mentor">
                         <label for="typeId">Mentor</label>
 
-                        <input type="radio" id="contactChoice1" name="userType" value="Mentee">
+                        <input type="radio" id="typeId" name="userType" value="Mentee">
                         <label for="typeId">Mentee</label>
                     </label>
 
                     <label>
-                        <table>
-                            <tr>
-                                <td>Questions</td>
-                            </tr>
-                        </table>
+                        <!-- Goals -->
+                        <span>What do you expect out of the connections you build? </span>
+                        <br><br>
+                        <textarea id="goalsId" name="questions" rows="4" cols="25" required></textarea>
+                        <br><br>
+                        <!-- Ideal Relationship -->
+                        <span>What is your ideal relationship with a mentor/mentee?</span>
+                        <br><br>
+                        <textarea id="idealRelationshipId" name="questions" rows="4" cols="25" required></textarea>
+                        <br><br>
+                        <!-- What is the main reason for use? -->
+                        <span>What is the main reason for your use of the mentorship platform?</span>
+                        <br><br>
+                        <textarea id="questionsId" name="questions" rows="4" cols="25" required></textarea>
 
                     </label>
                 </form>
@@ -486,19 +496,37 @@
         const addAccount = async () => {
             // Email
             let newUsername = document.getElementById('create-username').value;
+            console.log("Email: " + newUsername);
             // Password
             let newPassword = document.getElementById('create-password').value;
+            console.log("Password: " + newPassword);
             // First Name
             let firstName = document.getElementById('firstNameId').value;
+            console.log("First Name: " + firstName);
             // Last Name
             let lastName = document.getElementById('lastNameId').value;
+            console.log("Last Name: " + lastName);
             // Department
             let department = document.getElementById('departmentId').value;
+            console.log("Department: " + department);
             // Role
             let role = document.getElementById('roleId').value;
+            console.log("Role: " + role);
             // User Type
             let userType = document.querySelector('input[name="userType"]:checked').value;
-            console.log(userType);
+            console.log("Account Type: " + userType);
+
+            // Additional objects such as questions, goals, etc.
+            // Object for openToNewConnections
+            let openToNewConnections = 1;
+            // Goals
+            let goals = document.getElementById('goalsId').value;
+            console.log("Goals: " + goals);
+            // Ideal Relationship
+            let idealRelationship = document.getElementById('idealRelationshipId').value;
+            console.log("Ideal Relationship: " + idealRelationship);
+            // What is the main reason for use?
+            let reasonForUse = document.getElementById('questionsId').value;
 
             let response = await fetch('/create-account', {
                 method: "POST",
@@ -506,11 +534,24 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 'email': newUsername, 'password': newPassword })
+                body: JSON.stringify({ 'email': newUsername, 
+                                    'password': newPassword,
+                                    'firstName': firstName,
+                                    'lastName': lastName,
+                                    'department': department,
+                                    'role': role,
+                                    'userType': userType,
+                                    'openToNewConnections': openToNewConnections,
+                                    'goals': goals,
+                                    'idealRelationship': idealRelationship,
+                                    'reasonForUse': reasonForUse })
             });
             let accountSuccess = await response.json();
             if (accountSuccess['accountCreated']) {
                 alert(`Account created for ${firstName}`);
+            }
+            else {
+                alert(`Account creation failed for ${firstName}`);
             }
         }
 

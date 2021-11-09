@@ -70,9 +70,9 @@ app.get('/users', (req, res) => {
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body
-  let sql = `INSERT INTO Users (username, password) VALUES (?, ?)`
+  let sql = `INSERT INTO Users (email, password, firstName, lastName, department, role, userType, openToNewConnections, goals, idealRelationship, reasonForUse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
    
-  pool.query(sql, [req.body.username, req.body.password], (err, results) => {
+  pool.query(sql, [req.body.email, req.body.password, req.body.firstName, req.body.lastName, req.body.department, req.body.role, req.body.userType, req.body.openToNewConnections, req.body.goals, req.body.idealRelationship, req.body.reasoForUse], (err, results) => {
     if (err) {
       res.send({accountCreated: false, error: err}); 
     }
