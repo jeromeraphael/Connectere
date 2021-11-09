@@ -5,10 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: auto;
             text-align: center;
+            font-family: 'Inter', sans-serif;
         }
 
         th {
@@ -28,7 +33,7 @@
         
     </style>
 </head>
-<body>
+<body onload="loadMentees()">
 
     <!-- Later: Implement Nav bar-->
     <a href="..\dash.html">Connectere Dashboard</a>
@@ -44,15 +49,14 @@
         <input type="submit" value="Search">
     </form>
 
-    <table>
-        <tr>
+    <table id="tableOfFolks">
+        <!--<tr>
             <th>Michael Jackson</th>
             <th><button onclick='connect(this.id)' id="button1id">Connect</button></th>
         </tr>
         <tr>
             <td>I like dancing, puppies, and singing.</td>
         </tr>
-
         <tr>
             <th>Michael Jordan</th>
             <th><button onclick='connect(this.id)' id="button2id">Connect</button></th>
@@ -60,32 +64,99 @@
         <tr>
             <td>I like to play basketball</td>
         </tr>
-
         <tr>
             <th>Joe Biden</th>
             <th><button onclick='connect(this.id)' id="button3id">Connect</button></th>
         </tr>
         <tr>
             <td>I like being the president of the united states.</td>
-        </tr>
+        </tr> -->
     </table>
 
     <script>
-        function connect(button){
+        "use strict;"
 
+        let invite = 2;
+
+        const loadMentees = () => {
+            fetch('/users/mentees', {
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }}).then(mentees => mentees.json())
+
+            .then(mentees => {
+            console.log(mentees)
+
+            let menteeRows = "";
+
+            for (let i = 0; i < mentees.length; i++) {
+              let mentee = mentees[i];
+              menteeRows += `<tr>
+                <th>${mentee.firstName} ${mentee.lastName} : ${mentee.department} Department<th>
+                    <th><button onclick='sendInvite(this.id)' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></th></tr>
+                    <tr><td>${mentee.reasonForUse}<td></tr>`
+            }
+
+            let menteeTable = `
+            ${menteeRows}`
+
+            document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', menteeTable);
+
+            //Getting count of invites
+            fetch('/invites/count', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(count => count.json())
+    
+            .then(count => {
+                invite += count[0]["count(inviteId)"];
+                console.log(invite)
+            })
+
+        })
+        }
+
+        const sendInvite = (button) => {
+            
             x = document.getElementById(button).textContent;
             
-            if (document.getElementById(button).textContent == "Connect"){
-                alert("Your request has been sent. You may rescind your request at any time.")
-                document.getElementById(button).innerHTML = "Revoke";
-                document.getElementById(button).style.backgroundColor = "lightblue";
-            }
-            else{
-                document.getElementById(button).innerHTML = "Connect";
-                document.getElementById(button).style.backgroundColor = "lightgreen";
-            }
-        
+            // if (document.getElementById(button).textContent == "Connect"){
+                alert("Your request has been sent. You may rescind your request on your connections page.")
+                document.getElementById(button).disabled = true;
+                document.getElementById(button).style.backgroundColor = 'white';
+                document.getElementById(button).style.color = 'white';
+                document.getElementById(button).style.border = '2px solid white';
+            //     document.getElementById(button).style.backgroundColor = "lightblue";
+            // }
+            // else{
+            //     document.getElementById(button).innerHTML = "Connect"; 
+            //     document.getElementById(button).style.backgroundColor = "lightgreen";
+            // }
+            console.log('The button is working, just need to post and change the database now :v)')
+            let today = new Date()
+            let todayText = '2021-11-06';
+                
+            fetch('/send-invite', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"inviteId": invite, "inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
+            });
 
+            console.log('Test')
+            // fetch('/send-relationship', {
+            //     credentials: "same-origin",
+            //     method: "POST",
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     // body: JSON.stringify({"relationshipId": 3, "inviteId": 3, "menteeId": Number(button), "mentorId": 1, "dateBegan": todayText, "lifeCycleStatus": 'Pending'})
+            // });
 
         }
     </script>

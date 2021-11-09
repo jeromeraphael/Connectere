@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Report User</title>
+	<link href="css/forms-end.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="wrapper">
+		<section>
+			<h1>Report Form</h1>
+			<p>Fill out the form below.</p>
+			<form class="form" id="myForm">
+				<fieldset>
+					<legend>Your contact information</legend>
+					<label for="name">Full Name </label>
+					<input type="text" id="name" name="name" autofocus>
+					
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email">
+
+				</fieldset>
+				<fieldset>
+					<legend>About your Report </legend>
+					<label for="date">Incident date (Optional)</label>
+					<input type="date" id="date" name="date">
+					<label for="name">User to Report</label>
+					<input type="text" id="reportee" name="reportee">
+
+					<p>What are you reporting?</p>
+					<label>
+						<input type="radio" name="radio" value="Harassment, Bullying, Defamation" checked> Harassment, Bullying, Defamation and Threats
+					</label>
+					<label>
+						<input type="radio" name="radio" value="Hateful Content"> Hateful Content
+					</label>
+					<label>
+						<input type="radio" name="radio" value="Malicious and Deceptive Practices"> Malicious and Deceptive Practices
+					</label>
+					<label>
+						<input type="radio" name="radio" value="Personal, Confidential, and Protected Health Information"> Personal, Confidential and Protected Health Information
+					</label>
+					<label>
+						<input type="radio" name="radio" value="Spam">Spam
+					</label>
+					<P></P>
+					<label for="comments">Comments:</label>
+					<textarea id="comments" name="comments"></textarea>
+					<button onclick='sendFormData(this.form)'>Submit</button>
+				</fieldset>
+			</form>
+
+		</section>
+	
+	</div>
+	<script>
+
+		// var userId = localStorage.getItem('userId')
+
+		var form = document.getElementById('myForm'); 
+		form.addEventListener('submit', (e) => {
+			e.preventDefault(); 
+		})
+
+		var userId = 2; 
+
+		const sendFormData = (form) => {
+			let name = form.name.value;
+			let email = form.email.value;
+			let reportee = form.reportee.value; 
+			let date = form.date.value;
+			let reason = form.radio.value;
+			let comments = form.comments.value ?? 'none'; 
+			console.log(name, email, reportee, date, reason, comments); 
+
+			fetch('/reports', {
+				credentials: "same-origin", 
+				headers: {"Content-Type": "application/json"}, 
+				method: "POST", 
+				body: JSON.stringify({
+					"reporterId": userId,
+					"name": name, 
+					"email": email, 
+					"reportee": reportee, 
+					"date": date, 
+					"reason": reason, 
+					"comments": comments
+				})
+			})
+			.then(response => console.log(response));  
+
+		}
+
+
+		// const myForm = document.getElementById('myForm');
+
+		// // 'e' is the short var reference for event object which will be passed to event handlers.
+		// myForm.addEventListener('submit', function(e) {
+		// 	e.preventDefault();
+
+		// 	const formData = new FormData(this);
+
+		// 	fetch('/reports', {
+		// 	 	credentials: "same-origin",
+		// 		headers: {'Content-Type': 'application/json'},
+		// 	    method: 'post',
+		// 		body: formData
+
+		// } ) 	.then(function(response){
+		// 			return response.text();
+
+		// })		.then(function(text){
+		// 			console.log(text);
+
+		// })		.catch(function(error){
+		// 			console.error(error);
+		// })
+
+		// });
+
+	</script>
+</body>
+
+</html>
