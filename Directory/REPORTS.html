@@ -22,12 +22,16 @@
             text-align: left;
         }
 
+        td {
+            text-align: left; 
+        }
+
     </style>
 </head>
 <body>
     <h1>User Reports</h1>
-    <table>
-        <tr>
+    <table id="reportTable">
+        <!-- <tr>
             <th>Bob Smith</th>
             <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
         </tr>
@@ -53,10 +57,37 @@
                 <option value="unhelpfulInformation">Unhelpful Information</option>
             </select></td>
             <td><button id="pardon2" class="2 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
-        </tr>
+        </tr> -->
     </table>
 
     <script>
+
+        fetch('/reports', {
+            method: "GET", 
+            credentials: "same-origin", 
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log(response); 
+            response.forEach(report => {
+                let reportCell = `
+                <tr>
+                    <th>${report['Reported']}</th>
+                    <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
+                </tr>
+                <tr>
+                    <td>Reason: ${report['reportReason']}</td>
+                    <td><button id="pardon1" class="1 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
+                </tr>
+                <tr>
+                    <td>Comments: ${report['comments']}</td>`
+                document.getElementById("reportTable").insertAdjacentHTML('afterbegin', reportCell); 
+            }); 
+        }); 
+
         function report(butClass, value){
             document.getElementsByClassName(butClass).disabled;
         }
