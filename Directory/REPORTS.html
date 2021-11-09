@@ -77,7 +77,7 @@
             console.log(response); 
             response.forEach(report => {
                 let reportTable = `
-                <table id="${report['reportId']}-table">
+                <table id="${report['reportId']}-table" class="${report['reportedUserId']}">
                     <tbody>
                         <tr>
                             <th>${report['Reported']}</th>
@@ -97,6 +97,10 @@
 
         function report(user){
             alert(`User ${user} has been banned. Their account no longer exists`); 
+            let userReports = document.getElementsByClassName(user); 
+            for (let i = 0; i < userReports.length; i++) {
+                userReports[i].style.display = 'none'; 
+            }
         }
 
         function pardon(user, report) {
