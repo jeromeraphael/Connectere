@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true})); 
 
 var pool = mysql.createPool({
-  connectionLimit: 15,
+  connectionLimit: 100,
   host: "107.180.1.16",
   user: "fall2021group4",
   password: "fall2021group4",
@@ -156,7 +156,7 @@ app.get('/:userId/relationships', (req, res) => {
 app.get('/users', (req, res) => {
   res.contentType('application/json');
    
-  pool.query('SELECT * FROM users', (err, rows) => {
+  pool.query('SELECT * FROM Users', (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
@@ -266,7 +266,7 @@ app.get('/users/mentors', (req, res) => {
 // getting mentee information for the userpage
 app.get('/users/mentees', (req, res) => {
   res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
+  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
@@ -274,12 +274,25 @@ app.get('/users/mentees', (req, res) => {
 }); 
 
 app.get('/users/count', (req, res) => {
+  // res.contentType('application/json');
+  console.log('is this code even being ran?'); 
+  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != "";', [], (err, rows) => {
+    console.log(pool); 
+    if (err) throw err; 
+    console.log(rows); 
+    res.json(rows); 
+  }); 
+}); 
+
+app.get('/users/count2', (req, res) => {
   res.contentType('application/json');
-  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != ""', (err, rows) => {
+   
+  pool.query('SELECT * FROM Users', (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
   }); 
+   
 }); 
 
 app.get('/mentor/menteeSearch', (req, res) => {
