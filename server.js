@@ -31,8 +31,8 @@ app.get('/dash.html', (req, res) => {
     res.sendFile(__dirname + '/dash.html'); 
 }); 
 
-app.get('/Directory/menteeSearch.html', (req, res) => {
-    res.sendFile(__dirname + '/forms-end.html'); 
+app.get('/Directory/menteeSearch', (req, res) => {
+    res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
 });
 
 app.get('/Directory/reports', (req, res) => {
@@ -226,6 +226,65 @@ app.post('/validate-login', (req, res) => {
    
 });
 
+// getting the count of invites
+app.get('/invites/count', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT count(inviteId) FROM Invites WHERE inviteId IS NOT NULL', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+
+// lol hopefully these are some good post requests :v)
+app.post('/send-invite', (req, res) => {
+  let sql = `INSERT INTO Invites(inviteId, inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?, ?)`
+  pool.query(sql, [req.body.inviteId, req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
+    if (err) throw err;
+    console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
+  })
+});
+
+app.post('/send-relationship', (req, res) => {
+  let sql = `INSERT INTO Relationships(relationshipId, inviteId, menteeId, mentorId, dateBegan, lifeCycleStatus) VALUES (?, ?, ?, ?, ?, ?)`
+  pool.query(sql, [req.body.relationshipId, req.body.inviteId, req.body.menteeId, req.body.mentorId, req.body.dateBegan, req.body.lifeCycleStatus], (err, results) => {
+    if (err) throw err;
+    console.log(`Relationship with ID ${req.body.relationshipId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`)
+  })
+});
+
+app.get('/users/mentors', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+// getting mentee information for the userpage
+app.get('/users/mentees', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+app.get('/users/count', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != ""', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+app.get('/mentor/menteeSearch', (req, res) => {
+  res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
+}); 
 // Host: 107.180.1.16
 // Port: 3306
 // Username: 2021group4
