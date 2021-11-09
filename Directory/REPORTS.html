@@ -30,8 +30,11 @@
 </head>
 <body>
     <h1>User Reports</h1>
-    <table id="reportTable">
-        <!-- <tr>
+    <div id="reports">
+
+    </div>
+    <!-- <table id="reportTable">
+        <tr>
             <th>Bob Smith</th>
             <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
         </tr>
@@ -57,8 +60,8 @@
                 <option value="unhelpfulInformation">Unhelpful Information</option>
             </select></td>
             <td><button id="pardon2" class="2 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
-        </tr> -->
-    </table>
+        </tr>
+    </table> -->
 
     <script>
 
@@ -73,23 +76,32 @@
         .then(response => {
             console.log(response); 
             response.forEach(report => {
-                let reportCell = `
-                <tr>
-                    <th>${report['Reported']}</th>
-                    <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
-                </tr>
-                <tr>
-                    <td>Reason: ${report['reportReason']}</td>
-                    <td><button id="pardon1" class="1 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
-                </tr>
-                <tr>
-                    <td>Comments: ${report['comments']}</td>`
-                document.getElementById("reportTable").insertAdjacentHTML('afterbegin', reportCell); 
+                let reportTable = `
+                <table id="${report['reportId']}-table">
+                    <tbody>
+                        <tr>
+                            <th>${report['Reported']}</th>
+                            <th><button id="${report['reportedUserId']}-report" class="1 ban" onclick="report(${report['reportedUserId']})">BAN</button></th>
+                        </tr>
+                        <tr>
+                            <td>Reason: ${report['reportReason']}</td>
+                            <td><button id="${report['reportedUserId']}-pardon" class="1 pardon" onclick="pardon(${report['reportedUserId']}, ${report['reportId']})">Pardon</button></td>
+                        </tr>
+                        <tr>
+                            <td>Comments: ${report['comments']}</td>
+                    </tbody>
+                </table>`; 
+                document.getElementById("reports").insertAdjacentHTML('afterbegin', reportTable); 
             }); 
         }); 
 
-        function report(butClass, value){
-            document.getElementsByClassName(butClass).disabled;
+        function report(user){
+            alert(`User ${user} has been banned. Their account no longer exists`); 
+        }
+
+        function pardon(user, report) {
+            alert(`User ${user} has been pardoned.`);
+            document.getElementById(`${report}-table`).style.display = 'none'; 
         }
     </script>
 </body>

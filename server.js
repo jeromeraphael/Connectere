@@ -53,7 +53,7 @@ app.post('/reports', (req, res) => {
 }); 
 
 app.get('/reports', (req, res) => {
-  let sql = `SELECT reportDate, reportReason, comments, CONCAT(u.firstName, " ", u.lastName) as "Reporter", CONCAT(u2.firstName, " ", u2.lastName) as "Reported"
+  let sql = `SELECT reportId, reportDate, reportReason, comments, CONCAT(u.firstName, " ", u.lastName) as "Reporter", CONCAT(u2.firstName, " ", u2.lastName) as "Reported", reporterUserId, reportedUserId
 	              FROM Reports
                 JOIN Users u on u.userId = reporterUserId
                 JOIN Users u2 on u2.userId = reportedUserId;`
