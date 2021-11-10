@@ -319,6 +319,7 @@
 <body onload="init()">
     <br>
     <br>
+
     <div class="cont">
         <form id="login-form" onsubmit="return false" class="form sign-in">
             <h2>CONNECTERE</h2>
@@ -428,10 +429,8 @@
 
     <script>
         "use strict";
-        // variables
-
         function init() {
-            alert("Starting...");
+            alert("Welcome to Connectere.");
         }
 
         // This function switches on-click
@@ -442,6 +441,7 @@
 
         localStorage.clear();
         let loginAttemptCount = 0;
+
         // let createAccount = document.getElementById("create-account");
         // createAccount.style.display = 'none';
 
@@ -475,7 +475,9 @@
                 }
                 else {
                     if (loginAttemptCount < 10) {
-                        alert("Invalid credentials.");
+                        alert("Invalid credentials." +" Login attempt " + (loginAttemptCount+1) + " failed.");
+                        alert((10-(loginAttemptCount+1)) + " Attempts Left");
+                        loginAttemptCount++;
                         wrongLoginPrompt(json); 
                     }
                     else {
@@ -513,20 +515,25 @@
             let role = document.getElementById('roleId').value;
             console.log("Role: " + role);
             // User Type
-            let userType = document.querySelector('input[name="userType"]:checked').value;
+            let userType = document.getElementById('typeId').value;
             console.log("Account Type: " + userType);
 
             // Additional objects such as questions, goals, etc.
             // Object for openToNewConnections
-            let openToNewConnections = 1;
+            let openToNewConnections = "1";
+            console.log("Open to new connections: " + openToNewConnections);
+
             // Goals
             let goals = document.getElementById('goalsId').value;
             console.log("Goals: " + goals);
+
             // Ideal Relationship
             let idealRelationship = document.getElementById('idealRelationshipId').value;
             console.log("Ideal Relationship: " + idealRelationship);
+
             // What is the main reason for use?
             let reasonForUse = document.getElementById('questionsId').value;
+            console.log("Reason for use: " + reasonForUse);
 
             let response = await fetch('/create-account', {
                 method: "POST",
@@ -540,13 +547,15 @@
                                     'lastName': lastName,
                                     'department': department,
                                     'role': role,
-                                    'userType': userType,
-                                    'openToNewConnections': openToNewConnections,
                                     'goals': goals,
                                     'idealRelationship': idealRelationship,
-                                    'reasonForUse': reasonForUse })
+                                    'openToNewConnections': openToNewConnections,
+                                    'reasonForUse': reasonForUse,
+                                    'userType': userType})
             });
+            
             let accountSuccess = await response.json();
+
             if (accountSuccess['accountCreated']) {
                 alert(`Account created for ${firstName}`);
             }
@@ -554,27 +563,6 @@
                 alert(`Account creation failed for ${firstName}`);
             }
         }
-
-
-
-
-
-
-        // function signIn(){
-        //     // Variables
-        //     let username = document.getElementById("emailId").value;
-        //     let password = document.getElementById("passwordId").value;
-
-        //     console.log("Username: " + username);
-        //     console.log("Password: " + password);
-
-        //     if (username == "" && password == ""){
-        //         alert("Please enter company email and password to proceed.");
-        //     } else {
-        //         console.log("You're logged in!");
-        //         window.open('dash.html');
-        //     }
-        // }
 
     </script>
 </body>
