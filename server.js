@@ -79,8 +79,8 @@ app.post('/create-account', (req, res) => {
   //   else res.send({accountCreated: true});  
   // });
 
-  let sql = `INSERT INTO Users (email, password, firstName, lastName, department, role, goals, idealRelationship, openToNewConnections, reasonForUse) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  pool.query(sql, [req.body.email, req.body.password, req.body.firstName, req.body.lastName, req.body.department, req.body.role, req.body.goals, req.body.idealRelationship, req.body.openToNewConnections, req.body.reasonForUse], (err, results) => {
+  let sql = `INSERT INTO Users (email, password, firstName, lastName, department, role, goals, idealRelationship, openToNewConnections, reasonForUse, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  pool.query(sql, [req.body.email, req.body.password, req.body.firstName, req.body.lastName, req.body.department, req.body.role, req.body.goals, req.body.idealRelationship, req.body.openToNewConnections, req.body.reasonForUse, req.body.userType], (err, results) => {
     if (err) {
       res.send({accountCreated: false, error: err}); 
     }
