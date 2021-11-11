@@ -39,17 +39,47 @@ app.get('/Directory/reports', (req, res) => {
     res.sendFile(__dirname + '/Directory/Report/reports.html'); 
 }); 
 
-app.post('/reports', (req, res) => {
-    let sql = `INSERT INTO Reports (reporterUserId, reportedUserId, reportDate, reportReason, comments)
-                VALUES (?, 
-                        (SELECT userId FROM Users WHERE CONCAT(firstName, ' ', lastName) = ?),
-                         ?, ?, ?);`
-    pool.query(sql, [req.body.reporterId, req.body.reportee, req.body.date, req.body.reason, req.body.comments], (err, results) => {
-      if (err) {
-        res.json({"status": "rejected", "error": "Invalid input. Please try again."});
-      }
-      res.json({"status": "accepted"}); 
-    });
+app.get('/users/mentors', (req, res) => {
+  console.log('test test test test test test test'); 
+  res.contentType('application/json');
+  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+// getting mentee information for the userpage
+app.get('/users/mentees', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+app.get('/invites/count', (req, res) => {
+  res.contentType('application/json');
+  pool.query('SELECT count(inviteId) FROM Invites WHERE inviteId IS NOT NULL', (err, rows) => {
+    if (err) throw err; 
+    console.log(rows); 
+    res.send(rows); 
+  }); 
+}); 
+
+app.get('/users/count', (req, res) => {
+  // res.contentType('application/json');
+  console.log('is this code even being ran?'); 
+  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != "";', [], (err, rows) => { 
+    if (err) throw err; 
+    console.log(rows); 
+    res.json(rows); 
+  }); 
+}); 
+
+app.get('/mentor/menteeSearch', (req, res) => {
+  res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
 }); 
 
 app.get('/reports', (req, res) => {
@@ -77,38 +107,6 @@ app.get('/users/:userId', (req, res) => {
     })
 }); 
 
-app.post('/validate-login', (req, res) => {
-  // we are going to be sending a json back to the page, so we have to make sure
-  // to set the content type so it sends correctly
-  res.contentType('application/json'); 
-  
-  let sql = `SELECT * FROM Users WHERE email = ? AND password = ?`;
-   
-  pool.query(sql, [req.body.email, req.body.password], (err, results) => {
-    if (String(err).length > 0 && err !== null) {
-      console.log(`error: ${err}`); 
-    }
-    try {
-      // if there are any results, the user exists in the database, so we reuse
-      if (results.length === 0) {
-        console.log("You're out!");
-        console.log(results); 
-        res.send({loginValid: false}); 
-      }
-      else {
-        console.log("You're in the thing!");
-        console.log(results); 
-        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email']}); 
-      }
-    } 
-    catch (e) {
-      console.log(e); 
-      console.log('error with /validate-login'); 
-    } 
-  });
-  
-});
-
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
 }); 
@@ -130,15 +128,6 @@ app.get('/:relationship/chats', (req, res) => {
     });  
 }); 
 
-app.post('/save-chat', (req, res) => {
-  let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`; 
-  pool.query(sql, [req.body.relationshipId, req.body.userId, req.body.message], (err, results) => {
-    if (err) throw err; 
-    console.log(`Relationship (${req.body.relationshipId}) ${req.body.userId}: ${req.body.message}`); 
-  });
-})
-
-
 app.get('/:userId/relationships', (req, res) => {
     let sql = `SELECT r.relationshipId
       FROM Relationships r
@@ -152,6 +141,28 @@ app.get('/:userId/relationships', (req, res) => {
     })
 }); 
 
+app.get('/:userId/ongoingRelationships', (req, res) => {
+    let sql = `
+    SELECT CONCAT(u.firstName, " ", u.lastName) as "mentorName", 
+    u.email as "mentorEmail",
+      u.department as "mentorDepartment", 
+      u.role as "mentorRole", 
+      CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
+      u2.email as "menteeEmail",
+      u2.department as "menteeDepartment", 
+      u2.role as "menteeRole",
+    dateBegan, lifeCycleStatus
+      FROM Relationships r
+      JOIN Mentors m on m.mentorId = r.mentorId
+      JOIN Users u on u.userId = m.userId
+          JOIN Mentees me on me.menteeId = r.menteeId
+          JOIN Users u2 on u2.userId = me.userId
+    WHERE lifeCycleStatus = "Ongoing";`
+    pool.query(sql, [], (err, results) => {
+      if (err) throw err; 
+      res.json(results); 
+    })
+}); 
 
 app.get('/users', (req, res) => {
   res.contentType('application/json');
@@ -163,6 +174,32 @@ app.get('/users', (req, res) => {
   }); 
    
 }); 
+
+app.get('/finaldash', (req, res) => {
+  res.sendFile(__dirname + '/Directory/finaldash.html'); 
+})
+
+app.post('/save-chat', (req, res) => {
+  let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`; 
+  pool.query(sql, [req.body.relationshipId, req.body.userId, req.body.message], (err, results) => {
+    if (err) throw err; 
+    console.log(`Relationship (${req.body.relationshipId}) ${req.body.userId}: ${req.body.message}`); 
+  });
+}); 
+
+app.post('/reports', (req, res) => {
+  let sql = `INSERT INTO Reports (reporterUserId, reportedUserId, reportDate, reportReason, comments)
+              VALUES (?, 
+                      (SELECT userId FROM Users WHERE CONCAT(firstName, ' ', lastName) = ?),
+                       ?, ?, ?);`
+  pool.query(sql, [req.body.reporterId, req.body.reportee, req.body.date, req.body.reason, req.body.comments], (err, results) => {
+    if (err) {
+      res.json({"status": "rejected", "error": "Invalid input. Please try again."});
+    }
+    res.json({"status": "accepted"}); 
+  });
+}); 
+
 
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
@@ -201,21 +238,23 @@ app.post('/validate-login', (req, res) => {
   // to set the content type so it sends correctly
   res.contentType('application/json'); 
   
-  let sql = `SELECT * FROM users WHERE username = ? AND password = ?`;
+  let sql = `SELECT * FROM Users WHERE email = ? AND password = ?`;
    
-  pool.query(sql, [req.body.username, req.body.password], (err, results) => {
+  pool.query(sql, [req.body.email, req.body.password], (err, results) => {
     if (String(err).length > 0 && err !== null) {
       console.log(`error: ${err}`); 
     }
     try {
       // if there are any results, the user exists in the database, so we reuse
       if (results.length === 0) {
+        console.log("You're out!");
         console.log(results); 
         res.send({loginValid: false}); 
       }
       else {
+        console.log("You're in the thing!");
         console.log(results); 
-        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['username']}); 
+        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email']}); 
       }
     } 
     catch (e) {
@@ -223,19 +262,8 @@ app.post('/validate-login', (req, res) => {
       console.log('error with /validate-login'); 
     } 
   });
-   
+  
 });
-
-// getting the count of invites
-app.get('/invites/count', (req, res) => {
-  res.contentType('application/json');
-  pool.query('SELECT count(inviteId) FROM Invites WHERE inviteId IS NOT NULL', (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-}); 
-
 
 // lol hopefully these are some good post requests :v)
 app.post('/send-invite', (req, res) => {
@@ -254,50 +282,7 @@ app.post('/send-relationship', (req, res) => {
   })
 });
 
-app.get('/users/mentors', (req, res) => {
-  res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-}); 
 
-// getting mentee information for the userpage
-app.get('/users/mentees', (req, res) => {
-  res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-}); 
-
-app.get('/users/count', (req, res) => {
-  // res.contentType('application/json');
-  console.log('is this code even being ran?'); 
-  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != "";', [], (err, rows) => {
-    console.log(pool); 
-    if (err) throw err; 
-    console.log(rows); 
-    res.json(rows); 
-  }); 
-}); 
-
-app.get('/users/count2', (req, res) => {
-  res.contentType('application/json');
-   
-  pool.query('SELECT * FROM Users', (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-   
-}); 
-
-app.get('/mentor/menteeSearch', (req, res) => {
-  res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
-}); 
 // Host: 107.180.1.16
 // Port: 3306
 // Username: 2021group4
