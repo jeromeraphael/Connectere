@@ -19,6 +19,25 @@ var pool = mysql.createPool({
 });
 
 
+const insertMentorMentee = (email, userType) => {
+  var table; 
+  switch (userType) {
+    case "Mentor": 
+      table = 'Mentors';
+      break; 
+    case "Mentee": 
+      table = 'Mentees';
+      break;
+  } 
+  let sql = `INSERT INTO ${table}(userId) SELECT userId FROM Users WHERE email = ? ORDER BY userId LIMIT 1`;
+  pool.query(sql, [email], (err, results) => {
+    if (err) {
+      console.log(err); 
+    }
+  })
+}
+
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html'); 
 }); 
@@ -151,7 +170,7 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       u2.email as "menteeEmail",
       u2.department as "menteeDepartment", 
       u2.role as "menteeRole",
-    dateBegan, lifeCycleStatus
+    dateBegan, lifeCycleStatus, relationshipId
       FROM Relationships r
       JOIN Mentors m on m.mentorId = r.mentorId
       JOIN Users u on u.userId = m.userId
@@ -204,27 +223,19 @@ app.post('/reports', (req, res) => {
 app.post('/create-account', (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body
-  let sql = `INSERT INTO Users(password, firstName, lastName, email, department, role, goals, idealRelationship, openToNewConnections, reasonForUse) VALUES (?, ?, ?, ?, ?, ?,  ?, ?, ?, ?);`
+  let sql = `INSERT INTO Users(password, firstName, lastName, email, department, role, goals, idealRelationship, openToNewConnections, reasonForUse, userType) VALUES (?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?);`
    
   pool.query(sql, [req.body.password, req.body.firstName, req.body.lastName, req.body.email, req.body.department, req.body.role, req.body.goals, req.body.idealRelationship, 
-      req.body.openToNewConnections, req.body.reasonForUse], (err, results) => {
+      req.body.openToNewConnections, req.body.reasonForUse, req.body.userType], (err, results) => {
       if (err) {
         res.send({accountCreated: false, error: err}); 
       }
       else {
-        console.log(`${req.body} was inserted`)
+        console.log(`${req.body} was inserted`);
+        insertMentorMentee(req.body.email, req.body.userType); 
       }
     }); 
-  
-    switch (req.body.mentorStatus) {
-    case "Mentor": 
-      pool.query(`INSERT INTO Mentors VALUES (mentorId) SELECT userId FROM Users ORDER BY userId LIMIT 1`);
-      break; 
-    case "Mentee": 
-      pool.query(`INSERT INTO Mentees VALUES (menteeId) SELECT userId FROM Users ORDER BY userId LIMIT 1`); 
-      break; 
-  } 
-    
+      
   // querying the new information that has been just added and logging it
   // to the console so we can know what we are seeing
   // let querySql = `SELECT * FROM users WHERE username = ? AND password = ?` 

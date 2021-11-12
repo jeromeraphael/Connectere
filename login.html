@@ -319,23 +319,29 @@
 <body onload="init()">
     <br>
     <br>
+
     <div class="cont">
-        <div class="form sign-in">
+        <form id="login-form" onsubmit="return false" class="form sign-in">
             <h2>CONNECTERE</h2>
             <label>
                 <span>Email</span>
-                <input id="emailId" name="email" type="email" required />
+                <input id="login-email" name="email" type="email" required />
             </label>
 
             <label>
                 <span>Password</span>
-                <input id="passwordId" name="password" type="password" required />
+                <input id="login-password" name="password" type="password" required />
             </label>
 
-            <p class="forgot-pass">Forgot password?</p>
-            <button onclick="signIn()" type="button" id="submitId" class="submit">Sign In</button>
+            <!-- <p class="forgot-pass">Forgot password?</p> -->
 
-        </div>
+            <button onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
+
+        </form>
+
+        <p id="login-failed">Login attempt <span id="login-failure-number"></span> failed</p>
+        <p id="login-disabled">You have tried to log in too many times. Login is now disabled.</p>
+
         <div class="sub-cont">
             <div class="img">
                 <div class="img__text m--up">
@@ -355,57 +361,67 @@
 
             <div class="form-sign-up">
                 <h2>Create your Connectere Account</h2>
-                <div class="signUpScroll">
+                <form id="create-account" class="signUpScroll" onsubmit="return false">
                     <label>
                         <span>First Name</span>
-                        <input type="text" required />
+                        <input id="firstNameId" name="firstname" type="text" required />
                     </label>
 
                     <label>
                         <span>Last Name</span>
-                        <input type="text" required />
+                        <input id="lastNameId" name="lastname" type="text" required />
                     </label>
 
                     <label>
                         <span>Email</span>
-                        <input type="email" required />
+                        <input input id="create-username" name="username" type="email" required />
                     </label>
 
                     <label>
 
                         <span>Password</span>
-                        <input type="password" required />
+                        <input id="create-password" name="password" type="password" required />
                     </label>
 
                     <label>
                         <span>Department</span>
-                        <input type="text" required />
+                        <input input id="departmentId" name="department"type="text" required />
                     </label>
 
                     <label>
                         <span>Role</span>
-                        <input type="text" required />
+                        <input input id="roleId" name="role" type="text" required />
                     </label>
 
                     <label>
+                        <span><strong>TYPE OF ACCOUNT</strong></span>
                         <input type="radio" id="typeId" name="userType" value="Mentor">
                         <label for="typeId">Mentor</label>
 
-                        <input type="radio" id="contactChoice1" name="userType" value="Mentee">
+                        <input type="radio" id="typeId" name="userType" value="Mentee">
                         <label for="typeId">Mentee</label>
                     </label>
 
                     <label>
-                        <table>
-                            <tr>
-                              <td>Questions</td>
-                            </tr>
-                        </table>
-                        
-                    </label>
-                </div>
+                        <!-- Goals -->
+                        <span>What do you expect out of the connections you build? </span>
+                        <br><br>
+                        <textarea id="goalsId" name="questions" rows="4" cols="25" required></textarea>
+                        <br><br>
+                        <!-- Ideal Relationship -->
+                        <span>What is your ideal relationship with a mentor/mentee?</span>
+                        <br><br>
+                        <textarea id="idealRelationshipId" name="questions" rows="4" cols="25" required></textarea>
+                        <br><br>
+                        <!-- What is the main reason for use? -->
+                        <span>What is the main reason for your use of the mentorship platform?</span>
+                        <br><br>
+                        <textarea id="questionsId" name="questions" rows="4" cols="25" required></textarea>
 
-                <button onClick="signUp()" type="button" class="submit">Sign Up</button>
+                    </label>
+                </form>
+
+                <button onClick="addAccount()" type="button" class="submit">Sign Up</button>
 
             </div>
         </div>
@@ -413,9 +429,8 @@
 
     <script>
         "use strict";
-
-        function init(){
-            alert("Starting...");
+        function init() {
+            alert("Welcome to Connectere.");
         }
 
         // This function switches on-click
@@ -424,25 +439,131 @@
             document.querySelector('.cont').classList.toggle('s--signup');
         });
 
-        function signUp(){
-            console.log("Your account has been created.");
-        }
+        localStorage.clear();
+        let loginAttemptCount = 0;
 
-        function signIn(){
-            // Variables
-            let username = document.getElementById("emailId").value;
-            let password = document.getElementById("passwordId").value;
+        // let createAccount = document.getElementById("create-account");
+        // createAccount.style.display = 'none';
 
-            console.log("Username: " + username);
-            console.log("Password: " + password);
+        let loginFailed = document.getElementById('login-failed');
+        loginFailed.style.display = 'none';
 
-            if (username == "" && password == ""){
-                alert("Please enter company email and password to proceed.");
-            } else {
-                console.log("You're logged in!");
-                window.open('dash.html');
+        let loginDisabled = document.getElementById('login-disabled');
+        loginDisabled.style.display = 'none';
+
+        // Login
+        const validateLogin = async () =>  {
+            let email = document.getElementById('login-email').value;
+            localStorage.setItem('email', email);  
+
+            let password = document.getElementById('login-password').value; 
+            let response = await fetch('/validate-login', {
+                method: "POST", 
+                credentials: "same-origin", 
+                headers: {
+                    'Content-Type': 'application/json' 
+                }, 
+                body: JSON.stringify({'email': email, 'password': password})
+            });
+            
+            try {
+                let json = await response.json()
+                if (json['loginValid'] === true ) {
+                    localStorage.setItem('userId', json['userId']);
+                    localStorage.setItem('email', json['userName']);
+                    window.location.href = "http://localhost:4545/dashboard"
+                }
+                else {
+                    if (loginAttemptCount < 10) {
+                        alert("Invalid credentials." +" Login attempt " + (loginAttemptCount+1) + " failed.");
+                        alert((10-(loginAttemptCount+1)) + " Attempts Left");
+                        loginAttemptCount++;
+                        wrongLoginPrompt(json); 
+                    }
+                    else {
+                        loginDisabled.style.display = '';
+                        document.getElementById('submit').disabled = true;
+                    }  
+                }
+                console.log(JSON.stringify(json)); 
+            }
+            catch (e) {
+                console.log(e); 
+                console.log('going to index.html'); 
             }
         }
+
+
+        // Submit
+        const addAccount = async () => {
+            // Email
+            let newUsername = document.getElementById('create-username').value;
+            console.log("Email: " + newUsername);
+            // Password
+            let newPassword = document.getElementById('create-password').value;
+            console.log("Password: " + newPassword);
+            // First Name
+            let firstName = document.getElementById('firstNameId').value;
+            console.log("First Name: " + firstName);
+            // Last Name
+            let lastName = document.getElementById('lastNameId').value;
+            console.log("Last Name: " + lastName);
+            // Department
+            let department = document.getElementById('departmentId').value;
+            console.log("Department: " + department);
+            // Role
+            let role = document.getElementById('roleId').value;
+            console.log("Role: " + role);
+            // User Type
+            let userType = document.getElementById('typeId').value;
+            console.log("Account Type: " + userType);
+
+            // Additional objects such as questions, goals, etc.
+            // Object for openToNewConnections
+            let openToNewConnections = "1";
+            console.log("Open to new connections: " + openToNewConnections);
+
+            // Goals
+            let goals = document.getElementById('goalsId').value;
+            console.log("Goals: " + goals);
+
+            // Ideal Relationship
+            let idealRelationship = document.getElementById('idealRelationshipId').value;
+            console.log("Ideal Relationship: " + idealRelationship);
+
+            // What is the main reason for use?
+            let reasonForUse = document.getElementById('questionsId').value;
+            console.log("Reason for use: " + reasonForUse);
+
+            let response = await fetch('/create-account', {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'email': newUsername, 
+                                    'password': newPassword,
+                                    'firstName': firstName,
+                                    'lastName': lastName,
+                                    'department': department,
+                                    'role': role,
+                                    'goals': goals,
+                                    'idealRelationship': idealRelationship,
+                                    'openToNewConnections': openToNewConnections,
+                                    'reasonForUse': reasonForUse,
+                                    'userType': userType})
+            });
+            
+            let accountSuccess = await response.json();
+
+            if (accountSuccess['accountCreated']) {
+                alert(`Account created for ${firstName}`);
+            }
+            else {
+                alert(`Account creation failed for ${firstName}`);
+            }
+        }
+
     </script>
 </body>
 
