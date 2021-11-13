@@ -14,6 +14,7 @@
         body {
             width: 100%; 
             height: 100%; 
+            margin: 0; 
         }
 
         .relationshipDiv {
@@ -21,6 +22,25 @@
             border: 2px solid black; 
             margin: 30px; 
             padding: 30px; 
+        }
+
+        #dash-grid {
+            width: 90vw; 
+        }
+
+        #body-wrapper {
+            margin-left: 1.5vw; 
+            margin-right: 1.5vw; 
+            margin-top: 1.5vh; 
+            margin-bottom: 1.5vh; 
+            width: 97vw; 
+            height: 100%; 
+        }
+
+        #chat-display-box {
+            border: 2px solid black; 
+            margin-bottom: 2vh;
+            border-radius: 5px;  
         }
 
     </style>
@@ -35,34 +55,50 @@
         </div>
     </div>
     <script>
-        var userId = 2; 
-        var userType = 'mentor'; 
+        var userId = 3; 
+        var userType = 'mentee'; 
         
-        fetch(`/${userId}/ongoingRelationships`, {
-            method: "GET", 
-            credentials: 'same-origin', 
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(relationships => relationships.json())
-        .then(relationships => {
-            relationships.forEach(relationship => {
-                let relationshipGridDiv = `
-                <div id="relationship${relationship['relationshipId']}" class='relationshipDiv'>
-                    <h5 class='relationshipHeader'>${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
-                    <p class='dateBegan'>Relationship began:<br>${relationship['dateBegan']}</p>
-                    <div id="chat">
-                        <p id="chatHeader">Chat + </p>
-                        <div id="chatHistory">
-                            <form action="submit" id="msg-form" autocomplete="off" class='col-2'>
-                                <input type="text" id="input" placeholder="Send Chat Message" class='col-2'>
-                            </form>
-                </div>`; 
-                document.getElementById("dash-grid").insertAdjacentHTML('afterbegin', relationshipGridDiv); 
-            }) 
-        }); 
+        const getRelationships = (userId) => {
+            fetch(`/${userId}/ongoingRelationships`, {
+                method: "GET", 
+                credentials: 'same-origin', 
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(relationships => relationships.json())
+            .then(relationships => {
+                relationships.forEach(relationship => {
+                    let id  = relationship['relationshipId']
+                    let relationshipGridDiv = `
+                    <div id="relationship${id}" class='relationshipDiv'>
+                        <h5 class='relationshipHeader'>${userType !== 'mentor' ? "Mentor: ": "Mentee: "}${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
+                        <p class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
+                        <p class='dateBegan'>Relationship began:<br>${relationship['dateBegan']}</p>
+                        <div id="chat">
+                            <p id="chatHeader">Chat + </p>
+                            <div id="chatDisplayBox"></div>
+                            <div id="chatHistory">
+                                <form action="submit" id="msg-form-${id}" class='msg-form' autocomplete="off" class='col-2'>
+                                    <input type="text" id="input-relationship-${id}" placeholder="Send Chat Message" class='col-2'>
+                                </form>
+                            </div>
+                    </div>`; 
+                    document.getElementById("dash-grid").insertAdjacentHTML('afterbegin', relationshipGridDiv); 
+                    let form  = document.getElementById(`msg-form-${id}`); 
+                    let input = document.getElementById(`input-relationship-${id}`);
+                    form.addEventListener('submit', e => {
+                        e.preventDefault(); 
+                        if (input.value) {
+                            sendChat(id, userId, input.value);  
+                        }
+                    });
+                    getChatHistory(id); 
 
+                }) 
+            }); 
+        }
+        
         const getChat = async (userId) => {
             console.log(pass); 
         }
@@ -82,7 +118,11 @@
         let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
         console.log(userName); 
 
-        const addNewChatMessage = (senderId, newMessage) => {
+        const addNewChatMessage = (senderId, newMessage, relationship) => {
+            console.log(document.getElementById(relationship)); 
+            console.log(relationship); 
+            let relationshipChatDisplay = document.querySelector(`#${relationship}>#chat>#chatDisplayBox`); 
+            console.log(relationshipChatDisplay); 
             let messageDiv = document.createElement('div'); 
             let message = document.createElement('span'); 
             let sender = document.createElement('span'); 
@@ -92,11 +132,12 @@
             message.textContent = newMessage; 
             message.clasName = 'message-content'; 
             messageDiv.appendChild(message); 
-            chatDisplay.append(messageDiv); 
-            chatMessage.value = ''; 
+            relationshipChatDisplay.append(messageDiv); 
+            document.querySelector(`#input-relationship-${relationship.charAt(relationship.length-1)}`).value = '';
         }
 
         const getChatHistory = (relationship) => {
+            console.log(relationship); 
             fetch(`/${relationship}/chats`, {
                     credentials: 'same-origin', 
                     headers: {
@@ -106,7 +147,7 @@
                 .then(chats => chats.json())
                 .then(chats => {
                     for (let i = 0; i < chats.length; i++) {                        
-                        addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent']); 
+                        addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent'], `relationship${relationship}`); 
                     }
                 }); 
         }
@@ -125,8 +166,10 @@
                     'message': message
                 })
             })
-            .then(addNewChatMessage(userName, message));
+            .then(addNewChatMessage(userName, message, `relationship${relationshipId}`));
         }
+
+        getRelationships(userId); 
 
     </script>
 </body>

@@ -15,7 +15,10 @@ var pool = mysql.createPool({
   host: "107.180.1.16",
   user: "fall2021group4",
   password: "fall2021group4",
-  database: "cis4402021group4"
+  database: "cis4402021group4",
+  connectTimeout  : 60 * 60 * 1000,
+  acquireTimeout  : 60 * 60 * 1000,
+  timeout         : 60 * 60 * 1000
 });
 
 
@@ -163,20 +166,20 @@ app.get('/:userId/relationships', (req, res) => {
 app.get('/:userId/ongoingRelationships', (req, res) => {
     let sql = `
     SELECT CONCAT(u.firstName, " ", u.lastName) as "mentorName", 
-    u.email as "mentorEmail",
+      u.email as "mentorEmail",
       u.department as "mentorDepartment", 
       u.role as "mentorRole", 
       CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
       u2.email as "menteeEmail",
       u2.department as "menteeDepartment", 
       u2.role as "menteeRole",
-    dateBegan, lifeCycleStatus, relationshipId
-      FROM Relationships r
+      dateBegan, lifeCycleStatus, relationshipId
+    FROM Relationships r
       JOIN Mentors m on m.mentorId = r.mentorId
       JOIN Users u on u.userId = m.userId
           JOIN Mentees me on me.menteeId = r.menteeId
           JOIN Users u2 on u2.userId = me.userId
-    WHERE lifeCycleStatus = "Ongoing";`
+    WHERE lifeCycleStatus IN ("Ongoing", "pendingInviteAc");`
     pool.query(sql, [], (err, results) => {
       if (err) throw err; 
       res.json(results); 
@@ -231,7 +234,7 @@ app.post('/create-account', (req, res) => {
         res.send({accountCreated: false, error: err}); 
       }
       else {
-        console.log(`${req.body} was inserted`);
+        console.log(`${req.body.email} was inserted`);
         insertMentorMentee(req.body.email, req.body.userType); 
       }
     }); 
