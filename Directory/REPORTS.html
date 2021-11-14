@@ -3,11 +3,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <title>Document</title>
     <style>
         * {
             margin: auto;
             text-align: center;
+            font-family: "Inter"; 
         }
 
         .ban{
@@ -22,47 +26,43 @@
             text-align: left;
         }
 
-        td {
+        td, th {
             text-align: left; 
+        }
+
+        td {
+            width: 75%; 
+        }
+
+        .reportTable {
+            width: 50vw; 
+            margin-top: 3vh; 
+            margin-bottom: 1.5vh; 
+        }
+
+        button {
+            border: 2px solid black; 
+            border-radius: 5px; 
+        }
+
+        button:hover {
+            cursor: pointer; 
+        }
+
+        .pardon {
+            color: black; 
+            font-weight: 500; 
+        }
+
+        .ban {
+            color: white; 
         }
 
     </style>
 </head>
 <body>
     <h1>User Reports</h1>
-    <div id="reports">
-
-    </div>
-    <!-- <table id="reportTable">
-        <tr>
-            <th>Bob Smith</th>
-            <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
-        </tr>
-        <tr>
-            <td><select name="reports" id="reports">
-                <option value="harassment">Harassment</option>
-                <option value="harassment">Harassment</option>
-                <option value="offensiveLanguage">Offensive Language</option>
-                <option value="unhelpfulInformation">Unhelpful Information</option>
-            </select></td>
-            <td><button id="pardon1" class="1 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
-        </tr>
-
-        <tr>
-            <th>Jeff Jones</th>
-            <th><button id="ban2" class="2 ban" onclick="report(this.className, this.getAttribute('className'))">BAN</button></th>
-        </tr>
-        <tr>
-            <td><select name="reports" id="reports">
-                <option value="harassment">Harassment</option>
-                <option value="harassment">Harassment</option>
-                <option value="offensiveLanguage">Offensive Language</option>
-                <option value="unhelpfulInformation">Unhelpful Information</option>
-            </select></td>
-            <td><button id="pardon2" class="2 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
-        </tr>
-    </table> -->
-
+    <div id="reports"></div>
     <script>
 
         fetch('/reports', {
@@ -77,7 +77,7 @@
             console.log(response); 
             response.forEach(report => {
                 let reportTable = `
-                <table id="${report['reportId']}-table" class="${report['reportedUserId']}">
+                <table id="${report['reportId']}-table" class="${report['reportedUserId']} reportTable">
                     <tbody>
                         <tr>
                             <th>${report['Reported']}</th>
