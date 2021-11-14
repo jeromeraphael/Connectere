@@ -49,7 +49,7 @@ app.get('/chat', (req, res) => {
     res.sendFile(__dirname + "/chat.html"); 
 }); 
 
-app.get('/dashboard', (req, res) => {
+app.get('dashboard', (req, res) => {
     res.sendFile(__dirname + '/dash.html'); 
 }); 
 
