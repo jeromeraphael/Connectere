@@ -4,7 +4,41 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Report User</title>
-	<link href="css/forms-end.css" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+	<style>
+		
+		* {
+			font-family: 'Inter', sans-serif; 
+		}
+		
+		fieldset {
+			padding: 2%;
+			border-radius: 5px;  
+		}
+
+		textarea {
+			width: 40vw; 
+			height: 8vh; 
+		}
+
+		input, textarea {
+			margin: -5px; 
+		}
+
+		input:focus, textarea:focus {
+			border-color: lightgreen; 
+			outline: none !important; 
+			border: 1px solid lightgreen; 
+		}
+
+		h5 {
+			margin: 0; 
+			font-size: 1.25rem; 
+		}
+
+	</style>
 </head>
 
 <body>
@@ -16,38 +50,48 @@
 				<fieldset>
 					<legend>Your contact information</legend>
 					<label for="name">Full Name </label>
+					<br>
 					<input type="text" id="name" name="name" autofocus>
-					
+					<br><br>
 					<label for="email">Email</label>
+					<br>
 					<input type="email" id="email" name="email">
-
 				</fieldset>
 				<fieldset>
 					<legend>About your Report </legend>
-					<label for="date">Incident date (Optional)</label>
+					<label for="date">Incident Date</label>
+					<br>
 					<input type="date" id="date" name="date">
-					<label for="name">User to Report</label>
+					<br><br>
+					<label for="name">User to Report (First and Last Name)</label>
+					<br>
 					<input type="text" id="reportee" name="reportee">
-
-					<p>What are you reporting?</p>
+					<br><br>
+					<h5>What are you reporting?</h5>
 					<label>
 						<input type="radio" name="radio" value="Harassment, Bullying, Defamation" checked> Harassment, Bullying, Defamation and Threats
 					</label>
+					<br>
 					<label>
 						<input type="radio" name="radio" value="Hateful Content"> Hateful Content
 					</label>
+					<br>
 					<label>
 						<input type="radio" name="radio" value="Malicious and Deceptive Practices"> Malicious and Deceptive Practices
 					</label>
+					<br>
 					<label>
 						<input type="radio" name="radio" value="Personal, Confidential, and Protected Health Information"> Personal, Confidential and Protected Health Information
 					</label>
+					<br>
 					<label>
-						<input type="radio" name="radio" value="Spam">Spam
+						<input type="radio" name="radio" value="Spam"> Spam
 					</label>
 					<P></P>
 					<label for="comments">Comments:</label>
+					<br><br>
 					<textarea id="comments" name="comments"></textarea>
+					<br><br>
 					<button onclick='sendFormData(this.form)'>Submit</button>
 				</fieldset>
 			</form>
