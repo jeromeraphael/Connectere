@@ -41,6 +41,24 @@
                 cursor: pointer; 
             }
 
+            #popup {
+                position: absolute; 
+                visibility: hidden; 
+                width: auto;  
+                top: 40vh; 
+                left: 40vw; 
+                height: auto;
+            }
+
+            #popup-text-container, #popup-text, #popup {
+                color: white; 
+                background-color: black; 
+            }
+
+            #popup.show {
+                visibility: visible;
+            }
+
 
         </style>
     </head>
@@ -107,8 +125,13 @@
                     <textarea id="reasonForUse" name="questions" rows="4" cols="25" maxlength="400" required></textarea>
                 <br><br>
                 <input id="send_to" type="hidden" name="send_to" value="yourEmailHere">
-                <button type="submit">Save Changes</button>
+                <button type="submit" id="submit-btn">Save Changes</button>
             </form>
+            <div id="popup">
+                <div id="popup-text-container">
+                    <p id='popup-text'>Your information has been updated.</p>
+                </div>
+            </div>
         </div>
         <script>
             var form = document.getElementById('userUpdate'); 
@@ -116,6 +139,14 @@
             form.addEventListener('submit', (e) => {
                 e.preventDefault(); 
                 updateUser(); 
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', () => {
+                let popup = document.getElementById('popup'); 
+                popup.className = 'show'; 
+                setTimeout(() => {
+                    popup.className = popup.className.replace('show', ''); 
+                }, 3000); 
             })
 
             var firstName = form.firstName;
