@@ -129,7 +129,7 @@
             width: 100%;
             height: 100%;
             /* background: rgba(0, 0, 0, 0.6); */
-            background-image: linear-gradient(to bottom right, #C9EDBE, #B6D6D5);
+            background-image: linear-gradient(to bottom right, #59AFC9, #77C8D1 );
         }
 
         .cont.s--signup .img:before {
@@ -316,7 +316,7 @@
     </style>
 </head>
 
-<body onload="init()">
+<body>
     <br>
     <br>
 
@@ -334,8 +334,8 @@
             </label>
 
             <!-- <p class="forgot-pass">Forgot password?</p> -->
-
-            <button onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
+            <!-- onkeydown invokes a function that looks up enter button -->
+            <button onkeydown="handleEnter(e)" onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
 
         </form>
 
@@ -385,7 +385,7 @@
 
                     <label>
                         <span>Department</span>
-                        <input input id="departmentId" name="department"type="text" required />
+                        <input input id="departmentId" name="department" type="text" required />
                     </label>
 
                     <label>
@@ -395,11 +395,11 @@
 
                     <label>
                         <span><strong>TYPE OF ACCOUNT</strong></span>
-                        <input type="radio" id="typeId" name="userType" value="Mentor">
                         <label for="typeId">Mentor</label>
+                        <input type="radio" id="typeId" name="userType" value="Mentor">
 
-                        <input type="radio" id="typeId" name="userType" value="Mentee">
                         <label for="typeId">Mentee</label>
+                        <input type="radio" id="typeId" name="userType" value="Mentee">
                     </label>
 
                     <label>
@@ -451,45 +451,52 @@
         let loginDisabled = document.getElementById('login-disabled');
         loginDisabled.style.display = 'none';
 
-        // Login
-        const validateLogin = async () =>  {
-            let email = document.getElementById('login-email').value;
-            localStorage.setItem('email', email);  
+        // Enter
+        function handleEnter(e) {
+            if (e.keyCode == 13) {
+                validateLogin();
+            }
+        }
 
-            let password = document.getElementById('login-password').value; 
+        // Login
+        const validateLogin = async () => {
+            let email = document.getElementById('login-email').value;
+            localStorage.setItem('email', email);
+
+            let password = document.getElementById('login-password').value;
             let response = await fetch('/validate-login', {
-                method: "POST", 
-                credentials: "same-origin", 
+                method: "POST",
+                credentials: "same-origin",
                 headers: {
-                    'Content-Type': 'application/json' 
-                }, 
-                body: JSON.stringify({'email': email, 'password': password})
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'email': email, 'password': password })
             });
-            
+
             try {
                 let json = await response.json()
-                if (json['loginValid'] === true ) {
+                if (json['loginValid'] === true) {
                     localStorage.setItem('userId', json['userId']);
                     localStorage.setItem('email', json['userName']);
                     window.location.href = "http://localhost:4545/dashboard"
                 }
                 else {
                     if (loginAttemptCount < 10) {
-                        alert("Invalid credentials." +" Login attempt " + (loginAttemptCount+1) + " failed.");
-                        alert((10-(loginAttemptCount+1)) + " Attempts Left");
+                        alert("Invalid credentials." + " Login attempt " + (loginAttemptCount + 1) + " failed.");
+                        alert((10 - (loginAttemptCount + 1)) + " Attempts Left");
                         loginAttemptCount++;
-                        wrongLoginPrompt(json); 
+                        wrongLoginPrompt(json);
                     }
                     else {
                         loginDisabled.style.display = '';
                         document.getElementById('submit').disabled = true;
-                    }  
+                    }
                 }
-                console.log(JSON.stringify(json)); 
+                console.log(JSON.stringify(json));
             }
             catch (e) {
-                console.log(e); 
-                console.log('going to index.html'); 
+                console.log(e);
+                console.log('going to index.html');
             }
         }
 
@@ -541,19 +548,21 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 'email': newUsername, 
-                                    'password': newPassword,
-                                    'firstName': firstName,
-                                    'lastName': lastName,
-                                    'department': department,
-                                    'role': role,
-                                    'goals': goals,
-                                    'idealRelationship': idealRelationship,
-                                    'openToNewConnections': openToNewConnections,
-                                    'reasonForUse': reasonForUse,
-                                    'userType': userType})
+                body: JSON.stringify({
+                    'email': newUsername,
+                    'password': newPassword,
+                    'firstName': firstName,
+                    'lastName': lastName,
+                    'department': department,
+                    'role': role,
+                    'goals': goals,
+                    'idealRelationship': idealRelationship,
+                    'openToNewConnections': openToNewConnections,
+                    'reasonForUse': reasonForUse,
+                    'userType': userType
+                })
             });
-            
+
             let accountSuccess = await response.json();
 
             if (accountSuccess['accountCreated']) {

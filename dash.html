@@ -1,214 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        #firstRowId {
-            /* background-color: #59afc9; */
-            background-image: linear-gradient(to bottom right, #59AFC9, #B6D6D5);
-            width: 2vw;
+        body {
+            font-family: "Lato", sans-serif;
         }
 
-        table {
-            /* border: solid black 1px; */
-            border: #B6D6D5 1px solid;
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 20px;
+            border-radius: 1px;
         }
 
-        td {
-            /* border-right: solid black 1px; */
-            border-right: #B6D6D5 1px solid;
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
         }
 
-        th {
-            /* border-right: solid black 1px; */
-            border-right: #B6D6D5 1px solid;
-        }
-
-        tr:nth-child(even) {
-            background-color: #B6D6D5;
-        }
-
-        tr:nth-child(odd) {
-            background-color: #FFFFFF;
-        }
-
-
-        /* NAV STYLE */
-        * {
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-            box-sizing: border-box;
-        }
-
-        /* Create a column layout with Flexbox */
-        .row {
-            display: flex;
-            max-width: fit-content;
-            
-        }
-
-        /* Left column (menu) */
-        .left {
-            flex: 35%;
-            padding: 15px 0;
-            max-width: fit-content;
-            
-            
-        }
-
-        .left h2 {
-            padding-left: 8px;
-            padding: 1vh;
-            background-color: #B6D6D5;
-        }
-
-        /* Right column (page content) */
-        .right {
-            flex: 65%;
-            padding: 2vh 2vw;
-            max-width: fit-content;
-        }
-
-        /* Style the search box */
-        #mySearch {
-            width: 100%;
-            font-size: 18px;
-            padding: 11px;
-            border: 1px solid #ddd;
-            background-color: #B6D6D5;
-        }
-
-        /* Style the navigation menu inside the left column */
-        #myMenu {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            background-color: #B6D6D5;
-            
-        }
-
-        #myMenu li a {
-            padding: 12px;
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
             text-decoration: none;
-            color: white;
-            display: block
+            font-size: 25px;
+            color: #59AFC9;
+            display: block;
         }
 
-        #myMenu li a:hover {
-            background-color: #C9EDBE;
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- We gonna get dat information from the database -->
-    <!-- Nav bar implement later -->
 
-    <h2>CONNECTERE</h2>
-    <p>Welcome back!</p>
+    <div class="sidenav">
+        <h2>Connectere</h2>
 
-    <div class="row">
-        <div class="left" style="background-color:#bbb;">
-            <h2>Navigation</h2>
-            <!-- <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category"> -->
-            <ul id="myMenu">
-                <li id="userList"><a href="#userList">User List</a></li>
-                <li id="searchId"><a href="#userList">Search for Mentor/Mentee</a></li>
-                <li><a href="#">Contact Partners</a></li>
-                <li><a href="#">Requests</a></li>
-                <li id="reportId"><a href="#">Reports</a></li>
-                <li><a href="#">Ban/Unban</a></li>
-                <li id="logOutId"><a href="#"><strong>Log Out</strong></a></li>
-            </ul>
-        </div>
-
-        <div class="right userList" style="background-color:#ddd;">
-            <h1>User Information</h1>
-            <table rules="none">
-                <tr id="firstRowId">
-                    <th>User</th>
-                    <th>Date Joined</th>
-                    <th>Department</th>
-                    <th>Mentee</th>
-                    <th>Mentor</th>
-                    <th>Connections</th>
-                </tr>
-                <tr>
-                    <td>Bob Smith</td>
-                    <td>10/21/2021</td>
-                    <td>Finance</td>
-                    <td>Y</td>
-                    <td>N</td>
-                    <td>3</td>
-                </tr>
-                <tr>
-                    <td>Michael Jones</td>
-                    <td>9/15/2012</td>
-                    <td>Marketing</td>
-                    <td>Y</td>
-                    <td>Y</td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>Chris Holmes</td>
-                    <td>3/29/2020</td>
-                    <td>Information Security</td>
-                    <td>N</td>
-                    <td>Y</td>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <td>Joe Biden</td>
-                    <td>6/20/2019</td>
-                    <td>Management</td>
-                    <td>N</td>
-                    <td>N</td>
-                    <td>5</td>
-                </tr>
-            </table>
-        </div>
-
+        <a id="searchId">Search for Users</a>
+        <a id="contactPartnersId">Contact Partners</a>
+        <a id="requestsId">Requests</a>
+        <a id="reportsId">Reports</a>
+        <a id="logOutId" href="/">Log Out</a>
+        
+        
+        
+        
+        
     </div>
-    <!-- <a href=".\Directory\menteeSearch.html">Search for Mentee</a>
-    <a href=".\Directory\REPORTS.html">View User Reports</a>
-    <a href="login.html">Log Out</a> -->
 
+    <div class="main">
+        
+        <p>DYNAMIC OUTPUT</p>
+    </div>
+
+
+    <!-- Script -->
     <script>
         "use strict";
         let userList = document.getElementById("userList");
-        let searchList = document.getElementById("searchId");
-        let reportList = document.getElementById("reportId");
-        let logOut = document.getElementById("logOutId");
+        let searchId = document.getElementById("searchId");
+        let reportsId = document.getElementById("reportId");
+        let logOutId = document.getElementById("logOutId");
 
         const redirectToPage = (userChoice) => {
-          window.location.href = `http://localhost:4545/${userChoice}`
+            window.location.href = `http://localhost:4545/${userChoice}`
         }
 
-        userList.addEventListener('click', () => {redirectToPage('users')});
-        searchList.addEventListener('click', () => {redirectToPage('search')});
+        userList.addEventListener('click', () => { redirectToPage('users') });
+        searchList.addEventListener('click', () => { redirectToPage('search') });
         // For Sprint 3, only admin is allowed to access this.
-        reportList.addEventListener('click', () => {redirectToPage('admin/reports')});
+        reportList.addEventListener('click', () => { redirectToPage('admin/reports') });
         // Goes back to login page
-        logOut.addEventListener('click', () => {redirectToPage('')});
-  
-        const categoryPick = async() => {
-          let response = await fetch ('/pick', {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify()
-          })
+        logOut.addEventListener('click', () => { redirectToPage('/') });
+
+        const categoryPick = async () => {
+            let response = await fetch('/pick', {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify()
+            })
         };
-  
-  
-      </script>
 
 
+    </script>
 </body>
 
 </html>
