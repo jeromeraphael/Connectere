@@ -129,6 +129,14 @@ app.get('/users/:userId', (req, res) => {
     })
 }); 
 
+app.get('/:userId/info', (req, res) => {
+  let sql = `SELECT * FROM Users WHERE userId = ?`; 
+  pool.query(sql, [req.params.userId], (err, results) => {
+    if (err) throw err; 
+    res.json(results); 
+  }); 
+})
+
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
 }); 
@@ -199,7 +207,11 @@ app.get('/users', (req, res) => {
 
 app.get('/finaldash', (req, res) => {
   res.sendFile(__dirname + '/Directory/finaldash.html'); 
-})
+});
+
+app.get('/users/edit', (req, res) => {
+  res.sendFile(__dirname + '/update.html'); 
+});
 
 app.post('/save-chat', (req, res) => {
   let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`; 
@@ -295,6 +307,30 @@ app.post('/send-relationship', (req, res) => {
     console.log(`Relationship with ID ${req.body.relationshipId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`)
   })
 });
+
+app.put('/user/update'), (req, res) => {
+  let sql = `
+  UPDATE Users
+  SET 
+    firstName = ?, 
+    lastName = ?, 
+    email = ?,
+    department = ?, 
+    role = ?,
+    goals = ?,
+    idealRelationship = ?,
+    openToNewConnections = ?,
+    reasonForUse = ?
+  WHERE userId = ? `
+  pool.query(sql, [req.body.firstName, req.body.lastName, req.body.email, req.body.department, req.body.role, req.body.goals,
+                   req.body.idealRelationship, req.body.openToNewConnections, req.body.reasonForUse], 
+    (err, results) => {
+      if (err) throw err; 
+      else {
+        console.log('user updated'); 
+      }
+    })
+}
 
 
 // Host: 107.180.1.16

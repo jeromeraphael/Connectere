@@ -1,1 +1,1 @@
-GET http://localhost:4545/2/ongoingRelationships HTTP/1.1
+GET http://localhost:4545/11/info HTTP/1.1
