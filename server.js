@@ -22,25 +22,6 @@ var pool = mysql.createPool({
 });
 
 
-const insertMentorMentee = (email, userType) => {
-  var table; 
-  switch (userType) {
-    case "Mentor": 
-      table = 'Mentors';
-      break; 
-    case "Mentee": 
-      table = 'Mentees';
-      break;
-  } 
-  let sql = `INSERT INTO ${table}(userId) SELECT userId FROM Users WHERE email = ? ORDER BY userId LIMIT 1`;
-  pool.query(sql, [email], (err, results) => {
-    if (err) {
-      console.log(err); 
-    }
-  })
-}
-
-
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/login.html'); 
 }); 
@@ -60,6 +41,10 @@ app.get('/Directory/menteeSearch', (req, res) => {
 app.get('/Directory/reports', (req, res) => {
     res.sendFile(__dirname + '/Directory/Report/reports.html'); 
 }); 
+
+app.get('/users/edit', (req, res) => {
+  res.sendFile(__dirname + '/Directory/update.html'); 
+});
 
 app.get('/users/mentors', (req, res) => {
   console.log('test test test test test test test'); 
@@ -135,7 +120,7 @@ app.get('/:userId/info', (req, res) => {
     if (err) throw err; 
     res.json(results); 
   }); 
-})
+});
 
 app.get('/admin/reports',  (req, res) => {
     res.sendFile(__dirname + '/Directory/REPORTS.html'); 
@@ -168,7 +153,7 @@ app.get('/:userId/relationships', (req, res) => {
       if (err) throw err;
       res.json(results); 
       // res.send({relationships: results[0]['relationshipId']}); 
-    })
+    }); 
 }); 
 
 app.get('/:userId/ongoingRelationships', (req, res) => {
@@ -209,9 +194,28 @@ app.get('/finaldash', (req, res) => {
   res.sendFile(__dirname + '/Directory/finaldash.html'); 
 });
 
-app.get('/users/edit', (req, res) => {
-  res.sendFile(__dirname + '/update.html'); 
-});
+app.post('/update', (req, res) => {
+  let sql = `
+  UPDATE Users
+  SET 
+    firstName = ?, 
+    lastName = ?, 
+    email = ?,
+    password = ?, 
+    department = ?, 
+    role = ?,
+    goals = ?,
+    idealRelationship = ?,
+    openToNewConnections = ?,
+    reasonForUse = ?
+  WHERE userId = ? `
+  pool.query(sql, [req.body.firstName, req.body.lastName, req.body.email, req.body.password, req.body.department, req.body.role, req.body.goals, req.body.idealRelationship, req.body.openToNewConnections, req.body.reasonForUse, req.body.userId], (err, results) => {
+      if (err) throw err; 
+      else {
+        console.log('user updated'); 
+      }
+    });
+}); 
 
 app.post('/save-chat', (req, res) => {
   let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`; 
@@ -297,7 +301,7 @@ app.post('/send-invite', (req, res) => {
   pool.query(sql, [req.body.inviteId, req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
     if (err) throw err;
     console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
-  })
+  }); 
 });
 
 app.post('/send-relationship', (req, res) => {
@@ -308,31 +312,23 @@ app.post('/send-relationship', (req, res) => {
   })
 });
 
-app.put('/user/update'), (req, res) => {
-  let sql = `
-  UPDATE Users
-  SET 
-    firstName = ?, 
-    lastName = ?, 
-    email = ?,
-    department = ?, 
-    role = ?,
-    goals = ?,
-    idealRelationship = ?,
-    openToNewConnections = ?,
-    reasonForUse = ?
-  WHERE userId = ? `
-  pool.query(sql, [req.body.firstName, req.body.lastName, req.body.email, req.body.department, req.body.role, req.body.goals,
-                   req.body.idealRelationship, req.body.openToNewConnections, req.body.reasonForUse], 
-    (err, results) => {
-      if (err) throw err; 
-      else {
-        console.log('user updated'); 
-      }
-    })
+const insertMentorMentee = (email, userType) => {
+  var table; 
+  switch (userType) {
+    case "Mentor": 
+      table = 'Mentors';
+      break; 
+    case "Mentee": 
+      table = 'Mentees';
+      break;
+  } 
+  let sql = `INSERT INTO ${table}(userId) SELECT userId FROM Users WHERE email = ? ORDER BY userId LIMIT 1`;
+  pool.query(sql, [email], (err, results) => {
+    if (err) {
+      console.log(err); 
+    }
+  }); 
 }
-
-
 // Host: 107.180.1.16
 // Port: 3306
 // Username: 2021group4
