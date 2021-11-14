@@ -15,11 +15,11 @@
         }
 
         .ban{
-            background-color: rgb(201, 13, 13);
+            background-color: #555B6E;
         }
 
         .pardon{
-            background-color: lightblue;
+            background-color: #89B0AE;
         }
 
         option{
@@ -32,9 +32,11 @@
 
         td {
             width: 75%; 
+            max-width: 20vw; 
         }
 
         .reportTable {
+            max-width: 500px;
             width: 50vw; 
             margin-top: 3vh; 
             margin-bottom: 1.5vh; 
@@ -43,6 +45,7 @@
         button {
             border: 2px solid black; 
             border-radius: 5px; 
+            width: 5vw; 
         }
 
         button:hover {
@@ -81,7 +84,7 @@
                     <tbody>
                         <tr>
                             <th>${report['Reported']}</th>
-                            <th><button id="${report['reportedUserId']}-report" class="1 ban" onclick="report(${report['reportedUserId']})">BAN</button></th>
+                            <th><button id="${report['reportedUserId']}-report" class="1 ban" onclick="ban(${report['reportedUserId']})">BAN</button></th>
                         </tr>
                         <tr>
                             <td>Reason: ${report['reportReason']}</td>
@@ -95,12 +98,26 @@
             }); 
         }); 
 
-        function report(user){
-            alert(`User ${user} has been banned. Their account no longer exists`); 
-            let userReports = document.getElementsByClassName(user); 
-            for (let i = 0; i < userReports.length; i++) {
-                userReports[i].style.display = 'none'; 
+        function ban(user){
+            let ban = confirm(`User ${user} is about to be banned. Do you wish to continue?`); 
+            if (ban) {
+                fetch(`/ban/${user}`, {
+                    method: "GET", 
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(response => {
+                    alert("User has been banned"); 
+                })
+                let userReports = document.getElementsByClassName(user); 
+                for (let i = 0; i < userReports.length; i++) {
+                    userReports[i].style.display = 'none'; 
             }
+            }
+            
         }
 
         function pardon(user, report) {

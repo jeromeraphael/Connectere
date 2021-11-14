@@ -18,7 +18,8 @@ var pool = mysql.createPool({
   database: "cis4402021group4",
   connectTimeout  : 60 * 60 * 1000,
   acquireTimeout  : 60 * 60 * 1000,
-  timeout         : 60 * 60 * 1000
+  timeout         : 60 * 60 * 1000,
+  multipleStatements: true
 });
 
 
@@ -294,6 +295,16 @@ app.post('/validate-login', (req, res) => {
   });
   
 });
+
+app.get('/ban/:userId', (req, res) => {
+  let sql = 
+  `DELETE FROM Users
+   WHERE userId = ?`
+  pool.query(sql, [req.params.userId], (err, results) => {
+    if (err) throw err; 
+    console.log('user has been deleted'); 
+  })
+})
 
 // lol hopefully these are some good post requests :v)
 app.post('/send-invite', (req, res) => {
