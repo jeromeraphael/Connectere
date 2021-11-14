@@ -121,7 +121,17 @@
         }
 
         function pardon(user, report) {
-            alert(`User ${user} has been pardoned.`);
+            fetch(`/pardon/${report}`, {
+                method: "GET", 
+                credentials: "same-origin", 
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(response => {
+                alert("report has been pardoned"); 
+            })
             document.getElementById(`${report}-table`).style.display = 'none'; 
         }
     </script>

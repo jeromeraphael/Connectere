@@ -304,6 +304,16 @@ app.get('/ban/:userId', (req, res) => {
     if (err) throw err; 
     console.log('user has been deleted'); 
   })
+}); 
+
+app.get(`/pardon/:reportId`, (req, res) => {
+  let sql = 
+  `DELETE FROM Reports
+    WHERE reportId = ?`
+  pool.query(sql, [req.params.reportId], (err, results) => {
+    if (err) throw err; 
+    console.log('report has been pardoned'); 
+  }); 
 })
 
 // lol hopefully these are some good post requests :v)
