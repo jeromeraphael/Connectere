@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connectere</title>
 
-    <!-- Sprint 1: Jerome Cabacungan -->
-    <!-- Internal CSS for now -->
     <style>
         *,
         *:before,
@@ -320,7 +318,9 @@
     <br>
     <br>
 
+    <!-- Container -->
     <div class="cont">
+        <!-- Log-in -->
         <form id="login-form" onsubmit="return false" class="form sign-in">
             <h2>CONNECTERE</h2>
             <label>
@@ -335,13 +335,15 @@
 
             <!-- <p class="forgot-pass">Forgot password?</p> -->
             <!-- onkeydown invokes a function that looks up enter button -->
-            <button onkeydown="handleEnter(e)" onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
+            <button onclick="validateLogin()" type="button" id="submit" class="submit">Sign In</button>
 
         </form>
 
+        <!-- Validation -->
         <p id="login-failed">Login attempt <span id="login-failure-number"></span> failed</p>
         <p id="login-disabled">You have tried to log in too many times. Login is now disabled.</p>
 
+        <!-- Container to ask user for sign-up or log-in. Hence, the "img"-->
         <div class="sub-cont">
             <div class="img">
                 <div class="img__text m--up">
@@ -359,6 +361,7 @@
                 </div>
             </div>
 
+            <!-- Container for create-account -->
             <div class="form-sign-up">
                 <h2>Create your Connectere Account</h2>
                 <form id="create-account" class="signUpScroll" onsubmit="return false">
@@ -448,11 +451,11 @@
         loginDisabled.style.display = 'none';
 
         // Enter
-        function handleEnter(e) {
-            if (e.keyCode == 13) {
-                validateLogin();
-            }
-        }
+        // function handleEnter(e) {
+        //     if (e.keyCode == 13) {
+        //         validateLogin();
+        //     }
+        // }
 
         // Login
         const validateLogin = async () => {
@@ -557,6 +560,7 @@
                     'reasonForUse': reasonForUse,
                     'userType': userType
                 })
+                
             });
 
             let accountSuccess = await response.json();
