@@ -123,6 +123,7 @@
             })
             .then(relationships => relationships.json())
             .then(relationships => {
+                console.log(relationships)
                 relationships.forEach(relationship => {
                     let id  = relationship['relationshipId']; 
                     let startDate = new Date(relationship['dateBegan'].slice(0, 10)); 
@@ -132,7 +133,7 @@
                     <div id="relationship${id}" class='relationshipDiv'>
                         <div class='relationshipInfo col-2'>
                             <h5 class='relationshipHeader'>${userType !== 'mentor' ? "Mentor: ": "Mentee: "}${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
-                            <p class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
+                            <p id = "status-relationship${id}" class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
                             <p class='dateBegan'>Relationship began ${dateDiff} days ago</p>
                         </div>
                         <div class="chat col-2">
@@ -183,8 +184,6 @@
                     }
 
                     //------------------------------------------------------------------------------------------
-
-
                     let form  = document.getElementById(`msg-form${id}`); 
                     let input = document.getElementById(`input-relationship${id}`);
                     let chatHeader = document.querySelector(`#relationship${id}>.chat>.chatHeader`);
