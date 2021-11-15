@@ -79,7 +79,7 @@ app.get('/invites/count', (req, res) => {
 app.get('/users/count', (req, res) => {
   // res.contentType('application/json');
   console.log('is this code even being ran?'); 
-  pool.query('SELECT count(firstName) FROM Users WHERE firstName IS NOT NULL AND firstName != "";', [], (err, rows) => { 
+  pool.query('SELECT count(userType) FROM Users WHERE userType IS NOT NULL AND userType != "";', [], (err, rows) => { 
     if (err) throw err; 
     console.log(rows); 
     res.json(rows); 

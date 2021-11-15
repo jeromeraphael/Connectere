@@ -395,10 +395,10 @@
 
                     <label>
                         <span><strong>TYPE OF ACCOUNT</strong></span>
-                        <input type="radio" id="typeId" name="userType" value="Mentor">
+                        <input type="radio" id="mentorId" name="userType" value="Mentor">
                         <label for="typeId">Mentor</label>
 
-                        <input type="radio" id="typeId" name="userType" value="Mentee">
+                        <input type="radio" id="menteeType" name="userType" value="Mentee">
                         <label for="typeId">Mentee</label>
                     </label>
 
@@ -496,6 +496,12 @@
 
         // Submit
         const addAccount = async () => {
+
+
+            let radios = document.querySelectorAll('input[name="userType"]');
+            let value;
+
+
             // Email
             let newUsername = document.getElementById('create-username').value;
             console.log("Email: " + newUsername);
@@ -515,7 +521,14 @@
             let role = document.getElementById('roleId').value;
             console.log("Role: " + role);
             // User Type
-            let userType = document.getElementById('typeId').value;
+
+            for (const radio of radios) {
+                if (radio.checked) {
+                    value = radio.value;
+                }
+            }
+            // let userType = document.getElementById('typeId').value;
+            let userType = value;
             console.log("Account Type: " + userType);
 
             // Additional objects such as questions, goals, etc.
