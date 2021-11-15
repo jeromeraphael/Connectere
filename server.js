@@ -167,7 +167,9 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       u2.email as "menteeEmail",
       u2.department as "menteeDepartment", 
       u2.role as "menteeRole",
-      dateBegan, lifeCycleStatus, relationshipId
+      dateBegan, lifeCycleStatus, relationshipId, 
+      DAYOFMONTH(dateBegan), DAYOFMONTH(NOW()),
+      MONTH(dateBegan), MONTH(NOW())
     FROM Relationships r
       JOIN Mentors m on m.mentorId = r.mentorId
       JOIN Users u on u.userId = m.userId
@@ -179,6 +181,18 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       res.json(results); 
     })
 }); 
+
+//--------------------
+app.post('/updateRelationship', (req, res) => {
+  let sql = 'UPDATE Relationships SET lifeCycleStatus = "Terminated" WHERE relationshipId = ?'
+  pool.query(sql, [req.body.relationshipId], (err, results) => {
+    if (err) throw err;
+    else {
+      console.log('relationship updated');
+    }
+  })
+})
+//--------------------
 
 app.get('/users', (req, res) => {
   res.contentType('application/json');
