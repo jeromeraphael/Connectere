@@ -5,7 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Final Dash</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <style>
+       
+       * {
+           font-family: 'Inter', sans-serif; 
+       }
+
         .center {
             margin: auto; 
             display: table; 
@@ -77,8 +85,8 @@
         }
 
         .chatHeader {
-            background-color: black; 
-            color: white; 
+            background-color: lightgreen; 
+            color: black; 
             margin: 0; 
             padding: 0.75em;
             padding-right: 0;  
@@ -190,8 +198,8 @@
         }
 
         getUserData(userId); 
-        let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
-        console.log(userName); 
+        // let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
+        // console.log(userName); 
 
         const addNewChatMessage = (senderId, newMessage, relationship) => {
             let relationshipChatDisplay = document.querySelector(`#${relationship}>.chat>.chatDisplayBox`); 

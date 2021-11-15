@@ -173,7 +173,7 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       JOIN Users u on u.userId = m.userId
           JOIN Mentees me on me.menteeId = r.menteeId
           JOIN Users u2 on u2.userId = me.userId
-    WHERE lifeCycleStatus IN ("Ongoing", "pendingInviteAc");`
+    WHERE lifeCycleStatus IN ("Ongoing");`
     pool.query(sql, [], (err, results) => {
       if (err) throw err; 
       res.json(results); 
