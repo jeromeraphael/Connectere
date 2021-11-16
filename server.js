@@ -90,6 +90,10 @@ app.get('/mentor/menteeSearch', (req, res) => {
   res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
 }); 
 
+app.get('/menteeSearch/nathan', (req, res) => {
+  res.sendFile(__dirname + '/nathan_mentee_search.html'); 
+}); 
+
 app.get('/reports', (req, res) => {
   let sql = `SELECT reportId, reportDate, reportReason, comments, CONCAT(u.firstName, " ", u.lastName) as "Reporter", CONCAT(u2.firstName, " ", u2.lastName) as "Reported", reporterUserId, reportedUserId
 	              FROM Reports
@@ -326,8 +330,8 @@ app.get(`/pardon/:reportId`, (req, res) => {
 
 // lol hopefully these are some good post requests :v)
 app.post('/send-invite', (req, res) => {
-  let sql = `INSERT INTO Invites(inviteId, inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?, ?)`
-  pool.query(sql, [req.body.inviteId, req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
+  let sql = `INSERT INTO Invites(inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?)`
+  pool.query(sql, [req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
     if (err) throw err;
     console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
   }); 

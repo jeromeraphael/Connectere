@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: auto;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        th {
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        th:nth-child(odd), td:nth-child(odd) {
+            text-align: left;
+        }
+
+        button {
+            background-color: lightgreen;
+        }
+        
+    </style>
+</head>
+
+
+<body onload="loadUsers()">
+
+    <!-- Later: Implement Nav bar-->
+    <a href="..\dash.html">Connectere Dashboard</a>
+    <h1>Mentee/Mentor Search</h1>
+    <form>
+        <select name="searchInfo" id="xD">
+            <option value="Security">Security</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Finance">Finance</option>
+            <option value="Management">Management</option>
+            <option value="Communication">Communication</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+
+    <table id="tableOfFolks">
+
+    </table>
+
+    <script>
+        "use strict;"
+
+        var userId = 3; 
+        var userType = 'mentor'; 
+        let invite = 2;
+
+        const loadUsers = () => {
+            if(userType == 'mentor'){
+                
+            fetch('/users/mentees', {
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }}).then(mentees => mentees.json())
+
+            .then(mentees => {
+            console.log(mentees)
+
+            let menteeRows = "";
+
+            for (let i = 0; i < mentees.length; i++) {
+              let mentee = mentees[i];
+              menteeRows += `<tr>
+                <th>${mentee.firstName} ${mentee.lastName} : ${mentee.department} Department<th>
+                    <th><button onclick='sendInvite(this.id)' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></th></tr>
+                    <tr><td>${mentee.reasonForUse}<td></tr>`
+            }
+
+            let menteeTable = `
+            ${menteeRows}`
+
+            document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', menteeTable);
+
+        })}
+
+        else if(userType == 'mentee'){
+                
+                fetch('/users/mentors', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }}).then(mentors => mentors.json())
+    
+                .then(mentors => {
+                console.log(mentors)
+    
+                let mentorRows = "";
+    
+                for (let i = 0; i < mentors.length; i++) {
+                  let mentor = mentors[i];
+                  mentorRows += `<tr>
+                    <th>${mentor.firstName} ${mentor.lastName} : ${mentor.department} Department<th>
+                        <th><button onclick='sendInvite(this.id)' id='${mentor.menteeId}' value='${mentor.menteeId}'>Connect</button></th></tr>
+                        <tr><td>${mentor.reasonForUse}<td></tr>`
+                }
+    
+                let mentorTable = `
+                ${mentorRows}`
+    
+                document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', mentorTable);
+    
+            })}
+
+
+        //Getting count of invites
+        fetch('/invites/count', {
+            credentials: "same-origin",
+            headers: {
+            'Content-Type': 'application/json'
+            }
+            }).then(count => count.json())
+    
+            .then(count => {
+                invite += count[0]["count(inviteId)"];
+                console.log(invite)
+            })
+        }
+
+        const sendInvite = (button) => {
+            
+            x = document.getElementById(button).textContent;
+            
+
+                alert("Your request has been sent. You may rescind your request on your connections page.")
+                document.getElementById(button).disabled = true;
+                document.getElementById(button).style.backgroundColor = 'white';
+                document.getElementById(button).style.color = 'white';
+                document.getElementById(button).style.border = '2px solid white';
+
+
+  
+            console.log('The button is working, just need to post and change the database now :v)')
+            let today = new Date()
+            let todayText = '2021-11-06';
+                
+            fetch('/send-invite', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
+            });
+
+            console.log('Test')
+
+            
+        }
+    </script>
+</body>
+</html>
