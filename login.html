@@ -395,7 +395,7 @@
 
                     <label>
                         <span><strong>TYPE OF ACCOUNT</strong></span>
-                        <input type="radio" id="mentorId" name="userType" value="Mentor">
+                        <input type="radio" id="mentorType" name="userType" value="Mentor">
                         <label for="typeId">Mentor</label>
 
                         <input type="radio" id="menteeType" name="userType" value="Mentee">
@@ -497,7 +497,7 @@
         // Submit
         const addAccount = async () => {
 
-
+            // radios is all the radios with the name userType
             let radios = document.querySelectorAll('input[name="userType"]');
             let value;
 
