@@ -464,6 +464,18 @@
 
         // Login
         const validateLogin = async () => {
+            let radios = document.querySelectorAll('input[name="userType"]');
+            let value;
+
+            for (const radio of radios) {
+                if (radio.checked) {
+                    value = radio.value;
+                    break;
+                }
+            }
+
+            let userType = value;
+
             let email = document.getElementById('login-email').value;
             localStorage.setItem('email', email);
 
@@ -474,7 +486,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 'email': email, 'password': password })
+                body: JSON.stringify({'email': email, 'password': password, 'userType': userType })
             });
 
             try {
@@ -482,7 +494,8 @@
                 if (json['loginValid'] === true) {
                     localStorage.setItem('userId', json['userId']);
                     localStorage.setItem('email', json['userName']);
-                    window.location.href = "http://localhost:4545/dashboard"
+                    localStorage.setItem('userType', json['userType']);
+                    window.location.href = `http://localhost:4545/${userType}/dashboard`
                 }
                 else {
                     if (loginAttemptCount < 10) {

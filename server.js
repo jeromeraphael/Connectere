@@ -71,7 +71,24 @@ app.post('/validate-login', (req, res) => {
 // Landing page
 // dashboard use params or if statement to route to correct page
 app.get('/:userType/dashboard', (req, res) => {
-    res.sendFile(__dirname + '/dashboard.html');
+    let sql = `SELECT * FROM Users WHERE userType = ?`; 
+    pool.query(sql, [req.params.userType], (err, results) => {
+      console.log(results);
+      console.log(req.params.userType);
+
+      if (req.params.userType === "Mentor") {
+        res.sendFile(__dirname + '/mentor_dash.html'); 
+      } 
+      else if (req.params.userType === "Mentee") {
+        res.sendFile(__dirname + '/mentee_dash.html'); 
+      } 
+      else {
+        res.sendFile(__dirname + '/admin_dash.html'); 
+      }
+      
+      if (err) throw err; 
+      res.send(results);
+  }); 
 });
 // app.get('/dashboard', (req, res) => {
 //   res.sendFile(__dirname + '/dash.html'); 
@@ -106,6 +123,9 @@ app.get('/Directory/reports', (req, res) => {
 app.get('/users/edit', (req, res) => {
   res.sendFile(__dirname + '/Directory/update.html'); 
 });
+
+// Retrieve userType from SQL
+
 
 app.get('/users/mentors', (req, res) => {
   console.log('test test test test test test test'); 
