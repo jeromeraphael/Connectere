@@ -178,8 +178,25 @@
 	
 	</div> -->
     <script>
-        var userId = localStorage.getItem('userId'); 
+        var userId = localStorage.getItem("userId"); 
+        var userName = localStorage.getItem("userName"); 
         var userType = localStorage.getItem('userType'); 
+        var searchId = document.getElementById('searchId'); 
+
+
+        switch (userType) {
+            case "Mentor": 
+                searchId.innerHTML += ' Mentees'
+                searchId.href = '/mentee/search'
+                break; 
+            case "Mentee": 
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
+                break; 
+            default: 
+                console.log('incorrect user type defined'); 
+                break; 
+        }
 
         const getInvites  = () => {
             fetch(`/${userId}/invites`, {

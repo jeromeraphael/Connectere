@@ -459,6 +459,9 @@ app.post("/reports", (req, res) => {
   );
 });
 
+app.get(`/`)
+
+
 app.post("/create-account", (req, res) => {
   // inserting data into the database with create-account
   // post requests have a body that can be accessed through req.body
