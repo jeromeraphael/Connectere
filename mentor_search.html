@@ -162,7 +162,10 @@
 
         <script>
             "use strict";
-
+            var userId = localStorage.getItem("userId"); 
+            var userName = localStorage.getItem("userName"); 
+            var userType = localStorage.getItem('userType'); 
+            var mentorMenteeId = localStoraget.getItem("mentorMenteeId");       
 
 
             const getmentors = () => {
@@ -183,7 +186,7 @@
                             <td class='role'>${mentor['role']}</td>
                             <td class='goals'>${mentor['goals']}</td>
                             <td class='idealRelationship'>${mentor['idealRelationship']}</td>
-                            <td class='button'><button onclick='sendInvite(this.id)' id='${mentor.mentorId}' value='${mentor.mentorId}'>Connect</button></td>
+                            <td class='button'><button onclick='sendInvite(this.id, ${mentor.mentorId})' id='${mentor.mentorId}' value='${mentor.mentorId}'>Connect</button></td>
                         </tr>`;
                         document.getElementById('mentorBody').insertAdjacentHTML('afterbegin', mentorRow); 
                     })
@@ -201,7 +204,7 @@
 
 
             
-        const sendInvite = (button) => {
+        const sendInvite = (button, mentorId) => {
             
             let x = document.getElementById(button).textContent;
             
@@ -226,7 +229,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "mentorId": 20})
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "menteeId": mentorMenteeId, "mentorId": mentorId})
             });
 
             console.log('Test')

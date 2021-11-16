@@ -252,7 +252,9 @@
         getInvites(); 
 
         const updateInvite = (id, status, relStatus) => {
-            console.log(id, status, relStatus); 
+            console.log(id, status, relStatus);
+            alert(`You have successfully ${status} the invite.`); 
+            document.getElementById(id).remove();  
             fetch(`invite/${id}/update`, {
                 method: "POST",
                 credentials: "same-origin",

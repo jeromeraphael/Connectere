@@ -163,10 +163,10 @@
 
         <script>
             "use strict";
-
-            const getMentorId = () => {
-
-            }
+            var userId = localStorage.getItem("userId"); 
+            var userName = localStorage.getItem("userName"); 
+            var userType = localStorage.getItem('userType'); 
+            var mentorMenteeId = localStoraget.getItem("mentorMenteeId");         
 
 
             const getMentees = () => {
@@ -230,7 +230,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": menteeId})
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": mentorMenteeId, "menteeId": menteeId})
             });
 
             console.log('Test')

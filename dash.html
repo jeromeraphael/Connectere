@@ -207,6 +207,43 @@
         var userType = localStorage.getItem('userType'); 
         var searchId = document.getElementById('searchId'); 
 
+        fetch('/users/mentors', {
+            method: "GET", 
+            headers: {
+                "Content-Type": "application/json"
+            }, 
+            credentials: "same-origin"
+        })
+        .then(response => response.json())
+        .then(response => {
+            localStorage.setItem("mentors", JSON.stringify(response)); 
+            response.forEach(mentor => {
+                console.log(mentor['userId']); 
+                console.log(mentor['userId'] == userId)
+                console.log(userId)
+                if (mentor['userId'] == userId) {
+                    localStorage.setItem("mentorMenteeId", mentor['mentorId']); 
+                }
+            }); 
+        }); 
+
+        
+        fetch('/users/mentees', {
+            method: "GET", 
+            headers: {
+                "Content-Type": "application/json"
+            }, 
+            credentials: "same-origin"
+        })
+        .then(response => response.json())
+        .then(response => {
+            localStorage.setItem("mentees", JSON.stringify(response)); 
+            response.forEach(mentor => {
+                if (mentor['userId'] == userId) {
+                    localStorage.setItem("mentorMenteeId", mentor['menteeId']); 
+                }
+            }); 
+        }); 
 
         switch (userType) {
             case "Mentor": 
@@ -346,8 +383,8 @@
         }
 
         const getChatHistory = async (relationship) => {
-            localStorage.setItem("inputValue", document.getElementById(`input-relationship${relationship}`).value); 
-            console.log('getting chat history'); 
+            localStorage.setItem(`inputValue${relationship}`, document.getElementById(`input-relationship${relationship}`).value); 
+            console.log('getting chat history for ' + relationship); 
             fetch(`/${relationship}/chats`, {
                     credentials: 'same-origin', 
                     headers: {
@@ -360,7 +397,7 @@
                     for (let i = 0; i < chats.length; i++) {        
                         document.querySelector(`#relationship${relationship}>.chat>p`).innerHTML = "Chat +";                  
                         addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent'], `relationship${relationship}`); 
-                        document.getElementById(`input-relationship${relationship}`).value = localStorage.getItem("inputValue"); 
+                        document.getElementById(`input-relationship${relationship}`).value = localStorage.getItem(`inputValue${relationship}`); 
                     }
                 }); 
         }

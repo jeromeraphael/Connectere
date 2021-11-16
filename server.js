@@ -428,8 +428,8 @@ app.post("/update", (req, res) => {
 
 app.post('/invite/:id/update', (req, res) => {
   let sql = ` 
-  UPDATE Relationships SET lifeCycleStatus = ? Where inviteId = ?`;
-  pool.query(sql, [req.body.status, req.params.id, req.body.lifeCycleStatus, req.params.id], (err, results) => {
+  UPDATE Relationships SET lifeCycleStatus = ? Where inviteId = ?;`;
+  pool.query(sql, [req.body.relationshipStatus, req.params.id], (err, results) => {
     if (err) throw err; 
     console.log('relationship and invite have been updated'); 
   })
