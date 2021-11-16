@@ -132,7 +132,7 @@
             width: 100%;
             height: 100%;
             /* background: rgba(0, 0, 0, 0.6); */
-            background-image: linear-gradient(to bottom right, #59AFC9, #77C8D1 );
+            background-image: linear-gradient(to bottom right, #59AFC9, #77C8D1);
         }
 
         .cont.s--signup .img:before {
@@ -464,38 +464,41 @@
 
         // Login
         const validateLogin = async () => {
-            let radios = document.querySelectorAll('input[name="userType"]');
-            let value;
-
-            for (const radio of radios) {
-                if (radio.checked) {
-                    value = radio.value;
-                    break;
-                }
-            }
-
-            let userType = value;
-
+            // fetch the userType from app.get('/users/:userType', req, res)
             let email = document.getElementById('login-email').value;
             localStorage.setItem('email', email);
 
             let password = document.getElementById('login-password').value;
+
             let response = await fetch('/validate-login', {
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({'email': email, 'password': password, 'userType': userType })
+                body: JSON.stringify({ 'email': email, 'password': password })
             });
 
             try {
                 let json = await response.json()
+
                 if (json['loginValid'] === true) {
                     localStorage.setItem('userId', json['userId']);
                     localStorage.setItem('email', json['userName']);
                     localStorage.setItem('userType', json['userType']);
-                    window.location.href = `http://localhost:4545/${userType}/dashboard`
+
+                    // Switch case for userType
+                    switch (json.userType) {
+                        case 'Mentor':
+                            window.location.href = '/mentor/dashboard';
+                            break;
+                        case 'Mentee':
+                            window.location.href = '/mentee/dashboard';
+                            break;
+                        default:
+                            window.location.href = '/admin/dashboard';
+                            break;
+                    }
                 }
                 else {
                     if (loginAttemptCount < 10) {
@@ -588,7 +591,7 @@
                     'reasonForUse': reasonForUse,
                     'userType': userType
                 })
-                
+
             });
 
             let accountSuccess = await response.json();
