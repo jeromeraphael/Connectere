@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 20px;
+            border-radius: 1px;
+        }
+
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidenav">
+        <h2>Connectere</h2>
+        <a id="searchId" href="/admin/users">View Active Users</a>
+        <a id="reportsId" href="/admin/reports">Reports</a>
+        <a id="logOutId" href="/">Log Out</a>
+    </div>
+
+    <div class="main">
+        <h2>Welcome, Administrator.</h2>
+        
+    </div>
+
+
+    <!-- Script -->
+    <script>
+        "use strict";
+
+        const redirectToPage = (userChoice) => {
+            window.location.href = `http://localhost:4545/${userChoice}`
+        }
+
+        let searchId = document.getElementById("searchId");
+        let reportsId = document.getElementById("reportId");
+        let logOutId = document.getElementById("logOutId");
+
+        searchList.addEventListener('click', () => { redirectToPage('admin/users') });
+        reportList.addEventListener('click', () => { redirectToPage('admin/reports') });
+        logOut.addEventListener('click', () => { redirectToPage('/') });
+
+        const categoryPick = async () => {
+            let response = await fetch('/pick', {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify()
+            })
+        };
+
+
+    </script>
+</body>
+
+</html>

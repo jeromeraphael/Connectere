@@ -60,7 +60,7 @@ app.get('/users/mentors', (req, res) => {
 // getting mentee information for the userpage
 app.get('/users/mentees', (req, res) => {
   res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
+  pool.query('SELECT firstName, lastName, email, role, department, goals, idealRelationship, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
@@ -199,6 +199,10 @@ app.get('/finaldash', (req, res) => {
   res.sendFile(__dirname + '/Directory/finaldash.html'); 
 });
 
+app.get('/mentee/search', (req, res) => {
+  res.sendFile(__dirname + "/mentee_search.html"); 
+}); 
+
 app.post('/update', (req, res) => {
   let sql = `
   UPDATE Users
@@ -289,7 +293,7 @@ app.post('/validate-login', (req, res) => {
       else {
         console.log("You're in the thing!");
         console.log(results); 
-        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email']}); 
+        res.send({loginValid: true, userId: results[0]['userId'], userName: results[0]['email'], userType: results[0]['userType']}); 
       }
     } 
     catch (e) {
