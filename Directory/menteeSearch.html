@@ -33,7 +33,9 @@
         
     </style>
 </head>
-<body onload="loadMentees()">
+
+
+<body onload="loadUsers()">
 
     <!-- Later: Implement Nav bar-->
     <a href="..\dash.html">Connectere Dashboard</a>
@@ -50,35 +52,19 @@
     </form>
 
     <table id="tableOfFolks">
-        <!--<tr>
-            <th>Michael Jackson</th>
-            <th><button onclick='connect(this.id)' id="button1id">Connect</button></th>
-        </tr>
-        <tr>
-            <td>I like dancing, puppies, and singing.</td>
-        </tr>
-        <tr>
-            <th>Michael Jordan</th>
-            <th><button onclick='connect(this.id)' id="button2id">Connect</button></th>
-        </tr>
-        <tr>
-            <td>I like to play basketball</td>
-        </tr>
-        <tr>
-            <th>Joe Biden</th>
-            <th><button onclick='connect(this.id)' id="button3id">Connect</button></th>
-        </tr>
-        <tr>
-            <td>I like being the president of the united states.</td>
-        </tr> -->
+
     </table>
 
     <script>
         "use strict;"
 
+        var userId = 3; 
+        var userType = 'mentor'; 
         let invite = 2;
 
-        const loadMentees = () => {
+        const loadUsers = () => {
+            if(userType == 'mentor'){
+                
             fetch('/users/mentees', {
             credentials: "same-origin",
             headers: {
@@ -103,38 +89,64 @@
 
             document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', menteeTable);
 
-            //Getting count of invites
-            fetch('/invites/count', {
+        })}
+
+        else if(userType == 'mentee'){
+                
+                fetch('/users/mentors', {
                 credentials: "same-origin",
                 headers: {
                     'Content-Type': 'application/json'
+                }}).then(mentors => mentors.json())
+    
+                .then(mentors => {
+                console.log(mentors)
+    
+                let mentorRows = "";
+    
+                for (let i = 0; i < mentors.length; i++) {
+                  let mentor = mentors[i];
+                  mentorRows += `<tr>
+                    <th>${mentor.firstName} ${mentor.lastName} : ${mentor.department} Department<th>
+                        <th><button onclick='sendInvite(this.id)' id='${mentor.menteeId}' value='${mentor.menteeId}'>Connect</button></th></tr>
+                        <tr><td>${mentor.reasonForUse}<td></tr>`
                 }
+    
+                let mentorTable = `
+                ${mentorRows}`
+    
+                document.getElementById('tableOfFolks').insertAdjacentHTML('beforeend', mentorTable);
+    
+            })}
+
+
+        //Getting count of invites
+        fetch('/invites/count', {
+            credentials: "same-origin",
+            headers: {
+            'Content-Type': 'application/json'
+            }
             }).then(count => count.json())
     
             .then(count => {
                 invite += count[0]["count(inviteId)"];
                 console.log(invite)
             })
-
-        })
         }
 
         const sendInvite = (button) => {
             
             x = document.getElementById(button).textContent;
             
-            // if (document.getElementById(button).textContent == "Connect"){
+
                 alert("Your request has been sent. You may rescind your request on your connections page.")
                 document.getElementById(button).disabled = true;
                 document.getElementById(button).style.backgroundColor = 'white';
                 document.getElementById(button).style.color = 'white';
                 document.getElementById(button).style.border = '2px solid white';
-            //     document.getElementById(button).style.backgroundColor = "lightblue";
-            // }
-            // else{
-            //     document.getElementById(button).innerHTML = "Connect"; 
-            //     document.getElementById(button).style.backgroundColor = "lightgreen";
-            // }
+
+
+  
             console.log('The button is working, just need to post and change the database now :v)')
             let today = new Date()
             let todayText = '2021-11-06';
@@ -149,15 +161,8 @@
             });
 
             console.log('Test')
-            // fetch('/send-relationship', {
-            //     credentials: "same-origin",
-            //     method: "POST",
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     // body: JSON.stringify({"relationshipId": 3, "inviteId": 3, "menteeId": Number(button), "mentorId": 1, "dateBegan": todayText, "lifeCycleStatus": 'Pending'})
-            // });
 
+            
         }
     </script>
 </body>
