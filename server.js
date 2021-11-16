@@ -39,6 +39,8 @@ app.get('/Directory/menteeSearch', (req, res) => {
     res.sendFile(__dirname + '/Directory/menteeSearch.html'); 
 });
 
+
+
 app.get('/Directory/reports', (req, res) => {
     res.sendFile(__dirname + '/Directory/Report/reports.html'); 
 }); 
@@ -48,9 +50,8 @@ app.get('/users/edit', (req, res) => {
 });
 
 app.get('/users/mentors', (req, res) => {
-  console.log('test test test test test test test'); 
   res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
+  pool.query('SELECT firstName, lastName, email, role, department, goals, idealRelationship, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
     if (err) throw err; 
     console.log(rows); 
     res.send(rows); 
@@ -205,6 +206,10 @@ app.get('/finaldash', (req, res) => {
 
 app.get('/mentee/search', (req, res) => {
   res.sendFile(__dirname + "/mentee_search.html"); 
+}); 
+
+app.get('/mentor/search', (req, res) => {
+  res.sendFile(__dirname + '/mentor_search.html'); 
 }); 
 
 app.post('/update', (req, res) => {

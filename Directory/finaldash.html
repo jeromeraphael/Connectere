@@ -100,8 +100,8 @@
         }
 
         .chatHeader {
-            background-color: #59AFC9; 
-            color: white; 
+            background-color: black;
+            color: #C9EDBE; 
             margin: 0; 
             padding: 0.75em;
             padding-right: 0;  
@@ -186,7 +186,7 @@
         <div class="sidenav">
             <h2>Connectere</h2>
     
-            <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
+            <a id="searchId" href="/mentor/menteeSearch">Search for</a>
             <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
             <a id="requestsId">Requests</a>
     
@@ -209,9 +209,25 @@
         </div>
     </div>
     <script>
-        var userId = 3; 
-        var userType = 'mentee'; 
-        
+        var userId = localStorage.getItem("userId"); 
+        var userType = localStorage.getItem('userType'); 
+        var searchId = document.getElementById('searchId'); 
+
+
+        switch (userType) {
+            case "Mentor": 
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
+                break; 
+            case "Mentee": 
+                searchId.innerHTML += ' Mentees'
+                searchId.href = 'mentee/search'
+                break; 
+            default: 
+                console.log('incorrect user type defined'); 
+                break; 
+        }
+
         const getRelationships = (userId) => {
             fetch(`/${userId}/ongoingRelationships`, {
                 method: "GET", 
