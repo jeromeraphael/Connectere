@@ -1,21 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Search</title>
     <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 50%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        h1 {
+            color: green;
+        }
+
+        /* NAV */
         body {
-            /* font-family: "Lato", sans-serif; */
-            font-family: 'Inter', sans-serif;
+            font-family: "Lato", sans-serif;
         }
 
         .sidenav {
             height: 100%;
-            width: 200px;
+            width: 210px;
             position: fixed;
             z-index: 1;
             top: 0;
@@ -26,7 +42,7 @@
             border-radius: 1px;
         }
 
-        .sidenav h2{
+        .sidenav h2 {
             color: #C9EDBE;
             text-align: center;
         }
@@ -59,6 +75,8 @@
         }
     </style>
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
 
 <body>
 
@@ -83,14 +101,64 @@
 
     <div class="main">
         <div id="welcome">
-            <img src="https://i.kym-cdn.com/entries/icons/original/000/038/514/johnxinaheader.jpg" alt="">
+            <center>
+                <h1>Mentor Search</h1>
+                <h3>
+                    perform a real time search and find your mentor
+                </h3>
+                <b>Search the table for Mentor or Department:
+                    <input id="gfg" type="text" placeholder="Search here">
+                </b>
+                <br>
+                <br>
+                <table>
+                    <tr>
+                        <th>Mentor</th>
+                        <th>Department</th>
+                        <th>Type</th>
+                    </tr>
+                    <tbody id="geeks">
+                        <tr>
+                            <td>Michael Jackson</td>
+                            <td>Finance</td>
+                            <td>Mentor
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Snoop Dogg</td>
+                            <td>Technology</td>
+                            <td>Mentor</td>
+                        </tr>
+                        <tr>
+                            <td>Michael Jordan</td>
+                            <td>Security</td>
+                            <td>Mentor</td>
+                        </tr>
+                        <tr>
+                            <td>Elon Musk</td>
+                            <td>Blockchain</td>
+                            <td>Mentor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </center>
         </div>
     </div>
 
 
-    <!-- Script -->
     <script>
         "use strict";
+
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#geeks tr").filter(function () {
+                    $(this).toggle($(this).text()
+                        .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+        //   NAV
         let userList = document.getElementById("userList");
         let searchId = document.getElementById("searchId");
         let reportsId = document.getElementById("reportId");
@@ -98,7 +166,7 @@
         let logOutId = document.getElementById("logOutId");
         let contactPartnersId = document.getElementById("contactPartnersId");
 
-        
+
 
         const redirectToPage = (userChoice) => {
             window.location.href = `http://localhost:4545/${userChoice}`
@@ -129,9 +197,12 @@
                 body: JSON.stringify()
             })
         };
-
-
+        // -----------------------------------
+        
     </script>
+
+
+
 </body>
 
 </html>

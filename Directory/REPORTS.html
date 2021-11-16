@@ -22,11 +22,18 @@
             text-align: left;
         }
 
+        td {
+            text-align: left; 
+        }
+
     </style>
 </head>
 <body>
     <h1>User Reports</h1>
-    <table>
+    <div id="reports">
+
+    </div>
+    <!-- <table id="reportTable">
         <tr>
             <th>Bob Smith</th>
             <th><button id="ban1" class="1 ban" onclick="report('1', this.value)">BAN</button></th>
@@ -54,11 +61,51 @@
             </select></td>
             <td><button id="pardon2" class="2 pardon" onclick="report(this.className, this.value)">Pardon</button></td>
         </tr>
-    </table>
+    </table> -->
 
     <script>
-        function report(butClass, value){
-            document.getElementsByClassName(butClass).disabled;
+
+        fetch('/reports', {
+            method: "GET", 
+            credentials: "same-origin", 
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log(response); 
+            response.forEach(report => {
+                let reportTable = `
+                <table id="${report['reportId']}-table" class="${report['reportedUserId']}">
+                    <tbody>
+                        <tr>
+                            <th>${report['Reported']}</th>
+                            <th><button id="${report['reportedUserId']}-report" class="1 ban" onclick="report(${report['reportedUserId']})">BAN</button></th>
+                        </tr>
+                        <tr>
+                            <td>Reason: ${report['reportReason']}</td>
+                            <td><button id="${report['reportedUserId']}-pardon" class="1 pardon" onclick="pardon(${report['reportedUserId']}, ${report['reportId']})">Pardon</button></td>
+                        </tr>
+                        <tr>
+                            <td>Comments: ${report['comments']}</td>
+                    </tbody>
+                </table>`; 
+                document.getElementById("reports").insertAdjacentHTML('afterbegin', reportTable); 
+            }); 
+        }); 
+
+        function report(user){
+            alert(`User ${user} has been banned. Their account no longer exists`); 
+            let userReports = document.getElementsByClassName(user); 
+            for (let i = 0; i < userReports.length; i++) {
+                userReports[i].style.display = 'none'; 
+            }
+        }
+
+        function pardon(user, report) {
+            alert(`User ${user} has been pardoned.`);
+            document.getElementById(`${report}-table`).style.display = 'none'; 
         }
     </script>
 </body>

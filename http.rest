@@ -1,1 +1,1 @@
-GET http://localhost:4545/validate-login
+GET http://localhost:4545/11/info HTTP/1.1

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Edit Profile</title>
+        <style>
+        
+            div {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+
+            .input-container {
+                display: inline-block;
+                margin: 0; 
+                padding: 0;  
+            }
+
+
+            .textarea-label, textarea {
+                width: 50vw; 
+                max-width: 1000px; 
+            }
+
+            input {
+                display: inline-block; 
+                width: 30vw; 
+                margin-right: 3vw;
+                margin-bottom: 2vh;  
+            }
+
+            #show {
+                background: none; 
+                border: none; 
+            }
+
+            show:hover {
+                cursor: pointer; 
+            }
+
+            #popup {
+                position: absolute; 
+                visibility: hidden; 
+                width: auto;  
+                top: 40vh; 
+                left: 40vw; 
+                height: auto;
+            }
+
+            #popup-text-container, #popup-text, #popup {
+                color: white; 
+                background-color: black; 
+            }
+
+            #popup.show {
+                visibility: visible;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <h1>Update your profile information</h1>
+        <div>
+            <form class="update" id="userUpdate">
+                <div class="input-container">
+                    <label for="firstName">First Name</label>
+                    <br>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="input-container">
+                    <label for="lastName">Last Name</label>
+                    <br>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <button id='show' onclick="showPassword()">show</button>
+                    <br>
+                    <input type="password" id="password" name="password" class='hidden-password' required>
+                </div>
+                <div class="input-container">
+                    <label for="email">Email</label>
+                    <br>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <br>
+                <div class="input-container">
+                    <label for="department">Department</label>
+                    <br>
+                    <input type="text" id="department" required>
+                </div>
+                <div class="input-container">
+                    <label for="jobRole">Position</label>
+                    <br>
+                    <input type="text" id="jobRole" required>
+                <br>
+                </div>
+                <br>
+                <div class="input-container">
+                    <label for="openToNewConnections">Are you open to new connection?</label>
+                    <br>
+                    <select name="openToNewConnections" id="openToNewConnections">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                <br>
+                </div>
+                <br><br>
+                <label class="textarea-label" for="expectations">What do you expect out of this relationship?</label>
+                    <br>
+                    <textarea id="expectations" name="expectations" rows="4" cols="25" maxlength="400" required></textarea>
+                <!-- Ideal Relationship -->
+                <br><br>
+                <label class="textarea-label" for="relationship">What is your ideal relationship with a mentor/mentee?</label>
+                    <br>
+                    <textarea id="relationship" name="relationship" rows="4" cols="25" maxlength="400" required></textarea>
+                <!-- What is the main reason for use? -->
+                <br><br>
+                <label class="textarea-label" for="reasonForUse">What is the main reason for your use of the mentorship platform?</label>
+                    <br>
+                    <textarea id="reasonForUse" name="questions" rows="4" cols="25" maxlength="400" required></textarea>
+                <br><br>
+                <input id="send_to" type="hidden" name="send_to" value="yourEmailHere">
+                <button type="submit" id="submit-btn">Save Changes</button>
+            </form>
+            <div id="popup">
+                <div id="popup-text-container">
+                    <p id='popup-text'>Your information has been updated.</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            var form = document.getElementById('userUpdate'); 
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                updateUser(); 
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', () => {
+                let popup = document.getElementById('popup'); 
+                popup.className = 'show'; 
+                setTimeout(() => {
+                    popup.className = popup.className.replace('show', ''); 
+                }, 3000); 
+            })
+
+            var firstName = form.firstName;
+            var lastName = form.lastName;
+            var email = form.email;
+            var password = form.password;
+            var department = form.department;
+            var role = form.jobRole;
+            var openToNewConnections = form.openToNewConnections;
+            var expectations = form.expectations;
+            var relationship = form.relationship;
+            var reasonForUse = form.reasonForUse;
+            
+            var userId = 11;
+
+            const showPassword = () => {
+                let passwordInput = document.getElementById('password');
+                let btn  = document.getElementById('show'); 
+                switch (passwordInput.className) {
+                    case 'hidden-password':
+                        passwordInput.className = 'shown-password'; 
+                        passwordInput.type = 'text';
+                        btn.innerHTML = 'hide'; 
+                        break; 
+                    default: 
+                        passwordInput.className = 'hidden-password'; 
+                        passwordInput.type = 'password';
+                        btn.innerHTML = 'show';  
+                        break; 
+                }
+            }
+    
+            const populateFields = () => {
+                fetch(`/${userId}/info`, {
+                    method: "GET", 
+                    credentials: "same-origin", 
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(userData => { 
+                    firstName.value = userData[0]['firstName']; 
+                    lastName.value  = userData[0]['lastName'];
+                    email.value = userData[0]['email']; 
+                    password.value = userData[0]['password']; 
+                    department.value = userData[0]['department']; 
+                    role.value = userData[0]['role']; 
+                    openToNewConnections = userData[0]['openToNewConnections']; 
+                    expectations.value = userData[0]['goals']; 
+                    relationship.value = userData[0]['idealRelationship']
+                    reasonForUse.value = userData[0]['reasonForUse']; 
+                })
+            }
+
+            const updateUser = () => {
+                fetch('/update', {
+                    headers: {"Content-Type": "application/json"}, 
+                    method: "POST", 
+                    body: JSON.stringify({
+                        "userId":               userId,
+                        "firstName":            firstName.value,
+                        "lastName":             lastName.value,  
+                        "email":                email.value, 
+                        "password":             password.value, 
+                        "department":           department.value, 
+                        "role":                 role.value, 
+                        "openToNewConnections": openToNewConnections.value, 
+                        "goals":                expectations.value, 
+                        "idealRelationship":    relationship.value, 
+                        "reasonForUse":         reasonForUse.value
+                    })
+                })
+                .then(response => response.json())
+
+            }
+    
+            populateFields();     
+        
+        
+        </script>
+    </body>    
+</html>

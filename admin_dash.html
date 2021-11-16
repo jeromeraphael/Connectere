@@ -3,14 +3,10 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <title>Dashboard</title>
     <style>
         body {
-            /* font-family: "Lato", sans-serif; */
-            font-family: 'Inter', sans-serif;
+            font-family: "Lato", sans-serif;
         }
 
         .sidenav {
@@ -66,25 +62,16 @@
         <h2>Connectere</h2>
 
         <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
-        <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
+        <a id="contactPartnersId">Contact Partners</a>
         <a id="requestsId">Requests</a>
-
-        <!-- app.get('/admin/reports') -->
-        <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
-
-        <!-- app.get('/admin/users') -->
-
-
+        <a id="reportsId" href="/admin/reports">Reports</a>
         <a id="chatId" href="/chat">Chat</a>
-
-        <!-- logOutId -->
         <a id="logOutId" href="/">Log Out</a>
     </div>
 
     <div class="main">
-        <div id="welcome">
-            <img src="https://i.kym-cdn.com/entries/icons/original/000/038/514/johnxinaheader.jpg" alt="">
-        </div>
+        
+        <p>DYNAMIC OUTPUT</p>
     </div>
 
 
@@ -96,7 +83,6 @@
         let reportsId = document.getElementById("reportId");
         let chatId = document.getElementById("chatId");
         let logOutId = document.getElementById("logOutId");
-        let contactPartnersId = document.getElementById("contactPartnersId");
 
         
 
@@ -107,11 +93,6 @@
         chatId.addEventListener("click", () => {
             redirectToPage("chat");
         });
-
-        contactPartnersId.addEventListener("click", () => {
-            redirectToPage("finaldash");
-        });
-
         userList.addEventListener('click', () => { redirectToPage('users') });
         searchList.addEventListener('click', () => { redirectToPage('search') });
         // For Sprint 3, only admin is allowed to access this.

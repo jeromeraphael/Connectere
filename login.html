@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <title>Connectere</title>
 
     <style>
@@ -22,7 +25,8 @@
         }
 
         body {
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            /* font-family: 'Open Sans', Helvetica, Arial, sans-serif; */
+            font-family: "Inter", sans-serif;
             background: #ffffff;
         }
 
@@ -31,7 +35,8 @@
             border: none;
             outline: none;
             background: none;
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            /* font-family: 'Open Sans', Helvetica, Arial, sans-serif; */
+            font-family: "Lato", sans-serif;
         }
 
         .tip {
@@ -398,11 +403,11 @@
 
                     <label>
                         <span><strong>TYPE OF ACCOUNT</strong></span>
-                        <label for="typeId">Mentor</label>
-                        <input type="radio" id="typeId" name="userType" value="Mentor">
+                        <label for="mentorType">Mentor</label>
+                        <input type="radio" id="mentorType" name="userType" value="Mentor">
 
-                        <label for="typeId">Mentee</label>
-                        <input type="radio" id="typeId" name="userType" value="Mentee">
+                        <label for="menteeType">Mentee</label>
+                        <input type="radio" id="menteeType" name="userType" value="Mentee">
                     </label>
 
                     <label>
@@ -521,8 +526,18 @@
             let role = document.getElementById('roleId').value;
             console.log("Role: " + role);
             // User Type
-            let userType = document.getElementById('typeId').value;
-            console.log("Account Type: " + userType);
+            let radios = document.querySelectorAll('input[name="userType"]');
+            let value;
+
+            for (const radio of radios) {
+                if (radio.checked) {
+                    value = radio.value;
+                    break;
+                }
+            }
+
+            let userType = value;
+            console.log("User Type: " + userType);
 
             // Additional objects such as questions, goals, etc.
             // Object for openToNewConnections

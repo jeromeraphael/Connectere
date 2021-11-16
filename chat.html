@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <title>test chat</title>
+    <style>
+        /* ----NAV----- */
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 20px;
+            border-radius: 1px;
+        }
+
+        .sidenav h2 {
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        /* ----------- */
+        .center {
+            margin: auto;
+            display: table;
+        }
+
+        .col-5 {
+            width: 20vw;
+        }
+
+        .col-2 {
+            width: 50vw;
+        }
+
+        #chat-display-box {
+            border: 2px solid black;
+            margin-bottom: 2vh;
+            border-radius: 5px;
+        }
+
+        #chat-input-box {
+            padding: 1vh;
+            padding-left: 0;
+            margin-top: 1vh;
+        }
+
+        #input {
+            padding: 1vh;
+            padding-left: 0;
+            width: inherit;
+            padding-right: 0;
+        }
+
+        /* body {
+            font-family: "Inter"; 
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="sidenav">
+        <h2>Connectere</h2>
+
+        <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
+        <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
+        <a id="requestsId">Requests</a>
+
+        <!-- app.get('/admin/reports') -->
+        <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
+
+        <!-- app.get('/admin/users') -->
+
+
+        <a id="chatId" href="/chat">Chat</a>
+
+        <!-- logOutId -->
+        <a id="logOutId" href="/">Log Out</a>
+    </div>
+
+    <div class="main">
+        <div id="welcome">
+            <h1 class='center'>Chat</h1>
+            <div id="chat-container" class='center'>
+                <div id="chat-display-box" class='col-2'></div>
+                <div id="chat-input-box" class='col-2'>
+                    <form action="submit" id="msg-form" autocomplete="off" class='col-2'>
+                        <input type="text" id="input" placeholder="Send Chat Message" class='col-2'>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        let userId = 3
+        let form = document.getElementById('msg-form');
+        let chatDisplay = document.getElementById('chat-display-box');
+        let chatMessage = document.getElementById('input');
+
+        const parseMySQLDate = (mysqldate) => {
+            console.log(mysqldate);
+            let t = mysqldate.split(/[- :]/);
+            console.log(t)
+            let date = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+            return mysqldate.slice(0, 10);
+        }
+
+        const getUserData = (userId) => {
+            fetch(`users/${userId}`, {
+                credentials: 'same-origin',
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(userData => userData.json())
+                .then(userData => localStorage.setItem("userData", JSON.stringify(userData)));
+        }
+
+        getUserData(userId);
+        let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
+        console.log(userName);
+
+        const addNewChatMessage = (senderId, newMessage) => {
+            let messageDiv = document.createElement('div');
+            let message = document.createElement('span');
+            let sender = document.createElement('span');
+            sender.className = 'mesage-sender';
+            sender.textContent = `${senderId}: `
+            messageDiv.appendChild(sender);
+            message.textContent = newMessage;
+            message.clasName = 'message-content';
+            messageDiv.appendChild(message);
+            chatDisplay.append(messageDiv);
+            chatMessage.value = '';
+        }
+
+        const getChatHistory = (relationship) => {
+            fetch(`/${relationship}/chats`, {
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(chats => chats.json())
+                .then(chats => {
+                    for (let i = 0; i < chats.length; i++) {
+                        addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent']);
+                    }
+                });
+        }
+
+        const getRelationships = (userId) => {
+            fetch(`/${userId}/relationships`, {
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(relationships => relationships.json())
+                .then(relationships => {
+                    console.log(relationships);
+                    localStorage.setItem('relationships', JSON.stringify(relationships));
+                    getChatHistory(relationships[0]['relationshipId']);
+                });
+        }
+
+        const sendChat = (relationshipId, userId, message) => {
+            console.log(relationshipId + ' ' + userId + ' ' + message);
+            fetch('/save-chat', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                method: "POST",
+                body: JSON.stringify({
+                    'relationshipId': relationshipId,
+                    'userId': userId,
+                    'message': message
+                })
+            })
+                .then(addNewChatMessage(userName, message));
+        }
+
+        getRelationships(userId);
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            let relationshipId = JSON.parse(localStorage.getItem("relationships"))[0]['relationshipId'];
+            if (input.value) {
+                sendChat(relationshipId, userId, input.value);
+            }
+        })
+    </script>
+</body>
+
+</html>
