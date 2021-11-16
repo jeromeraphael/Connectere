@@ -5,6 +5,7 @@ const app = express();
 const httpServer = require('http').createServer(app); 
 const mysql = require('mysql'); 
 const path = require('path'); 
+//const { ppid } = require('process');
 // const { join } = require('path/posix');
 
 app.use(express.json());
@@ -183,6 +184,7 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
     })
 }); 
 
+//NATHANS STUFF BEGINS HERE (I ALSO ADDED SOME STUFF TO BEN'S POST)
 //--------------------
 app.post('/updateRelationship', (req, res) => {
   let sql = 'UPDATE Relationships SET lifeCycleStatus = "Terminated" WHERE relationshipId = ?'
@@ -211,6 +213,28 @@ app.post('/updateMentorExtension', (req, res) => {
     else {
       console.log('mentor extended relationship');
     }
+  })
+});
+
+//UPDATING THE LAST MENTEE/MENTOR EXTENSION FOR CONNECTION USE.
+//ONLY WORKS BECAUSE WE AREN'T USING A SYSTEM WHERE MULTIPLE PEOPLE ARE ON SIMULTANEOUSLY.
+app.post('/updateLastMenteeExtension', (req, res) => {
+  let sql = 'UPDATE Relationships SET menteeExtended = "1" WHERE relationshipId is not null ORDER BY relationshipId DESC LIMIT 1'
+  pool.query(sql, (err, results) => {
+    if (err) throw err;
+    else {
+      console.log('Most recent relationship updated');
+  }
+  })
+});
+
+app.post('/updateLastMentorExtension', (req, res) => {
+  let sql = 'UPDATE Relationships SET mentorExtended = "1" WHERE relationshipId is not null ORDER BY relationshipId DESC LIMIT 1'
+  pool.query(sql, (err, results) => {
+    if (err) throw err;
+    else {
+      console.log('Most recent relationship updated');
+  }
   })
 });
 //--------------------
