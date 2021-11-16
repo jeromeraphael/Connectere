@@ -47,12 +47,78 @@
 			background-color: lightgreen;
 		}
 
+		.sidenav {
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
+        }
+
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+		#main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
+        }
+
+		section {
+			width: 40vw; 
+		}
 
 	</style>
 </head>
 
 <body>
-	<div class="wrapper">
+	<div class="sidenav">
+		<h2>Connectere</h2>
+		<a id="contactPartnersId" href="/dashboard">Home</a>
+		<a id="searchId" href="/mentor/menteeSearch">Search for</a>
+		<a id="requestsId" href='/invites'>Relationship Invites</a>
+		<a href="/Directory/reports" id="reportsId"></a>
+		<a id="logOutId" href="/">Log Out</a>
+	</div>
+	<div id="main-body">
 		<section>
 			<h1>Report Form</h1>
 			<p>Fill out the form below.</p>

@@ -217,6 +217,26 @@ app.get("/:userId/invites", (req, res) => {
   })
 }); 
 
+app.get(`/pardon/:reportId`, (req, res) => {
+  let sql = 
+  `DELETE FROM Reports
+    WHERE reportId = ?`
+  pool.query(sql, [req.params.reportId], (err, results) => {
+    if (err) throw err; 
+    console.log('report has been pardoned'); 
+  }); 
+}); 
+
+app.get('/ban/:userId', (req, res) => {
+  let sql = 
+  `DELETE FROM Users
+   WHERE userId = ?`
+  pool.query(sql, [req.params.userId], (err, results) => {
+    if (err) throw err; 
+    console.log('user has been deleted'); 
+  })
+})
+
 app.get("/users/count", (req, res) => {
   // res.contentType('application/json');
   console.log("is this code even being ran?");
