@@ -149,11 +149,11 @@
                     document.getElementById("dash-grid").insertAdjacentHTML('afterbegin', relationshipGridDiv); 
 
                     //-----------------------------------------------------------------------------------------
-                    if (relationship['DAYOFMONTH(NOW())'] == relationship['DAYOFMONTH(dateBegan)'] && relationship['MONTH(NOW())'] != relationship['MONTH(dateBegan)']){
-                        if (userType === 'mentee'){
+                    if (userType === 'mentee'){
+                        if (relationship['DAYOFMONTH(NOW())'] == relationship['DAYOFMONTH(dateBegan)'] && relationship['MONTH(NOW())'] != relationship['MONTH(dateBegan'] && relationship['menteeExtended'] != 1){
                             let answer = confirm(`Your relationship with ${relationship['mentorName']} is one month old. Do you wish to extend it?`)
                             console.log(answer)
-                            if(! answer){   
+                            if(! answer){
                                 document.getElementById(`input-relationship${id}`).disabled = true;
                                 document.getElementById(`status-relationship${id}`).innerHTML = 'Terminated';
                                 fetch('/updateRelationship', {
@@ -164,13 +164,25 @@
                                     })
                                 }).then(response => response.json())
                             }
+                            else{
+                                fetch('/updateMenteeExtension', {
+                                    headers: {"Content-Type": "application/json"},
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                        "relationshipId": relationship['relationshipId']
+                                    })
+                                }).then(response => response.json())
+                            }
                         }
-                        else{
-                            let answer = confirm(`Your relationship with ${relationship['menteeName']} is one month old. Do you wish to extend it?`);
+                    }
+                    else{
+                        if (relationship['DAYOFMONTH(NOW())'] == relationship['DAYOFMONTH(dateBegan)'] && relationship['MONTH(NOW())'] != relationship['MONTH(dateBegan'] && relationship['mentorExtended'] != 1){
+                            let answer = confirm(`Your relationship with ${relationship['menteeName']} is one month old. Do you wish to extend it?`)
                             console.log(answer)
-                            if(! answer){   
+                            if(! answer){
                                 document.getElementById(`input-relationship${id}`).disabled = true;
                                 document.getElementById(`status-relationship${id}`).innerHTML = 'Terminated';
+                                //terminates relationship
                                 fetch('/updateRelationship', {
                                     headers: {"Content-Type": "application/json"},
                                     method: "POST",
@@ -179,8 +191,17 @@
                                     })
                                 }).then(response => response.json())
                             }
+                            else{
+                                //updates mentorExtended column to 1
+                                fetch('/updateMentorExtension', {
+                                    headers: {"Content-Type": "application/json"},
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                        "relationshipId": relationship['relationshipId']
+                                    })
+                                }).then(response => response.json())
+                            }
                         }
-
                     }
 
                     //------------------------------------------------------------------------------------------

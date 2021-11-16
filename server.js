@@ -167,7 +167,8 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       u2.email as "menteeEmail",
       u2.department as "menteeDepartment", 
       u2.role as "menteeRole",
-      dateBegan, lifeCycleStatus, relationshipId, 
+      dateBegan, lifeCycleStatus, relationshipId,
+      menteeExtended, mentorExtended,
       DAYOFMONTH(dateBegan), DAYOFMONTH(NOW()),
       MONTH(dateBegan), MONTH(NOW())
     FROM Relationships r
@@ -192,6 +193,26 @@ app.post('/updateRelationship', (req, res) => {
     }
   })
 })
+
+app.post('/updateMenteeExtension', (req, res) => {
+  let sql = 'UPDATE Relationships SET menteeExtended = "1" WHERE relationshipId = ?'
+  pool.query(sql, [req.body.relationshipId], (err, results) => {
+    if (err) throw err;
+    else {
+      console.log('mentee extended relationship');
+    }
+  })
+});
+
+app.post('/updateMentorExtension', (req, res) => {
+  let sql = 'UPDATE Relationships SET mentorExtended = "1" WHERE relationshipId = ?'
+  pool.query(sql, [req.body.relationshipId], (err, results) => {
+    if (err) throw err;
+    else {
+      console.log('mentor extended relationship');
+    }
+  })
+});
 //--------------------
 
 app.get('/users', (req, res) => {
