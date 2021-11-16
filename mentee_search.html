@@ -33,7 +33,11 @@
         }
 
         h1 {
-            color: green;
+            color: #C9EDBE;
+            background: black;
+            border-radius: 5px; 
+            width: 35vw; 
+            padding: 7.5px; 
         }
 
         /* NAV */
@@ -102,7 +106,7 @@
         button {
             background-color: black;
             border-style: none; 
-            color: #59AFC9;
+            color: #C9EDBE;
             border-radius: 5px; 
             height: 10vh;  
         }
@@ -120,19 +124,11 @@
     <body>
         <div class="sidenav">
             <h2>Connectere</h2>
-
-            <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
-            <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
-            <a id="requestsId">Requests</a>
-
+            <a id="home" href="/dashboard">Home</a>
+            <a id="searchId" href="/mentee/search">Search for Mentees</a>
+            <a id="requestsId">Relationship Invites</a>
             <!-- app.get('/admin/reports') -->
-            <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
-
             <!-- app.get('/admin/users') -->
-
-
-            <a id="chatId" href="/chat">Chat</a>
-
             <!-- logOutId -->
             <a id="logOutId" href="/">Log Out</a>
         </div>
@@ -143,7 +139,7 @@
                     <h1>Mentee Search</h1>
                     <b>Search the table for Mentees or Department:
                         <br><br>
-                        <input id="input" type="text" placeholder="Search here">
+                        <input id="input" type="text" placeholder="Search here" autocomplete="off">
                     </b>
                     <br>
                     <br>
@@ -209,7 +205,7 @@
             let x = document.getElementById(button).textContent;
             
 
-                alert("Your request has been sent. You may rescind your request on your connections page.")
+                alert("Your request has been sent.")
                 document.getElementById(button).innerHTML = "Sent"; 
                 document.getElementById(button).disabled = true;
                 document.getElementById(button).style.backgroundColor = '#59AFC9';

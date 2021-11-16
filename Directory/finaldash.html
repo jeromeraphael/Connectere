@@ -216,12 +216,12 @@
 
         switch (userType) {
             case "Mentor": 
-                searchId.innerHTML += ' Mentors'
-                searchId.href = '/mentor/search'
+                searchId.innerHTML += ' Mentees'
+                searchId.href = '/mentee/search'
                 break; 
             case "Mentee": 
-                searchId.innerHTML += ' Mentees'
-                searchId.href = 'mentee/search'
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
                 break; 
             default: 
                 console.log('incorrect user type defined'); 

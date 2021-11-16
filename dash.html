@@ -1,88 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Final Dash</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <style>
-        #firstRowId{
-            background-color: #59afc9;
+       
+       * {
+           font-family: 'Inter', sans-serif; 
+       }
+
+        .center {
+            margin: auto; 
+            display: table; 
         }
+
+        .col-2 {
+            width: 50%; 
+        }
+
+        body {
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            box-sizing: border-box;
+        }
+
+        input, form {
+            width: 95%; 
+        }
+
+        input {
+            margin-top: 1vh; 
+            padding-top: 1vh; 
+            padding-bottom: 1vh; 
+        }
+
         
+
+        .relationshipDiv {
+            /* display: inline-grid;  */
+            border: 2px solid black; 
+            border-radius: 10px; 
+            margin-left: 2.5vw; 
+            margin-right: 2.5vw; 
+            margin-top: 1.5vh; 
+            margin-bottom: 1.5vh;  
+            padding-left: 2vw; 
+            padding-right: 2vw; 
+            padding-top: 2vh; 
+            padding-bottom: 2vh; 
+            width: auto; 
+            max-width: 45vw;  
+        }
+
+        #dash-grid {
+            display: inline-grid; 
+            grid-template-columns: 40vw 40vw; 
+        }
+
+        #body-wrapper {
+            margin-left: 1.5vw; 
+            margin-right: 1.5vw; 
+            margin-top: 1.5vh; 
+            margin-bottom: 1.5vh; 
+            width: 97vw; 
+            height: 100%; 
+        }
+
+        #main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
+        }
+
+        .chat, .relationshipInfo {
+            display: inline; 
+        }
+
+        .relationshipInfo {
+            float: left;
+        }
+
+        .chat {
+            float: right;
+            height: inherit; 
+            max-height: 40vh; 
+            overflow-y: auto;  
+        }
+
+        h3 {
+            margin: 0; 
+            width: auto; 
+        }
+
+        .chatHeader {
+            background-color: black;
+            color: #C9EDBE; 
+            margin: 0; 
+            padding: 0.75em;
+            padding-right: 0;  
+            width: auto; 
+            margin-bottom: 1vh;
+            position: sticky; 
+            top: 0px;  
+        }
+
+        .chatHeader:hover {
+            cursor: pointer; 
+        }
+
+        .chatDisplayBox {
+            display: none; 
+            font-size: 0.75rem; 
+        }
+
+        .chatDisplayBox.show {
+            display: table;  
+        }
+
         table {
-            border: solid black 1px;
+            font-size: .75rem;
+            font-weight: 100;  
+            margin-right: 1vw; 
         }
 
-        td {
-            border-right: solid black 1px;
+        .sidenav {
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
         }
 
-        th {
-            border-right: solid black 1px;
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
         }
 
-        tr:nth-child(even) {
-            background-color: #B6D6D5;
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
         }
 
-        tr:nth-child(odd) {
-            background-color: #FFFFFF;
+        .sidenav a:hover {
+            color: #C9EDBE;
         }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+
     </style>
 </head>
-
 <body>
-    <!-- We gonna get dat information from the database -->
-    <!-- Nav bar implement later -->
-    <a href=".\mentor/menteeSearch">Search for Mentee</a>
-    <a href=".\admin/reports">View User Reports</a>
-    <a href="login.html">Log Out</a>
+    <div id="body-wrapper" class='center'>
+        <div class="sidenav">
+            <h2>Connectere</h2>
+            <a id="contactPartnersId" href="/dashboard">Home</a>
+            <a id="searchId" href="/mentor/menteeSearch">Search for</a>
+            <a id="requestsId" href='/invites'>Relationship Invites</a>
+            <a id="logOutId" href="/">Log Out</a>
+        </div>
+        <div id="main-body">
+            <div id="header">
+                <h1>Ongoing Relationships</h1>
+            </div>
+            <div id="dash-grid" class="center"></div>            
+        </div>
+    </div>
+    <script src="https://unpkg.com/set-interval-async"></script>
+    <script>
+        var setIntervalAsync = SetIntervalAsync.dynamic.setIntervalAsync; 
+        var userId = localStorage.getItem("userId"); 
+        var userName = localStorage.getItem("userName"); 
+        var userType = localStorage.getItem('userType'); 
+        var searchId = document.getElementById('searchId'); 
 
-    <h1>User Information</h1>
-    <table rules="none">
-        <tr id="firstRowId">
-            <th>User</th>
-            <th>Date Joined</th>
-            <th>Department</th>
-            <th>Mentee</th>
-            <th>Mentor</th>
-            <th>Connections</th>
-        </tr>
-        <tr>
-            <td>Bob Smith</td>
-            <td>10/21/2021</td>
-            <td>Finance</td>
-            <td>Y</td>
-            <td>N</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <td>Michael Jones</td>
-            <td>9/15/2012</td>
-            <td>Marketing</td>
-            <td>Y</td>
-            <td>Y</td>
-            <td>1</td>
-        </tr>
-        <tr>
-            <td>Chris Holmes</td>
-            <td>3/29/2020</td>
-            <td>Information Security</td>
-            <td>N</td>
-            <td>Y</td>
-            <td>2</td>
-        </tr>
-        <tr>
-            <td>Joe Biden</td>
-            <td>6/20/2019</td>
-            <td>Management</td>
-            <td>N</td>
-            <td>N</td>
-            <td>5</td>
-        </tr>
-    </table>
+
+        switch (userType) {
+            case "Mentor": 
+                searchId.innerHTML += ' Mentees'
+                searchId.href = '/mentee/search'
+                break; 
+            case "Mentee": 
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
+                break; 
+            default: 
+                console.log('incorrect user type defined'); 
+                break; 
+        }
+
+        const getRelationships = async (userId) => {
+            fetch(`/${userId}/ongoingRelationships`, {
+                method: "GET", 
+                credentials: 'same-origin', 
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(relationships => relationships.json())
+            .then(relationships => {
+                relationships.forEach(relationship => {
+                    let id  = relationship['relationshipId']; 
+                    let startDate = new Date(relationship['dateBegan'].slice(0, 10)); 
+                    let today = new Date()
+                    let dateDiff = today.getDate() - startDate.getDate(); 
+                    let relationshipGridDiv = `
+                    <div id="relationship${id}" class='relationshipDiv'>
+                        <div class='relationshipInfo col-2'>
+                            <h3 class='relationshipHeader'>${userType !== 'Mentor' ? "Mentor: ": "Mentee: "}${userType !== 'Mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
+                                <div class="otherPersonInfo">
+                                    <table class="otherPersonTable">
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Department: </div></td>
+                                                <td><div class="expandedInfo department">${userType !== 'Mentor' ? relationship['mentorDepartment'] : relationship['menteeDepartment']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Role: </div></td>
+                                                <td><div class="expandedInfo role">${userType !== 'Mentor' ? relationship['mentorRole']: relationship['menteeRole']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Email: </div></td>
+                                                <td><div class="expandedInfo email">${userType !== 'Mentor' ? relationship['mentorEmail']: relationship['menteeEmail']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Goals: </div></td>
+                                                <td><div class="expandedInfo goals">${userType !== 'Mentor' ? relationship['mentorGoals']: relationship['menteeGoals']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Ideal Relationship: </div></td>
+                                                <td><div class="expandedInfo idealRelationship">${userType !== 'Mentor' ? relationship['mentorIdealRelationship']: relationship['menteeIdealRelationship']}</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <p class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
+                            <p class='dateBegan'>Relationship began ${dateDiff} days ago</p>
+                        </div>
+                        <div class="chat col-2">
+                            <p class="chatHeader">Chat + </p>
+                            <div class="chatDisplayBox" id="${id}-chat"></div>
+                            <div class="chatHistory">
+                                <form action="submit" id="msg-form${id}" class='msg-form' autocomplete="off">
+                                    <input type="text" id="input-relationship${id}" placeholder="Send Chat Message">
+                                </form>
+                            </div>
+
+                    </div>`; 
+                    document.getElementById("dash-grid").insertAdjacentHTML('afterbegin', relationshipGridDiv); 
+                    let form  = document.getElementById(`msg-form${id}`); 
+                    let input = document.getElementById(`input-relationship${id}`);
+                    let chatHeader = document.querySelector(`#relationship${id}>.chat>.chatHeader`);
+                    let chatHistory = document.querySelector(`#relationship${id}>.chat>.chatDisplayBox`); 
+
+                    let otherPersonInfo = document.querySelector(`#relationship${id}>div>h3`); 
+
+                    form.addEventListener('submit', e => {
+                        e.preventDefault(); 
+                        if (input.value) {
+                            sendChat(id, userId, input.value);  
+                        }
+                    });
+
+                    chatHeader.addEventListener('click', () => {
+                        if (chatHistory.classList.length === 2) {
+                            chatHistory.classList.remove('show'); 
+                            chatHeader.innerHTML = "Chat + "; 
+                        }
+                        else {
+                            chatHistory.classList.add('show'); 
+                            chatHeader.innerHTML = "Chat -"
+                        }
+                    }); 
+                    setIntervalAsync(() => getChatHistory(id), 5000); 
+
+                }) 
+            }); 
+        }
+        
+        const getChat = async (userId) => {
+            console.log(pass); 
+        }
+
+        const getUserData = (userId) => {
+            fetch(`users/${userId}`, {
+                credentials: 'same-origin', 
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(userData => userData.json())
+            .then(userData => localStorage.setItem("userData", JSON.stringify(userData))); 
+        }
+
+        getUserData(userId); 
+        // let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
+        // console.log(userName); 
+
+        const addNewChatMessage = (senderId, newMessage, relationship) => {
+            let relationshipChatDisplay = document.querySelector(`#${relationship}>.chat>.chatDisplayBox`); 
+            let messageDiv = document.createElement('div');
+            let message = document.createElement('span');
+            let sender = document.createElement('span'); 
+            sender.className = 'message-sender'; 
+            sender.textContent = `${senderId}: ` 
+            messageDiv.appendChild(sender);
+            message.textContent = newMessage; 
+            message.clasName = 'message-content'; 
+            messageDiv.appendChild(message); 
+            relationshipChatDisplay.append(messageDiv); 
+            document.querySelector(`#input-${relationship}`).value = '';
+        }
+
+        const getChatHistory = async (relationship) => {
+            localStorage.setItem("inputValue", document.getElementById(`input-relationship${relationship}`).value); 
+            console.log('getting chat history'); 
+            fetch(`/${relationship}/chats`, {
+                    credentials: 'same-origin', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(chats => chats.json())
+                .then(chats => {
+                    document.getElementById(relationship+'-chat').innerText = '';
+                    for (let i = 0; i < chats.length; i++) {        
+                        document.querySelector(`#relationship${relationship}>.chat>p`).innerHTML = "Chat +";                  
+                        addNewChatMessage(chats[i]['Sender'], chats[i]['chatContent'], `relationship${relationship}`); 
+                        document.getElementById(`input-relationship${relationship}`).value = localStorage.getItem("inputValue"); 
+                    }
+                }); 
+        }
+
+        const sendChat = (relationshipId, userId, message) => {
+            console.log(relationshipId + ' ' + userId + ' ' + message);
+            fetch('/save-chat', {
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin', 
+                method: "POST", 
+                body: JSON.stringify({
+                    'relationshipId': relationshipId, 
+                    'userId': userId, 
+                    'message': message
+                })
+            })
+            .then(addNewChatMessage(userName, message, `relationship${relationshipId}`));
+        }
+
+        getRelationships(userId); 
+    </script>
+    
 </body>
-
 </html>

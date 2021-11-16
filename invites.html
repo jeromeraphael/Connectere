@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Invites</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+    <style>
+               
+       * {
+           font-family: 'Inter', sans-serif; 
+       }
+
+        .center {
+            margin: auto; 
+            display: table; 
+        }
+
+        .col-2 {
+            width: 50%; 
+        }
+
+        body {
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            box-sizing: border-box;
+        }
+
+        #body-wrapper {
+            margin-left: 1.5vw; 
+            margin-right: 1.5vw; 
+            margin-top: 1.5vh; 
+            margin-bottom: 1.5vh; 
+            width: 97vw; 
+            height: 100%; 
+        }
+
+        #main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
+        }
+
+        table {
+            font-size: .75rem;
+            font-weight: 100;  
+            margin-right: 1vw; 
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
+        }
+
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        #dash-grid {
+            display: inline-grid; 
+            grid-template-columns: auto auto auto; 
+        }
+
+        .invite {
+            margin-left: 1vw;
+            margin-right: 1vw;
+            margin-top: 1vh; 
+            margin-bottom: 1vh; 
+            border: 2px solid black; 
+            border-radius: 5px; 
+            padding: 10px; 
+        }
+
+        h5 {
+            padding: 0; 
+            margin: 0; 
+        }
+
+        button {
+            background-color: black;
+            border-style: none; 
+            color: #C9EDBE;
+            border-radius: 5px; 
+            height: 3vh;  
+            margin-top: 1vh; 
+        }
+
+        button:hover {
+            background-color: #59AFC9; 
+            color: white; 
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="body-wrapper" class='center'>
+        <div class="sidenav">
+            <h2>Connectere</h2>
+            <a id="contactPartnersId" href="/dashboard">Home</a>
+            <a id="searchId" href="/mentor/menteeSearch">Search for</a>
+            <a id="requestsId">Relationship Invites</a>
+            <a id="logOutId" href="/">Log Out</a>
+        </div>
+        <div id="main-body">
+            <div id="header">
+                <h1>Relationship Invites</h1>
+            </div>
+            <div id="dash-grid" class="center"></div>            
+        </div>
+    </div>
+    <!-- <div class="wrapper">
+		<section>
+			<h1>Invitation Form</h1>
+			<p>Fill in the form below and the mentor will get in touch with you as soon as possible.</p>
+			<p></p>
+				<fieldset>
+					<label for="name">Full Name </label>
+					<input type="text" id="name" name="name" autofocus>
+					<label for="phone">Phone Number</label>
+					<input type="tel" id="phone" name="phone" placeholder="Don't forget the area code!">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email">
+					<label for="email">Mentor Name/ ID</label>
+					<input type="mentorName" id="mentorName" name="mentorName">
+					<label for="message">Message:</label>
+					<textarea id="message" name="message"></textarea>
+					<input id="send_to" type="hidden" name="send_to" value="yourEmailHere">
+					<button type="submit">Submit</button>
+				</fieldset>
+				
+			</form>
+
+		</section>
+	
+	</div> -->
+    <script>
+        var userId = localStorage.getItem('userId'); 
+        var userType = localStorage.getItem('userType'); 
+
+        const getInvites  = () => {
+            fetch(`/${userId}/invites`, {
+                method: "GET", 
+                credentials: "same-origin", 
+                headers: {
+                    "Content-Type": "applicatoin/json"
+                }
+            })
+            .then(response => response.json())
+            .then(invites => {
+                invites.forEach(inv => {
+                    let inviteHTML = `
+                    <div class='invite' id=${inv['id']}>
+                        <h5 class='inviter'>${userType !== 'Mentor' ? inv['mentorName'] : inv['menteeName']} wants to connect</h5>
+                        <div class="otherPersonInfo">
+                            <table class="otherPersonTable">
+                                <tbody>
+                                    <tr>
+                                        <td><div class="expandedInfo label">Department: </div></td>
+                                        <td><div class="expandedInfo department">${userType !== 'Mentor' ? inv['mentorDepartment'] : inv['menteeDepartment']}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="expandedInfo label">Role: </div></td>
+                                        <td><div class="expandedInfo role">${userType !== 'Mentor' ? inv['mentorRole']: inv['menteeRole']}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="expandedInfo label">Email: </div></td>
+                                        <td><div class="expandedInfo email">${userType !== 'Mentor' ? inv['mentorEmail']: inv['menteeEmail']}</div></td>    
+                                    </tr>
+                                    <tr>
+                                        <td><div class="expandedInfo label">Goals: </div></td>
+                                        <td><div class="expandedInfo goals">${userType !== 'Mentor' ? inv['mentorGoals']: inv['menteeGoals']}</div></td>    
+                                    </tr>
+                                    <tr>
+                                        <td><div class="expandedInfo label">Ideal Relationship: </div></td>
+                                        <td><div class="expandedInfo idealRelationship">${userType !== 'Mentor' ? inv['mentorIdealRelationship']: inv['menteeIdealRelationship']}</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class='btn-div'>
+                            <button onclick='updateInvite(${inv['id']}, 'Accepted', 'Ongoing')'>Accept Invite</button>
+                            <button onclick='declineInvite(${inv['id']}, 'Declined', 'Terminated')'>Decline Invite</button>
+                        </div>
+                    </div>`
+                    document.getElementById('dash-grid').insertAdjacentHTML('afterbegin', inviteHTML); 
+                })
+            }); 
+        }
+
+        getInvites(); 
+
+        const updateInvite = (id, status, relStatus) => {
+            fetch(`invite/${id}/update`, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "id": id,
+                    "inviteStatus": status,
+                    "relationshipStatus": relStatus
+                })
+            })
+            .then(response => response.json())
+            .then(response => {
+                alert(`You have successfully ${status} the invite.`); 
+                document.getElementById(id).remove(); 
+            })
+        }
+
+    </script>
+</body>
+
+</html>

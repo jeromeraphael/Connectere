@@ -106,7 +106,7 @@
         button {
             background-color: black;
             border-style: none; 
-            color: #59AFC9;
+            color: #C9EDBE;
             border-radius: 5px; 
             height: 10vh;  
         }
@@ -124,19 +124,11 @@
     <body>
         <div class="sidenav">
             <h2>Connectere</h2>
-
-            <a id="searchId" href="/mentor/mentorSearch">Search for Users</a>
-            <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
-            <a id="requestsId">Requests</a>
-
+            <a id="home" href="/dashboard">Home</a>
+            <a id="searchId" href="/mentor/search">Search for Mentors</a>
+            <a id="requestsId">Relationship Invites</a>
             <!-- app.get('/admin/reports') -->
-            <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
-
             <!-- app.get('/admin/users') -->
-
-
-            <a id="chatId" href="/chat">Chat</a>
-
             <!-- logOutId -->
             <a id="logOutId" href="/">Log Out</a>
         </div>
@@ -147,7 +139,7 @@
                     <h1>Mentor Search</h1>
                     <b>Search the table for a Mentor:
                         <br><br>
-                        <input id="input" type="text" placeholder="Search here">
+                        <input id="input" type="text" placeholder="Search here" autocomplete="off">
                     </b>
                     <br>
                     <br>
@@ -184,7 +176,7 @@
                 .then(mentors => {
                     mentors.forEach(mentor => {
                         let mentorRow = 
-                        `<tr>
+                        `<tr id=${mentor['u.userId']}>
                             <td class='name'>${mentor['firstName']} ${mentor['lastName']}</td>
                             <td class='department'>${mentor['department']}</td>
                             <td class='role'>${mentor['role']}</td>
@@ -213,7 +205,7 @@
             let x = document.getElementById(button).textContent;
             
 
-                alert("Your request has been sent. You may rescind your request on your connections page.")
+                alert("Your request has been sent.")
                 document.getElementById(button).innerHTML = "Sent"; 
                 document.getElementById(button).disabled = true;
                 document.getElementById(button).style.backgroundColor = '#59AFC9';
