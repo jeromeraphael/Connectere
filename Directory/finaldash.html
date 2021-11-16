@@ -5,7 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Final Dash</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
     <style>
+       
+       * {
+           font-family: 'Inter', sans-serif; 
+       }
+
         .center {
             margin: auto; 
             display: table; 
@@ -26,6 +34,14 @@
             width: 95%; 
         }
 
+        input {
+            margin-top: 1vh; 
+            padding-top: 1vh; 
+            padding-bottom: 1vh; 
+        }
+
+        
+
         .relationshipDiv {
             /* display: inline-grid;  */
             border: 2px solid black; 
@@ -44,7 +60,7 @@
 
         #dash-grid {
             display: inline-grid; 
-            grid-template-columns: 45vw 45vw; 
+            grid-template-columns: 40vw 40vw; 
         }
 
         #body-wrapper {
@@ -56,6 +72,12 @@
             height: 100%; 
         }
 
+        #main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
+        }
 
         .chat, .relationshipInfo {
             display: inline; 
@@ -72,43 +94,140 @@
             overflow-y: auto;  
         }
 
-        h5 {
+        h3 {
             margin: 0; 
+            width: auto; 
         }
 
         .chatHeader {
-            background-color: black; 
-            color: white; 
+            background-color: black;
+            color: #C9EDBE; 
             margin: 0; 
             padding: 0.75em;
             padding-right: 0;  
             width: auto; 
-            margin-bottom: 1vh; 
+            margin-bottom: 1vh;
+            position: sticky; 
+            top: 0px;  
+        }
+
+        .chatHeader:hover {
+            cursor: pointer; 
         }
 
         .chatDisplayBox {
             display: none; 
+            font-size: 0.75rem; 
         }
 
         .chatDisplayBox.show {
             display: table;  
         }
 
+        table {
+            font-size: .75rem;
+            font-weight: 100;  
+            margin-right: 1vw; 
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
+        }
+
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+
     </style>
 </head>
 <body>
     <div id="body-wrapper" class='center'>
-        <div id="nav"></div>
-        <div id="header">
-            <h1>Ongoing Relationships</h1>
+        <div class="sidenav">
+            <h2>Connectere</h2>
+    
+            <a id="searchId" href="/mentor/menteeSearch">Search for</a>
+            <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
+            <a id="requestsId">Requests</a>
+    
+            <!-- app.get('/admin/reports') -->
+            <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
+    
+            <!-- app.get('/admin/users') -->
+    
+    
+            <a id="chatId" href="/chat">Chat</a>
+    
+            <!-- logOutId -->
+            <a id="logOutId" href="/">Log Out</a>
         </div>
-        <div id="dash-grid" class="center">
+        <div id="main-body">
+            <div id="header">
+                <h1>Ongoing Relationships</h1>
+            </div>
+            <div id="dash-grid" class="center"></div>            
         </div>
     </div>
     <script>
-        var userId = 3; 
-        var userType = 'mentee'; 
-        
+        var userId = localStorage.getItem("userId"); 
+        var userType = localStorage.getItem('userType'); 
+        var searchId = document.getElementById('searchId'); 
+
+
+        switch (userType) {
+            case "Mentor": 
+                searchId.innerHTML += ' Mentees'
+                searchId.href = '/mentee/search'
+                break; 
+            case "Mentee": 
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
+                break; 
+            default: 
+                console.log('incorrect user type defined'); 
+                break; 
+        }
+
         const getRelationships = (userId) => {
             fetch(`/${userId}/ongoingRelationships`, {
                 method: "GET", 
@@ -127,7 +246,33 @@
                     let relationshipGridDiv = `
                     <div id="relationship${id}" class='relationshipDiv'>
                         <div class='relationshipInfo col-2'>
-                            <h5 class='relationshipHeader'>${userType !== 'mentor' ? "Mentor: ": "Mentee: "}${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
+                            <h3 class='relationshipHeader'>${userType !== 'mentor' ? "Mentor: ": "Mentee: "}${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
+                                <div class="otherPersonInfo">
+                                    <table class="otherPersonTable">
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Department: </div></td>
+                                                <td><div class="expandedInfo department">${userType !== 'mentor' ? relationship['mentorDepartment'] : relationship['menteeDepartment']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Role: </div></td>
+                                                <td><div class="expandedInfo role">${userType !== 'mentor' ? relationship['mentorRole']: relationship['menteeRole']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Email: </div></td>
+                                                <td><div class="expandedInfo email">${userType !== 'mentor' ? relationship['mentorEmail']: relationship['menteeEmail']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Goals: </div></td>
+                                                <td><div class="expandedInfo goals">${userType !== 'mentor' ? relationship['mentorGoals']: relationship['menteeGoals']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Ideal Relationship: </div></td>
+                                                <td><div class="expandedInfo idealRelationship">${userType !== 'mentor' ? relationship['mentorIdealRelationship']: relationship['menteeIdealRelationship']}</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             <p class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
                             <p class='dateBegan'>Relationship began ${dateDiff} days ago</p>
                         </div>
@@ -146,6 +291,8 @@
                     let input = document.getElementById(`input-relationship${id}`);
                     let chatHeader = document.querySelector(`#relationship${id}>.chat>.chatHeader`);
                     let chatHistory = document.querySelector(`#relationship${id}>.chat>.chatDisplayBox`); 
+
+                    let otherPersonInfo = document.querySelector(`#relationship${id}>div>h3`); 
 
                     form.addEventListener('submit', e => {
                         e.preventDefault(); 
@@ -186,15 +333,15 @@
         }
 
         getUserData(userId); 
-        let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
-        console.log(userName); 
+        // let userName = JSON.parse(localStorage.getItem('userData'))[0]["Full Name"];
+        // console.log(userName); 
 
         const addNewChatMessage = (senderId, newMessage, relationship) => {
             let relationshipChatDisplay = document.querySelector(`#${relationship}>.chat>.chatDisplayBox`); 
             let messageDiv = document.createElement('div');
             let message = document.createElement('span');
             let sender = document.createElement('span'); 
-            sender.className = 'mesage-sender'; 
+            sender.className = 'message-sender'; 
             sender.textContent = `${senderId}: ` 
             messageDiv.appendChild(sender);
             message.textContent = newMessage; 

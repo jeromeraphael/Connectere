@@ -63,9 +63,8 @@ app.post("/validate-login", (req, res) => {
           loginValid: true,
           userId: results[0]["userId"],
           userName: results[0]["email"],
-          userType: results[0]["userType"],
-          userFullName: results[0]['firstName'] + ' ' + results[0]['lastName']
-          });
+          userType: results[0]["userType"]
+        });
       }
     } catch (e) {
       console.log(e);
@@ -122,14 +121,8 @@ app.get("/mentee/dashboard", (req, res) => {
   res.sendFile(__dirname + "/mentee_dash.html");
 });
 
-// Test
 app.get("/chat", (req, res) => {
   res.sendFile(__dirname + "/chat.html");
-});
-
-// app.get(mentee)
-app.get("/mentee/reports", (req, res) => {
-  res.sendFile(__dirname + "/Directory/Report/reports.html");
 });
 
 app.get("/Directory/menteeSearch", (req, res) => {
@@ -159,26 +152,32 @@ app.get("/users/edit", (req, res) => {
 //   );
 // });
 
-// Server Test - Ben
-// admin_dash => populate table with all mentors
-app.get('/users/mentors', (req, res) => {
-  res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, role, department, goals, idealRelationship, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";', (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-}); 
+app.get("/users/mentors", (req, res) => {
+  console.log("test test test test test test test");
+  res.contentType("application/json");
+  pool.query(
+    'SELECT firstName, lastName, email, department, reasonForUse, u.userId, mentorId FROM Mentors me JOIN Users u ON me.userId = u.userId WHERE firstName is not null and firstName != "";',
+    (err, rows) => {
+      if (err) throw err;
+      console.log(rows);
+      res.send(rows);
+    }
+  );
+});
 
 // getting mentee information for the userpage
-app.get('/users/mentees', (req, res) => {
-  res.contentType('application/json');
-  pool.query('SELECT firstName, lastName, email, role, department, goals, idealRelationship, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""', [], (err, rows) => {
-    if (err) throw err; 
-    console.log(rows); 
-    res.send(rows); 
-  }); 
-}); 
+app.get("/users/mentees", (req, res) => {
+  res.contentType("application/json");
+  pool.query(
+    'SELECT firstName, lastName, email, department, reasonForUse, u.userId, menteeId FROM Mentees m JOIN Users u ON m.userId = u.userId WHERE firstName is not null and firstName != ""',
+    [],
+    (err, rows) => {
+      if (err) throw err;
+      console.log(rows);
+      res.send(rows);
+    }
+  );
+});
 
 app.get("/invites/count", (req, res) => {
   res.contentType("application/json");
@@ -191,51 +190,6 @@ app.get("/invites/count", (req, res) => {
     }
   );
 });
-
-app.get('/invites', (req, res) => {
-  res.sendFile(__dirname + '/invites.html'); 
-}); 
-
-app.get("/:userId/invites", (req, res) => {
-  let sql = `
-  SELECT i.inviteId as "id", i.inviteContent, CONCAT(u.firstName, ' ', u.lastName) as "mentorName", 
-	u.role as "mentorRole", u.department as "mentorDepartment", u.email as "mentorEmail", 
-    u.goals as "mentorGoals", u.idealRelationship as "mentorIdealRelationship",
-    CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
-	u2.role as "menteeRole", u2.department as "menteeDepartment", u2.email as "mentorEmail",
-    u2.goals as "menteeGoals", u2.idealRelationship as "menteeIdealRelationship"
-    FROM Invites i 
-		join Mentors m on m.mentorId = i.mentorId 
-		join Mentees me on me.menteeId = i.menteeId 
-        join Users u on u.userId = m.userId
-        join Users u2 on u2.userId = me.userId
-    WHERE i.inviteLifeCycleStatus NOT IN ("Accepted", "Declined")
-    AND (m.userId = ? or me.userId = ?);`
-  pool.query(sql, [req.params.userId, req.params.userId], (err, results) => {
-    if (err) throw err; 
-    res.json(results);
-  })
-}); 
-
-app.get(`/pardon/:reportId`, (req, res) => {
-  let sql = 
-  `DELETE FROM Reports
-    WHERE reportId = ?`
-  pool.query(sql, [req.params.reportId], (err, results) => {
-    if (err) throw err; 
-    console.log('report has been pardoned'); 
-  }); 
-}); 
-
-app.get('/ban/:userId', (req, res) => {
-  let sql = 
-  `DELETE FROM Users
-   WHERE userId = ?`
-  pool.query(sql, [req.params.userId], (err, results) => {
-    if (err) throw err; 
-    console.log('user has been deleted'); 
-  })
-})
 
 app.get("/users/count", (req, res) => {
   // res.contentType('application/json');
@@ -314,41 +268,28 @@ app.get("/:userId/relationships", (req, res) => {
   });
 });
 
-app.get('/:userId/ongoingRelationships', (req, res) => {
+app.get("/:userId/ongoingRelationships", (req, res) => {
   let sql = `
-  SELECT CONCAT(u.firstName, " ", u.lastName) as "mentorName", 
-    u.email as "mentorEmail",
-    u.department as "mentorDepartment", 
-    u.role as "mentorRole", 
-    u.goals as "mentorGoals", 
-    u.idealRelationship as "mentorIdealRelationship",
-    CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
-    u2.email as "menteeEmail",
-    u2.department as "menteeDepartment", 
-    u2.role as "menteeRole",
-    u2.goals as "menteeGoals", 
-    u2.idealRelationship as "menteeIdealRelationship", 
-    dateBegan, lifeCycleStatus, relationshipId
-  FROM Relationships r
-    JOIN Mentors m on m.mentorId = r.mentorId
-    JOIN Users u on u.userId = m.userId
-        JOIN Mentees me on me.menteeId = r.menteeId
-        JOIN Users u2 on u2.userId = me.userId
-  WHERE lifeCycleStatus IN ("Ongoing")
-  AND (u2.userId = ? OR u.userId = ?);`
-  pool.query(sql, [req.params.userId, req.params.userId], (err, results) => {
-    if (err) throw err; 
-    res.json(results); 
-  })
-}); 
-
-app.get('/mentee/search', (req, res) => {
-  res.sendFile(__dirname + "/mentee_search.html"); 
-}); 
-
-app.get('/mentor/search', (req, res) => {
-  res.sendFile(__dirname + '/mentor_search.html'); 
-}); 
+    SELECT CONCAT(u.firstName, " ", u.lastName) as "mentorName", 
+      u.email as "mentorEmail",
+      u.department as "mentorDepartment", 
+      u.role as "mentorRole", 
+      CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
+      u2.email as "menteeEmail",
+      u2.department as "menteeDepartment", 
+      u2.role as "menteeRole",
+      dateBegan, lifeCycleStatus, relationshipId
+    FROM Relationships r
+      JOIN Mentors m on m.mentorId = r.mentorId
+      JOIN Users u on u.userId = m.userId
+          JOIN Mentees me on me.menteeId = r.menteeId
+          JOIN Users u2 on u2.userId = me.userId
+    WHERE lifeCycleStatus IN ("Ongoing", "pendingInviteAc");`;
+  pool.query(sql, [], (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
 
 app.get("/users", (req, res) => {
   res.contentType("application/json");
@@ -363,12 +304,6 @@ app.get("/users", (req, res) => {
 app.get("/finaldash", (req, res) => {
   res.sendFile(__dirname + "/Directory/finaldash.html");
 });
-
-app.get('/:userId/mentorId', (req, res) => {
-  let sql = `SELECT mentorId FROM Users u JOIN `
-}); 
-
-app.get('/')
 
 app.post("/update", (req, res) => {
   let sql = `
@@ -409,16 +344,6 @@ app.post("/update", (req, res) => {
   );
 });
 
-app.post('/invite/:id/update', (req, res) => {
-  let sql = `
-  UPDATE Invites SET inviteLifeCycleStatus = ? WHERE inviteId = ?; 
-  UPDATE Relationships SET lifeCycleStatus = ? Where inviteId = ?`;
-  pool.query(sql, [req.body.status, req.params.id, req.body.lifeCycleStatus, req.params.id], (err, results) => {
-    if (err) throw err; 
-    console.log('relationship and invite have been updated'); 
-  })
-}); 
-
 app.post("/save-chat", (req, res) => {
   let sql = `INSERT INTO Chats (relationshipId, senderId, chatContent) VALUES (?, ?, ?)`;
   pool.query(
@@ -458,9 +383,6 @@ app.post("/reports", (req, res) => {
     }
   );
 });
-
-app.get(`/`)
-
 
 app.post("/create-account", (req, res) => {
   // inserting data into the database with create-account
@@ -531,12 +453,24 @@ app.post("/create-account", (req, res) => {
 // });
 
 // lol hopefully these are some good post requests :v)
-app.post('/send-invite', (req, res) => {
-  let sql = `INSERT INTO Invites(inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?)`
-  pool.query(sql, [req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
-    if (err) throw err;
-    console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
-  }); 
+app.post("/send-invite", (req, res) => {
+  let sql = `INSERT INTO Invites(inviteId, inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?, ?)`;
+  pool.query(
+    sql,
+    [
+      req.body.inviteId,
+      req.body.inviteContent,
+      req.body.inviteLifecycleStatus,
+      req.body.mentorId,
+      req.body.menteeId,
+    ],
+    (err, results) => {
+      if (err) throw err;
+      console.log(
+        `Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`
+      );
+    }
+  );
 });
 
 app.post("/send-relationship", (req, res) => {

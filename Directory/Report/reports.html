@@ -5,235 +5,242 @@
 	<meta charset="UTF-8">
 	<title>Report User</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
 	<style>
+		
 		* {
-			font-family: 'Inter', sans-serif;
+			font-family: 'Inter', sans-serif; 
 		}
-
+		
 		fieldset {
 			padding: 2%;
-			border-radius: 5px;
+			border-radius: 5px;  
 		}
 
 		textarea {
-			width: 40vw;
-			height: 8vh;
+			width: 40vw; 
+			height: 8vh; 
 		}
 
-		input,
-		textarea {
-			margin: -5px;
+		input, textarea {
+			margin: -5px; 
 		}
 
-		input:focus,
-		textarea:focus {
-			border-color: lightgreen;
-			outline: none !important;
-			border: 1px solid lightgreen;
+		input:focus, textarea:focus {
+			border-color: lightgreen; 
+			outline: none !important; 
+			border: 1px solid lightgreen; 
 		}
 
 		h5 {
-			margin: 0;
-			font-size: 1.25rem;
+			margin: 0; 
+			font-size: 1.25rem; 
 		}
-
+		
 		#submit-popup {
 			visibility: hidden;
 		}
 
 		#submit-popup.show {
-			visibility: visible;
+			visibility: visible; 
 			background-color: lightgreen;
 		}
 
-		#comments{
-			width: 405px;
-		}
-
-		/* NAV */
 		.sidenav {
-			height: 100%;
-			width: 220px;
-			position: fixed;
-			z-index: 1;
-			top: 0;
-			left: 0;
-			background-color: black;
-			overflow-x: hidden;
-			padding-top: 20px;
-			border-radius: 1px;
-		}
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
+        }
 
-		.sidenav h2 {
-			color: #C9EDBE;
-			text-align: center;
-		}
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
 
-		.sidenav a {
-			padding: 6px 6px 6px 32px;
-			text-decoration: none;
-			font-size: 25px;
-			color: #59AFC9;
-			display: block;
-		}
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
+        }
 
-		.sidenav a:hover {
-			color: #C9EDBE;
-		}
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
 
-		.main {
-			width: 40vw;
-			display: block; 
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+		#main-body {
+            display: block; 
             float: left;
             position:absolute; 
-            left: 15vw;
-			/* Same as the width of the sidenav */
+            left: 18vw;  
+        }
+
+		section {
+			width: 40vw; 
 		}
 
-		@media screen and (max-height: 450px) {
-			.sidenav {
-				padding-top: 15px;
-			}
-
-			.sidenav a {
-				font-size: 18px;
-			}
-		}
 	</style>
 </head>
 
 <body>
 	<div class="sidenav">
 		<h2>Connectere</h2>
-		<a id="homeId" href="/">Home</a>
-
-
-		<a id="searchId" href="/mentor/menteeSearch">Search for Mentors</a>
-		<a id="contactPartnersId" href="/finaldash">Connections</a>
-		<a id="requestsId">Invites</a>
-		<!-- Report A user -->
-		<a id="reportsId" href="/mentee/reports">Report A User</a>
-
-		<!-- logOutId -->
+		<a id="contactPartnersId" href="/dashboard">Home</a>
+		<a id="searchId" href="/mentor/menteeSearch">Search for</a>
+		<a id="requestsId" href='/invites'>Relationship Invites</a>
+		<a href="/Directory/reports" id="reportsId"></a>
 		<a id="logOutId" href="/">Log Out</a>
 	</div>
-
-	<div class="main">
-		<div class="wrapper">
-			<section>
-				<h1>Report Form</h1>
-				<p>Fill out the form below.</p>
-				<form class="form" id="myForm">
-					<fieldset>
-						<legend>Your contact information</legend>
-						<label for="name">Full Name </label>
-						<br>
-						<input type="text" id="name" name="name" autofocus>
-						<br><br>
-						<label for="email">Email</label>
-						<br>
-						<input type="email" id="email" name="email">
-					</fieldset>
-					<fieldset>
-						<legend>About your Report </legend>
-						<label for="date">Incident Date</label>
-						<br>
-						<input type="date" id="date" name="date">
-						<br><br>
-						<label for="name">User to Report (First and Last Name)</label>
-						<br>
-						<input type="text" id="reportee" name="reportee">
-						<br><br>
-						<h5>What are you reporting?</h5>
-						<label>
-							<input type="radio" name="radio" value="Harassment, Bullying, Defamation" checked>
-							Harassment, Bullying, Defamation and Threats
-						</label>
-						<br>
-						<label>
-							<input type="radio" name="radio" value="Hateful Content"> Hateful Content
-						</label>
-						<br>
-						<label>
-							<input type="radio" name="radio" value="Malicious and Deceptive Practices"> Malicious and
-							Deceptive Practices
-						</label>
-						<br>
-						<label>
-							<input type="radio" name="radio"
-								value="Personal, Confidential, and Protected Health Information"> Personal, Confidential
-							and Protected Health Information
-						</label>
-						<br>
-						<label>
-							<input type="radio" name="radio" value="Spam"> Spam
-						</label>
-						<P></P>
-						<label for="comments">Comments:</label>
-						<br><br>
-						<textarea id="comments" name="comments"></textarea>
-						<br><br>
-						<button onclick='sendFormData(this.form)'>Submit</button>
-					</fieldset>
-				</form>
-				<div id="submit-popup">
-					<p id="submit-msg">You have successfully submitted your report.</p>
-				</div>
-			</section>
-
-		</div>
-
+	<div id="main-body">
+		<section>
+			<h1>Report Form</h1>
+			<p>Fill out the form below.</p>
+			<form class="form" id="myForm">
+				<fieldset>
+					<legend>Your contact information</legend>
+					<label for="name">Full Name </label>
+					<br>
+					<input type="text" id="name" name="name" autofocus>
+					<br><br>
+					<label for="email">Email</label>
+					<br>
+					<input type="email" id="email" name="email">
+				</fieldset>
+				<fieldset>
+					<legend>About your Report </legend>
+					<label for="date">Incident Date</label>
+					<br>
+					<input type="date" id="date" name="date">
+					<br><br>
+					<label for="name">User to Report (First and Last Name)</label>
+					<br>
+					<input type="text" id="reportee" name="reportee">
+					<br><br>
+					<h5>What are you reporting?</h5>
+					<label>
+						<input type="radio" name="radio" value="Harassment, Bullying, Defamation" checked> Harassment, Bullying, Defamation and Threats
+					</label>
+					<br>
+					<label>
+						<input type="radio" name="radio" value="Hateful Content"> Hateful Content
+					</label>
+					<br>
+					<label>
+						<input type="radio" name="radio" value="Malicious and Deceptive Practices"> Malicious and Deceptive Practices
+					</label>
+					<br>
+					<label>
+						<input type="radio" name="radio" value="Personal, Confidential, and Protected Health Information"> Personal, Confidential and Protected Health Information
+					</label>
+					<br>
+					<label>
+						<input type="radio" name="radio" value="Spam"> Spam
+					</label>
+					<P></P>
+					<label for="comments">Comments:</label>
+					<br><br>
+					<textarea id="comments" name="comments"></textarea>
+					<br><br>
+					<button onclick='sendFormData(this.form)'>Submit</button>
+				</fieldset>
+			</form>
+			<div id="submit-popup">
+				<p id="submit-msg">You have successfully submitted your report.</p>
+			</div>
+		</section>
+	
 	</div>
-
-
-
 	<script>
 
+		var userId = localStorage.getItem("userId"); 
+        var userName = localStorage.getItem("userName"); 
+        var userType = localStorage.getItem('userType'); 
+        var searchId = document.getElementById('searchId'); 
+
+
+        switch (userType) {
+            case "Mentor": 
+                searchId.innerHTML += ' Mentees'
+                searchId.href = '/mentee/search'
+                break; 
+            case "Mentee": 
+                searchId.innerHTML += ' Mentors'
+                searchId.href = '/mentor/search'
+                break; 
+            default: 
+                console.log('incorrect user type defined'); 
+                break; 
+        }
 		// var userId = localStorage.getItem('userId')
 
-		var form = document.getElementById('myForm');
+		var form = document.getElementById('myForm'); 
 		form.addEventListener('submit', (e) => {
-			e.preventDefault();
+			e.preventDefault(); 
 		})
 
-		var userId = 2;
+		var userId = 2; 
 
 		const sendFormData = (form) => {
 			let name = form.name.value;
 			let email = form.email.value;
-			let reportee = form.reportee.value;
+			let reportee = form.reportee.value; 
 			let date = form.date.value;
 			let reason = form.radio.value;
-			let comments = form.comments.value ?? 'none';
-			console.log(name, email, reportee, date, reason, comments);
+			let comments = form.comments.value ?? 'none'; 
+			console.log(name, email, reportee, date, reason, comments); 
 
 			fetch('/reports', {
-				credentials: "same-origin",
-				headers: { "Content-Type": "application/json" },
-				method: "POST",
+				credentials: "same-origin", 
+				headers: {"Content-Type": "application/json"}, 
+				method: "POST", 
 				body: JSON.stringify({
 					"reporterId": userId,
-					"name": name,
-					"email": email,
-					"reportee": reportee,
-					"date": date,
-					"reason": reason,
+					"name": name, 
+					"email": email, 
+					"reportee": reportee, 
+					"date": date, 
+					"reason": reason, 
 					"comments": comments
 				})
 			})
-				.then(response => console.log(response))
-				.then(response => {
-					let submitMsg = document.getElementById('submit-popup');
-					submitMsg.classList.add('show');
-					setTimeout(() => {
-						submitMsg.classList.remove('show');
-					}, 3000);
-				});
+			.then(response => console.log(response))
+			.then(response => {
+				let submitMsg = document.getElementById('submit-popup'); 
+				submitMsg.classList.add('show'); 
+				setTimeout( () => {
+					submitMsg.classList.remove('show'); 
+				}, 3000); 
+			}); 
 		}
 
-
+		
 
 
 		// const myForm = document.getElementById('myForm');

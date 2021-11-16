@@ -1,188 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
-    <title>Active Users</title>
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+        <title>Document</title>
+        <style>
+            * {
+                font-family: 'Inter', sans-serif;
+            }
+            #firstRowId{
+                background-color: #59afc9;
+            }
+            
+            table {
+                border: solid black 1px;
+            }
+    
+            td {
+                border-right: solid black 1px;
+            }
+    
+            th {
+                border-right: solid black 1px;
+                padding: 0px 30px;
+            }
+            
+            tr:nth-child(even) {
+                background-color: #B6D6D5;
+            }
+    
+            tr:nth-child(odd) {
+                background-color: #FFFFFF;
+            }
 
-        #firstRowId {
-            background-color: #59afc9;
-        }
-
-        table {
-            border: solid black 1px;
-        }
-
-        td {
-            border-right: solid black 1px;
-            color: black;
-        }
-
-        th {
-            border-right: solid black 1px;
-            padding: 0px 30px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #B6D6D5;
-        }
-
-        tr:nth-child(odd) {
-            background-color: #FFFFFF;
-        }
-
-        /* NAV */
-        body {
+            body {
             font-family: "Inter", sans-serif;
         }
 
-        .sidenav {
-            height: 100%;
-            width: 200px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: black;
-            overflow-x: hidden;
-            padding-top: 20px;
-            border-radius: 1px;
-        }
-
-        .sidenav h2{
-            color: #C9EDBE;
-            text-align: center;
-        }
-
-        .sidenav a {
-            padding: 6px 6px 6px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #59AFC9;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            color: #C9EDBE;
-        }
-
-        .main {
-            margin-left: 200px;
-            /* Same as the width of the sidenav */
-        }
-
-        @media screen and (max-height: 450px) {
             .sidenav {
-                padding-top: 15px;
+                height: 100%;
+                width: 200px;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: black;
+                overflow-x: hidden;
+                padding-top: 20px;
+                border-radius: 1px;
+            }
+
+            .sidenav h2{
+                color: #C9EDBE;
+                text-align: center;
             }
 
             .sidenav a {
-                font-size: 18px;
+                padding: 6px 6px 6px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #59AFC9;
+                display: block;
             }
-        
+
+            .sidenav a:hover {
+                color: #C9EDBE;
+            }
+
+            .main {
+                margin-left: 200px;
+                /* Same as the width of the sidenav */
+            }
+
+            @media screen and (max-height: 450px) {
+                .sidenav {
+                    padding-top: 15px;
+                }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+            }
+
+            #main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
         }
+        </style>
+    </head>
+    
+    <body onload="loadInfo()">
+        <div class="sidenav">
+            <h2>Connectere</h2>
+            <a id="searchId" href="/admin/users">View Active Users</a>
+            <a id="reportsId" href="/admin/reports">Reports</a>
+            <a id="logOutId" href="/">Log Out</a>
+        </div>
 
-        /* Mentor Table */
-        /* #firstRowMentor {
-            background-color: black;
-            color: #C9EDBE;
-        }
-
-        #mentorTableId {
-            border: solid black 5px; */
-    </style>
-</head>
-
-<body onload="loadInfo()">
-    <div class="sidenav">
-        <h2>Connectere</h2>
-        <a id="searchId" href="/admin/users">View Active Users</a>
-        <a id="reportsId" href="/admin/reports">Reports</a>
-        <a id="logOutId" href="/">Log Out</a>
-    </div>
-
-    <div class="main">
         <!-- We gonna get dat information from the database -->
-        <div id="userCountDiv">
-            <h2>X Users are on Connectere.</h2>
+        <div id="main-body">
+            <div id="userCountDiv">
+                <h2>X Users are on Connectere.</h2>
+            </div>
+            
+            <div id="mentorDiv">
+                <h2>Mentors</h2>
+                <table rules ="none" id="mentorTableId">
+                </table>
+            </div>
+            
+            <div id="menteeDiv">
+                <h2>Mentees</h2>
+                <table rules="none" id="menteeTableId">
+                </table>
+            </div> 
         </div>
-
-        <div id="mentorDiv">
-            <h2>Mentors</h2>
-            <table rules="none" id="mentorTableId">
-            </table>
-        </div>
-
-        <div id="menteeDiv">
-            <h2>Mentees</h2>
-            <table rules="none" id="menteeTableId">
-            </table>
-        </div>
-    </div>
-
-</body>
-
-
-
-<script text="text/javascript">
+    </body>
+    
+    
+    
+    <script text="text/javascript">
     // loadInfo is called when the page is loaded :v)
     const loadInfo = () => {
-
-        // fetching the data for user count and sending to JSON.
-        fetch('/users/count', {
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(count => count.json())
-
+    
+            // fetching the data for user count and sending to JSON.
+            fetch('/users/count', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(count => count.json())
+    
             // adding the user count into the userCountDiv after the last child element
             .then(count => {
                 console.log(count)
                 //document.getElementById('userCountDiv').insertAdjacentHTML('beforebegin', `<h2>${count[0]["count(firstName)"]}</h2>`);
                 document.getElementById('userCountDiv').innerHTML = `<h2>${count[0]["count(userType)"]} Users are on Connectere.</h2>`;
             })
-
-        // same thing as above
-        fetch('/users/mentors', {
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(mentors => mentors.json())
-
-
+    
+            // same thing as above
+            fetch('/users/mentors', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(mentors => mentors.json())
+    
+            
             // kinda similar to how the count is handled
             // mentorRows finna get all the info from each mentor in the array, and is added into mentorTable
             // mentorTable is then added after the last child of the existing mentor table....? <FIX BEFORE FINAL SPRINT NATHAN!!!!
             .then(mentors => {
                 console.log(mentors)
-
+    
                 let mentorRows = "";
-
+    
                 for (let i = 0; i < mentors.length; i++) {
-                    let mentor = mentors[i];
-                    mentorRows += `<tr>
-                    <td>${mentor.firstName}</td>
-                    <td>${mentor.lastName}</td>
-                    <td>${mentor.email}</td>
-                    <td>${mentor.department}</td>
-                    <td>${mentor.userId}</td>
-                    <td>${mentor.mentorId}</td>
+                  let mentor = mentors[i];
+                  mentorRows += `<tr>
+                    <th>${mentor.firstName}</th>
+                    <th>${mentor.lastName}</th>
+                    <th>${mentor.email}</th>
+                    <th>${mentor.department}</th>
+                    <th>${mentor.userId}</th>
+                    <th>${mentor.mentorId}</th>
                   </tr>`
                 }
-
+    
                 let mentorTable = `
-                <table id="mentorTableId">
-                    <tr id="firstRowMentor">
+                <table>
+                    <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
@@ -195,23 +189,23 @@
                 // FIX THIS BEFORE WE GOTTA TURN THIS IN NATHAN!
                 document.getElementById('mentorTableId').insertAdjacentHTML('beforeend', mentorTable);
             })
-
-        // same as above :v)
-        fetch('/users/mentees', {
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(mentees => mentees.json())
-
+    
+            // same as above :v)
+            fetch('/users/mentees', {
+                credentials: "same-origin",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(mentees => mentees.json())
+    
             .then(mentees => {
                 console.log(mentees)
-
+    
                 let menteeRows = "";
-
+    
                 for (let i = 0; i < mentees.length; i++) {
-                    let mentee = mentees[i];
-                    menteeRows += `<tr>
+                  let mentee = mentees[i];
+                  menteeRows += `<tr>
                     <th>${mentee.firstName}</th>
                     <th>${mentee.lastName}</th>
                     <th>${mentee.email}</th>
@@ -220,7 +214,7 @@
                     <th>${mentee.menteeId}</th>
                   </tr>`
                 }
-
+    
                 let menteeTable = `
             <table>
                 <tr>
@@ -233,11 +227,10 @@
                 </tr>
                 ${menteeRows}
             </table>`
-
+    
                 document.getElementById('menteeTableId').insertAdjacentHTML('beforeend', menteeTable);
             })
-    }
-
-</script>
-
-</html>
+        }
+    
+    </script>
+    </html>

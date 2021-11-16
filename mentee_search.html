@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+    <title>Mentor Search</title>
+    <style>
+        
+        * {
+           font-family: 'Inter', sans-serif; 
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 50%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            width: auto; 
+            padding-top: 1.5vh;
+            padding-left: 1.5vw; 
+            padding-bottom: 1.5vh; 
+            padding-right: 1.5vw; 
+        }
+
+        h1 {
+            color: #C9EDBE;
+            background: black;
+            border-radius: 5px; 
+            width: 35vw; 
+            padding: 7.5px; 
+        }
+
+        /* NAV */
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 13vw;
+            display: block; 
+            position: fixed;
+            /* z-index: 0; */
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            padding-top: 3vh;
+            border-radius: 1px;
+            padding-right: 2vw; 
+            float: left; 
+        }
+
+        .sidenav h2{
+            color: #C9EDBE;
+            text-align: center;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 1.5vw;
+            color: #59AFC9;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #C9EDBE;
+        }
+
+        .main {
+            margin-left: 200px;
+            /* Same as the width of the sidenav */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        #gfg {
+            width: 30vw; 
+        }
+
+        td.button {
+            border: none; 
+            width: 5vw; 
+            height: 100%;
+        }
+
+        button {
+            background-color: black;
+            border-style: none; 
+            color: #C9EDBE;
+            border-radius: 5px; 
+            height: 10vh;  
+        }
+
+        button:hover {
+            background-color: #59AFC9; 
+            color: white; 
+        }
+
+
+    </style>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+    <body>
+        <div class="sidenav">
+            <h2>Connectere</h2>
+            <a id="home" href="/dashboard">Home</a>
+            <a id="searchId" href="/mentee/search">Search for Mentees</a>
+            <a id="requestsId">Relationship Invites</a>
+            <!-- app.get('/admin/reports') -->
+            <!-- app.get('/admin/users') -->
+            <!-- logOutId -->
+            <a id="logOutId" href="/">Log Out</a>
+        </div>
+
+        <div class="main">
+            <div id="welcome">
+                <center>
+                    <h1>Mentee Search</h1>
+                    <b>Search the table for Mentees or Department:
+                        <br><br>
+                        <input id="input" type="text" placeholder="Search here" autocomplete="off">
+                    </b>
+                    <br>
+                    <br>
+                    <table id="menteeTable">
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Role</th>
+                            <th>Goals</th>
+                            <th>Ideal Relationship</th>
+                        </tr>
+                        <tbody id="menteeBody">
+                        </tbody>
+                    </table>
+                </center>
+            </div>
+        </div>
+
+
+        <script>
+            "use strict";
+
+
+
+            const getMentees = () => {
+                fetch('/users/mentees', {
+                    method: "GET", 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }, 
+                    credentials: 'same-origin'
+                })
+                .then(response => response.json())
+                .then(mentees => {
+                    mentees.forEach(mentee => {
+                        let menteeRow = 
+                        `<tr>
+                            <td class='name'>${mentee['firstName']} ${mentee['lastName']}</td>
+                            <td class='department'>${mentee['department']}</td>
+                            <td class='role'>${mentee['role']}</td>
+                            <td class='goals'>${mentee['goals']}</td>
+                            <td class='idealRelationship'>${mentee['idealRelationship']}</td>
+                            <td class='button'><button onclick='sendInvite(this.id)' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></td>
+                        </tr>`;
+                        document.getElementById('menteeBody').insertAdjacentHTML('afterbegin', menteeRow); 
+                    })
+                }); 
+                $("#input").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#menteeBody tr").filter(function () {
+                        $(this).toggle($(this).text()
+                            .toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            }
+
+            getMentees(); 
+
+
+            
+        const sendInvite = (button) => {
+            
+            let x = document.getElementById(button).textContent;
+            
+
+                alert("Your request has been sent.")
+                document.getElementById(button).innerHTML = "Sent"; 
+                document.getElementById(button).disabled = true;
+                document.getElementById(button).style.backgroundColor = '#59AFC9';
+                document.getElementById(button).style.color = 'white';
+                document.getElementById(button).style.width = '-webkit-fill-available'; 
+                document.getElementById(button).style.border = '2px solid white';
+
+
+  
+            console.log('The button is working, just need to post and change the database now :v)')
+            let today = new Date()
+            let todayText = '2021-11-06';
+                
+            fetch('/send-invite', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
+            });
+
+            console.log('Test')
+
+            
+        }
+            // $(document).ready(function () {
+            //     $("#gfg").on("keyup", function () {
+            //         var value = $(this).val().toLowerCase();
+            //         $("#geeks tr").filter(function () {
+            //             $(this).toggle($(this).text()
+            //                 .toLowerCase().indexOf(value) > -1)
+            //         });
+            //     });
+            //     getMentees(); 
+            // });
+            //   NAV
+            let userList = document.getElementById("userList");
+            let searchId = document.getElementById("searchId");
+            let reportsId = document.getElementById("reportId");
+            let chatId = document.getElementById("chatId");
+            let logOutId = document.getElementById("logOutId");
+            let contactPartnersId = document.getElementById("contactPartnersId");
+
+
+
+            const redirectToPage = (userChoice) => {
+                window.location.href = `http://localhost:4545/${userChoice}`
+            }
+
+            chatId.addEventListener("click", () => {
+                redirectToPage("chat");
+            });
+
+            contactPartnersId.addEventListener("click", () => {
+                redirectToPage("finaldash");
+            });
+
+            userList.addEventListener('click', () => { redirectToPage('users') });
+            searchList.addEventListener('click', () => { redirectToPage('search') });
+            // For Sprint 3, only admin is allowed to access this.
+            reportList.addEventListener('click', () => { redirectToPage('admin/reports') });
+            // Goes back to login page
+            logOut.addEventListener('click', () => { redirectToPage('/') });
+
+            const categoryPick = async () => {
+                let response = await fetch('/pick', {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify()
+                })
+            };
+        </script>
+    </body>
+</html>

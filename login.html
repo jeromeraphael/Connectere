@@ -483,22 +483,42 @@
                 let json = await response.json()
 
                 if (json['loginValid'] === true) {
+                    localStorage.setItem("userName", json['userFullName'])
                     localStorage.setItem('userId', json['userId']);
                     localStorage.setItem('email', json['userName']);
                     localStorage.setItem('userType', json['userType']);
 
-                    // Switch case for userType
-                    switch (json.userType) {
-                        case 'Mentor':
-                            window.location.href = '/mentor/dashboard';
-                            break;
-                        case 'Mentee':
-                            window.location.href = '/mentee/dashboard';
-                            break;
-                        default:
-                            window.location.href = '/admin/dashboard';
-                            break;
+                    fetch(`/${json['userId']}/mentorMenteeId`, {
+                        method: "GET", 
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }, 
+                        credentials: "same-origin" 
+                    })
+                    .then(response => respoonse.json())
+                    .then(response => {
+                        localStorage.setItem("mentorMenteeId", response['mentorMenteeId'])
+                    }); 
+
+                    if (localStorage.getItem("userId") === "1") {
+                        window.location.href = '/admin/dashboard'
                     }
+                    else {
+                        window.location.href = '/dashboard';
+                    }
+
+                    // Switch case for userType
+                    // switch (json.userType) {
+                    //     case 'Mentor':
+                    //         window.location.href = '/mentor/dashboard';
+                    //         break;
+                    //     case 'Mentee':
+                    //         window.location.href = '/mentee/dashboard';
+                    //         break;
+                    //     default:
+                    //         window.location.href = '/admin/dashboard';
+                    //         break;
+                    // }
                 }
                 else {
                     if (loginAttemptCount < 10) {
