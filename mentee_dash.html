@@ -69,7 +69,7 @@
         <a id="contactPartnersId" href="/finaldash">Connections</a>
         <a id="requestsId">Invites</a>
         <!-- Report A user -->
-        <a id="reportId" href="/report">Report A User</a>
+        <a id="reportsId" href="/mentee/reports">Report A User</a>
 
         <!-- logOutId -->
         <a id="logOutId" href="/">Log Out</a>
@@ -108,7 +108,7 @@
         userList.addEventListener('click', () => { redirectToPage('users') });
         searchList.addEventListener('click', () => { redirectToPage('search') });
         // For Sprint 3, only admin is allowed to access this.
-        reportList.addEventListener('click', () => { redirectToPage('admin/reports') });
+        reportsId.addEventListener('click', () => { redirectToPage('mentee/reports') });
         // Goes back to login page
         logOut.addEventListener('click', () => { redirectToPage('/') });
 

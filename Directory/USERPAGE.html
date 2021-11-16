@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <title>Active Users</title>
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -24,6 +23,7 @@
 
         td {
             border-right: solid black 1px;
+            color: black;
         }
 
         th {
@@ -41,7 +41,7 @@
 
         /* NAV */
         body {
-            font-family: "Lato", sans-serif;
+            font-family: "Inter", sans-serif;
         }
 
         .sidenav {
@@ -87,25 +87,30 @@
             .sidenav a {
                 font-size: 18px;
             }
+        
         }
+
+        /* Mentor Table */
+        /* #firstRowMentor {
+            background-color: black;
+            color: #C9EDBE;
+        }
+
+        #mentorTableId {
+            border: solid black 5px; */
     </style>
 </head>
 
 <body onload="loadInfo()">
     <div class="sidenav">
         <h2>Connectere</h2>
-
-        <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
-        <a id="contactPartnersId">Contact Partners</a>
-        <a id="requestsId">Requests</a>
+        <a id="searchId" href="/admin/users">View Active Users</a>
         <a id="reportsId" href="/admin/reports">Reports</a>
-        <a id="chatId" href="/chat">Chat</a>
         <a id="logOutId" href="/">Log Out</a>
     </div>
 
     <div class="main">
         <!-- We gonna get dat information from the database -->
-        <a href="/admin/users">Connectere Dashboard</a>
         <div id="userCountDiv">
             <h2>X Users are on Connectere.</h2>
         </div>
@@ -143,7 +148,7 @@
             .then(count => {
                 console.log(count)
                 //document.getElementById('userCountDiv').insertAdjacentHTML('beforebegin', `<h2>${count[0]["count(firstName)"]}</h2>`);
-                document.getElementById('userCountDiv').innerHTML = `<h2>${count[0]["count(firstName)"]} Users are on Connectere.</h2>`;
+                document.getElementById('userCountDiv').innerHTML = `<h2>${count[0]["count(userType)"]} Users are on Connectere.</h2>`;
             })
 
         // same thing as above
@@ -166,18 +171,18 @@
                 for (let i = 0; i < mentors.length; i++) {
                     let mentor = mentors[i];
                     mentorRows += `<tr>
-                    <th>${mentor.firstName}</th>
-                    <th>${mentor.lastName}</th>
-                    <th>${mentor.email}</th>
-                    <th>${mentor.department}</th>
-                    <th>${mentor.userId}</th>
-                    <th>${mentor.mentorId}</th>
+                    <td>${mentor.firstName}</td>
+                    <td>${mentor.lastName}</td>
+                    <td>${mentor.email}</td>
+                    <td>${mentor.department}</td>
+                    <td>${mentor.userId}</td>
+                    <td>${mentor.mentorId}</td>
                   </tr>`
                 }
 
                 let mentorTable = `
-                <table>
-                    <tr>
+                <table id="mentorTableId">
+                    <tr id="firstRowMentor">
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>

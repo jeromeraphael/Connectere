@@ -121,8 +121,14 @@ app.get("/mentee/dashboard", (req, res) => {
   res.sendFile(__dirname + "/mentee_dash.html");
 });
 
+// Test
 app.get("/chat", (req, res) => {
   res.sendFile(__dirname + "/chat.html");
+});
+
+// app.get(mentee)
+app.get("/mentee/reports", (req, res) => {
+  res.sendFile(__dirname + "/Directory/Report/reports.html");
 });
 
 app.get("/Directory/menteeSearch", (req, res) => {
