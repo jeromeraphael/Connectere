@@ -126,7 +126,8 @@
             <h2>Connectere</h2>
             <a id="home" href="/dashboard">Home</a>
             <a id="searchId" href="/mentor/search">Search for Mentors</a>
-            <a id="requestsId">Relationship Invites</a>
+            <a id="requestsId" href="/invites">Relationship Invites</a>
+            <a href="/users/edit">Edit Account</a>
             <!-- app.get('/admin/reports') -->
             <!-- app.get('/admin/users') -->
             <!-- logOutId -->
@@ -225,7 +226,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "mentorId": Number(button)})
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "mentorId": 20})
             });
 
             console.log('Test')

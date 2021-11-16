@@ -189,6 +189,7 @@
             <a id="searchId" href="/mentor/menteeSearch">Search for</a>
             <a id="requestsId" href='/invites'>Relationship Invites</a>
             <a href="/Directory/reports" id="reportsId">Report a User</a>
+            <a href="/users/edit">Edit Account</a>
             <a id="logOutId" href="/">Log Out</a>
         </div>
         <div id="main-body">
@@ -235,7 +236,7 @@
                     let id  = relationship['relationshipId']; 
                     let startDate = new Date(relationship['dateBegan'].slice(0, 10)); 
                     let today = new Date()
-                    let dateDiff = today.getDate() - startDate.getDate(); 
+                    let dateDiff = (today.getDate() - startDate.getDate()) * -1; 
                     let relationshipGridDiv = `
                     <div id="relationship${id}" class='relationshipDiv'>
                         <div class='relationshipInfo col-2'>

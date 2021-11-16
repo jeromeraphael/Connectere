@@ -28,6 +28,21 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/login.html");
 });
 
+app.get('/:userId/mentorId', (req, res) => {
+  let sql = `SELECT mentorId FROM Mentors where userId = ?`; 
+  pool.query(sql, [req.params.userId], (err, results) => {
+    res.json(results); 
+  }); 
+}); 
+
+
+app.get('/:userId/menteeId', (req, res) => {
+  let sql = `SELECT menteeId FROM Mentees where userId = ?`; 
+  pool.query(sql, [req.params.userId], (err, results) => {
+    res.json(results); 
+  }); 
+}); 
+
 // Login
 app.post("/validate-login", (req, res) => {
   // we are going to be sending a json back to the page, so we have to make sure
@@ -209,8 +224,10 @@ app.get("/:userId/invites", (req, res) => {
 		join Mentees me on me.menteeId = i.menteeId 
         join Users u on u.userId = m.userId
         join Users u2 on u2.userId = me.userId
+        join Relationships r on r.inviteId = i.InviteId
     WHERE i.inviteLifeCycleStatus NOT IN ("Accepted", "Declined")
-    AND (m.userId = ? or me.userId = ?);`
+    AND (m.userId = ? or me.userId = ?)
+    AND r.lifeCycleStatus != "Ongoing";`
   pool.query(sql, [req.params.userId, req.params.userId], (err, results) => {
     if (err) throw err; 
     res.json(results);
@@ -410,8 +427,7 @@ app.post("/update", (req, res) => {
 });
 
 app.post('/invite/:id/update', (req, res) => {
-  let sql = `
-  UPDATE Invites SET inviteLifeCycleStatus = ? WHERE inviteId = ?; 
+  let sql = ` 
   UPDATE Relationships SET lifeCycleStatus = ? Where inviteId = ?`;
   pool.query(sql, [req.body.status, req.params.id, req.body.lifeCycleStatus, req.params.id], (err, results) => {
     if (err) throw err; 

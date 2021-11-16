@@ -487,6 +487,36 @@
                     localStorage.setItem('userId', json['userId']);
                     localStorage.setItem('email', json['userName']);
                     localStorage.setItem('userType', json['userType']);
+                    let userType = json['userType']
+
+                    if (userType === "Mentor") {
+                        fetch(`/${json['userId']}mentorId`, {
+                            method: "GET", 
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }, 
+                            credentials: "same-origin" 
+                        })
+                        .then(response => respoonse.json())
+                        .then(response => {
+                            localStorage.setItem("mentorMenteeId", response['mentorId'])
+                        }); 
+                    }
+
+                    if (userType === "Mentee") {
+                        fetch(`/${json['userId']}menteeId`, {
+                            method: "GET", 
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }, 
+                            credentials: "same-origin" 
+                        })
+                        .then(response => respoonse.json())
+                        .then(response => {
+                            localStorage.setItem("mentorMenteeId", response['menteeId'])
+                        }); 
+                    }
+                    
 
                     fetch(`/${json['userId']}/mentorMenteeId`, {
                         method: "GET", 

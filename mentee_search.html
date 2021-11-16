@@ -126,7 +126,8 @@
             <h2>Connectere</h2>
             <a id="home" href="/dashboard">Home</a>
             <a id="searchId" href="/mentee/search">Search for Mentees</a>
-            <a id="requestsId">Relationship Invites</a>
+            <a id="requestsId" href="/invites">Relationship Invites</a>
+            <a href="/users/edit">Edit Account</a>
             <!-- app.get('/admin/reports') -->
             <!-- app.get('/admin/users') -->
             <!-- logOutId -->
@@ -159,9 +160,13 @@
         </div>
 
 
+
         <script>
             "use strict";
 
+            const getMentorId = () => {
+
+            }
 
 
             const getMentees = () => {
@@ -182,7 +187,7 @@
                             <td class='role'>${mentee['role']}</td>
                             <td class='goals'>${mentee['goals']}</td>
                             <td class='idealRelationship'>${mentee['idealRelationship']}</td>
-                            <td class='button'><button onclick='sendInvite(this.id)' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></td>
+                            <td class='button'><button onclick='sendInvite(this.id, ${mentee.menteeId})' id='${mentee.menteeId}' value='${mentee.menteeId}'>Connect</button></td>
                         </tr>`;
                         document.getElementById('menteeBody').insertAdjacentHTML('afterbegin', menteeRow); 
                     })
@@ -200,7 +205,7 @@
 
 
             
-        const sendInvite = (button) => {
+        const sendInvite = (button, menteeId) => {
             
             let x = document.getElementById(button).textContent;
             
@@ -225,7 +230,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
+                body: JSON.stringify({"inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": menteeId})
             });
 
             console.log('Test')
@@ -281,6 +286,7 @@
                     body: JSON.stringify()
                 })
             };
+
         </script>
     </body>
 </html>

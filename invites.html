@@ -143,6 +143,7 @@
             <a id="contactPartnersId" href="/dashboard">Home</a>
             <a id="searchId" href="/mentor/menteeSearch">Search for</a>
             <a id="requestsId">Relationship Invites</a>
+            <a href="/users/update">Edit Account</a>
             <a id="logOutId" href="/">Log Out</a>
         </div>
         <div id="main-body">
@@ -239,8 +240,8 @@
                             </table>
                         </div>
                         <div class='btn-div'>
-                            <button onclick='updateInvite(${inv['id']}, 'Accepted', 'Ongoing')'>Accept Invite</button>
-                            <button onclick='declineInvite(${inv['id']}, 'Declined', 'Terminated')'>Decline Invite</button>
+                            <button onclick="updateInvite(${inv['id']}, 'Accepted', 'Ongoing')">Accept Invite</button>
+                            <button onclick="updateInvite(${inv['id']}, 'Declined', 'Terminated)">Decline Invite</button>
                         </div>
                     </div>`
                     document.getElementById('dash-grid').insertAdjacentHTML('afterbegin', inviteHTML); 
@@ -251,6 +252,7 @@
         getInvites(); 
 
         const updateInvite = (id, status, relStatus) => {
+            console.log(id, status, relStatus); 
             fetch(`invite/${id}/update`, {
                 method: "POST",
                 credentials: "same-origin",
