@@ -152,6 +152,8 @@ app.get("/users/edit", (req, res) => {
 //   );
 // });
 
+// Server Test - Ben
+// admin_dash => populate table with all mentors
 app.get("/users/mentors", (req, res) => {
   console.log("test test test test test test test");
   res.contentType("application/json");

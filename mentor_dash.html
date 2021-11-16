@@ -3,15 +3,19 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
     <title>Dashboard</title>
     <style>
         body {
-            font-family: "Lato", sans-serif;
+            font-family: "Inter", sans-serif;
         }
 
         .sidenav {
             height: 100%;
-            width: 200px;
+            width: 220px;
             position: fixed;
             z-index: 1;
             top: 0;
@@ -61,25 +65,18 @@
     <div class="sidenav">
         <h2>Connectere</h2>
 
-        <a id="searchId" href="/mentor/menteeSearch">Search for Users</a>
-        <a id="contactPartnersId" href="/finaldash">Contact Partners</a>
-        <a id="requestsId">Requests</a>
-
-        <!-- app.get('/admin/reports') -->
-        <a id="reportsId" href="/admin/reports">(Admin)Pending Report Actions</a>
-
-        <!-- app.get('/admin/users') -->
-
-
-        <a id="chatId" href="/chat">Chat</a>
+        <a id="searchId" href="/mentor/menteeSearch">Search for Mentees</a>
+        <a id="contactPartnersId" href="/finaldash">Connections</a>
+        <a id="requestsId">Invites</a>
+        <!-- Report A user -->
+        <a id="reportId" href="/report">Report A User</a>
 
         <!-- logOutId -->
         <a id="logOutId" href="/">Log Out</a>
     </div>
 
     <div class="main">
-        <div id="welcome">
-            <img src="https://i.kym-cdn.com/entries/icons/original/000/038/514/johnxinaheader.jpg" alt="">
+        <div id="welcome">            
         </div>
     </div>
 

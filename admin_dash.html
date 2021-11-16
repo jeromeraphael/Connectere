@@ -78,17 +78,32 @@
     <!-- Script -->
     <script>
         "use strict";
+        let userList = document.getElementById("userList");
+        let searchId = document.getElementById("searchId");
+        let reportsId = document.getElementById("reportId");
+        let chatId = document.getElementById("chatId");
+        let logOutId = document.getElementById("logOutId");
+        let contactPartnersId = document.getElementById("contactPartnersId");
+
+        
 
         const redirectToPage = (userChoice) => {
             window.location.href = `http://localhost:4545/${userChoice}`
         }
 
-        let searchId = document.getElementById("searchId");
-        let reportsId = document.getElementById("reportId");
-        let logOutId = document.getElementById("logOutId");
+        chatId.addEventListener("click", () => {
+            redirectToPage("chat");
+        });
 
-        searchList.addEventListener('click', () => { redirectToPage('admin/users') });
+        contactPartnersId.addEventListener("click", () => {
+            redirectToPage("finaldash");
+        });
+
+        userList.addEventListener('click', () => { redirectToPage('users') });
+        searchList.addEventListener('click', () => { redirectToPage('search') });
+        // For Sprint 3, only admin is allowed to access this.
         reportList.addEventListener('click', () => { redirectToPage('admin/reports') });
+        // Goes back to login page
         logOut.addEventListener('click', () => { redirectToPage('/') });
 
         const categoryPick = async () => {
@@ -101,8 +116,6 @@
                 body: JSON.stringify()
             })
         };
-
-
     </script>
 </body>
 
