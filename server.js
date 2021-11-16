@@ -549,7 +549,7 @@ app.post("/create-account", (req, res) => {
 // lol hopefully these are some good post requests :v)
 app.post('/send-invite', (req, res) => {
   let sql = `INSERT INTO Invites(inviteContent, inviteLifecycleStatus, mentorId, menteeId) VALUES (?, ?, ?, ?)`
-  pool.query(sql, [req.body.inviteContent, req.body.inviteLifecycleStatus, req.body.mentorId, req.body.menteeId], (err, results) => {
+  pool.query(sql, [req.body.inviteContent, req.body.inviteLifecycleStatus, Number(req.body.mentorId), req.body.menteeId], (err, results) => {
     if (err) throw err;
     console.log(`Invite with ID ${req.body.inviteId} between mentor ${req.body.mentorId} and mentee ${req.body.menteeId} created.`);
   }); 
