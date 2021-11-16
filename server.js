@@ -163,10 +163,14 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
       u.email as "mentorEmail",
       u.department as "mentorDepartment", 
       u.role as "mentorRole", 
+      u.goals as "mentorGoals", 
+      u.idealRelationship as "mentorIdealRelationship",
       CONCAT(u2.firstName, ' ', u2.lastName) as "menteeName", 
       u2.email as "menteeEmail",
       u2.department as "menteeDepartment", 
       u2.role as "menteeRole",
+      u2.goals as "menteeGoals", 
+      u2.idealRelationship as "menteeIdealRelationship", 
       dateBegan, lifeCycleStatus, relationshipId
     FROM Relationships r
       JOIN Mentors m on m.mentorId = r.mentorId
@@ -182,7 +186,7 @@ app.get('/:userId/ongoingRelationships', (req, res) => {
 
 app.get('/users', (req, res) => {
   res.contentType('application/json');
-   
+
   pool.query('SELECT * FROM Users', (err, rows) => {
     if (err) throw err; 
     console.log(rows); 

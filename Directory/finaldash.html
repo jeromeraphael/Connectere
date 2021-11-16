@@ -34,6 +34,13 @@
             width: 95%; 
         }
 
+        input {
+            padding-top: 1vh; 
+            padding-bottom: 1vh; 
+        }
+
+        
+
         .relationshipDiv {
             /* display: inline-grid;  */
             border: 2px solid black; 
@@ -91,7 +98,9 @@
             padding: 0.75em;
             padding-right: 0;  
             width: auto; 
-            margin-bottom: 1vh; 
+            margin-bottom: 1vh;
+            position: sticky; 
+            top: 0px;  
         }
 
         .chatHeader:hover {
@@ -100,10 +109,17 @@
 
         .chatDisplayBox {
             display: none; 
+            font-size: 0.75rem; 
         }
 
         .chatDisplayBox.show {
             display: table;  
+        }
+
+        table {
+            font-size: .75rem;
+            font-weight: 100;  
+            margin-right: 1vw; 
         }
 
     </style>
@@ -140,6 +156,32 @@
                     <div id="relationship${id}" class='relationshipDiv'>
                         <div class='relationshipInfo col-2'>
                             <h5 class='relationshipHeader'>${userType !== 'mentor' ? "Mentor: ": "Mentee: "}${userType !== 'mentor' ? relationship['mentorName']: relationship['menteeName']}</h5>
+                                <div class="otherPersonInfo">
+                                    <table class="otherPersonTable">
+                                        <tbody>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Department: </div></td>
+                                                <td><div class="expandedInfo department">${userType !== 'mentor' ? relationship['mentorDepartment'] : relationship['menteeDepartment']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Role: </div></td>
+                                                <td><div class="expandedInfo role">${userType !== 'mentor' ? relationship['mentorRole']: relationship['menteeRole']}</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Email: </div></td>
+                                                <td><div class="expandedInfo email">${userType !== 'mentor' ? relationship['mentorEmail']: relationship['menteeEmail']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Goals: </div></td>
+                                                <td><div class="expandedInfo goals">${userType !== 'mentor' ? relationship['mentorGoals']: relationship['menteeGoals']}</div></td>    
+                                            </tr>
+                                            <tr>
+                                                <td><div class="expandedInfo label">Ideal Relationship: </div></td>
+                                                <td><div class="expandedInfo idealRelationship">${userType !== 'mentor' ? relationship['mentorIdealRelationship']: relationship['menteeIdealRelationship']}</div></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             <p class='lifeCycleStatus'>${relationship['lifeCycleStatus']}</p>
                             <p class='dateBegan'>Relationship began ${dateDiff} days ago</p>
                         </div>
@@ -158,6 +200,8 @@
                     let input = document.getElementById(`input-relationship${id}`);
                     let chatHeader = document.querySelector(`#relationship${id}>.chat>.chatHeader`);
                     let chatHistory = document.querySelector(`#relationship${id}>.chat>.chatDisplayBox`); 
+
+                    let otherPersonInfo = document.querySelector(`#relationship${id}>div>h5`); 
 
                     form.addEventListener('submit', e => {
                         e.preventDefault(); 
@@ -206,7 +250,7 @@
             let messageDiv = document.createElement('div');
             let message = document.createElement('span');
             let sender = document.createElement('span'); 
-            sender.className = 'mesage-sender'; 
+            sender.className = 'message-sender'; 
             sender.textContent = `${senderId}: ` 
             messageDiv.appendChild(sender);
             message.textContent = newMessage; 
