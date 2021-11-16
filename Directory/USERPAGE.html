@@ -37,27 +37,91 @@
             tr:nth-child(odd) {
                 background-color: #FFFFFF;
             }
+
+            body {
+            font-family: "Inter", sans-serif;
+        }
+
+            .sidenav {
+                height: 100%;
+                width: 200px;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: black;
+                overflow-x: hidden;
+                padding-top: 20px;
+                border-radius: 1px;
+            }
+
+            .sidenav h2{
+                color: #C9EDBE;
+                text-align: center;
+            }
+
+            .sidenav a {
+                padding: 6px 6px 6px 32px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #59AFC9;
+                display: block;
+            }
+
+            .sidenav a:hover {
+                color: #C9EDBE;
+            }
+
+            .main {
+                margin-left: 200px;
+                /* Same as the width of the sidenav */
+            }
+
+            @media screen and (max-height: 450px) {
+                .sidenav {
+                    padding-top: 15px;
+                }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+            }
+
+            #main-body {
+            display: block; 
+            float: left;
+            position:absolute; 
+            left: 18vw;  
+        }
         </style>
     </head>
     
     <body onload="loadInfo()">
+        <div class="sidenav">
+            <h2>Connectere</h2>
+            <a id="searchId" href="/admin/users">View Active Users</a>
+            <a id="reportsId" href="/admin/reports">Reports</a>
+            <a id="logOutId" href="/">Log Out</a>
+        </div>
+
         <!-- We gonna get dat information from the database -->
-        <a href="..\dash.html">Connectere Dashboard</a>
-        <div id="userCountDiv">
-            <h2>X Users are on Connectere.</h2>
+        <div id="main-body">
+            <div id="userCountDiv">
+                <h2>X Users are on Connectere.</h2>
+            </div>
+            
+            <div id="mentorDiv">
+                <h2>Mentors</h2>
+                <table rules ="none" id="mentorTableId">
+                </table>
+            </div>
+            
+            <div id="menteeDiv">
+                <h2>Mentees</h2>
+                <table rules="none" id="menteeTableId">
+                </table>
+            </div> 
         </div>
-        
-        <div id="mentorDiv">
-            <h2>Mentors</h2>
-            <table rules ="none" id="mentorTableId">
-            </table>
-        </div>
-        
-        <div id="menteeDiv">
-            <h2>Mentees</h2>
-            <table rules="none" id="menteeTableId">
-            </table>
-        </div> 
     </body>
     
     
@@ -78,7 +142,7 @@
             .then(count => {
                 console.log(count)
                 //document.getElementById('userCountDiv').insertAdjacentHTML('beforebegin', `<h2>${count[0]["count(firstName)"]}</h2>`);
-                document.getElementById('userCountDiv').innerHTML = `<h2>${count[0]["count(firstName)"]} Users are on Connectere.</h2>`;
+                document.getElementById('userCountDiv').innerHTML = `<h2>${count[0]["count(userType)"]} Users are on Connectere.</h2>`;
             })
     
             // same thing as above

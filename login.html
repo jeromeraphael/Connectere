@@ -500,7 +500,13 @@
                         localStorage.setItem("mentorMenteeId", response['mentorMenteeId'])
                     }); 
 
-                    window.location.href = '/dashboard';
+                    if (localStorage.getItem("userId") === "1") {
+                        window.location.href = '/admin/dashboard'
+                    }
+                    else {
+                        window.location.href = '/dashboard';
+                    }
+
                     // Switch case for userType
                     // switch (json.userType) {
                     //     case 'Mentor':
