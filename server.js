@@ -97,11 +97,12 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(__dirname + '/dash.html');
 })
 
-// Admin Dash
+// Admin Dash -works
 app.get('/admin/dashboard', (req, res) => {
   res.sendFile(__dirname + '/admin_dash.html');
 });
 
+// Admin Report -works
 app.get("/admin/reports", (req, res) => {
   res.sendFile(__dirname + "/Directory/REPORTS.html");
 });
@@ -138,18 +139,18 @@ app.get("/users/edit", (req, res) => {
 });
 
 // Retrieve userType from SQL
-app.get("/users/:userType", (req, res) => {
-  console.log("Checking userType ");
-  res.contentType("application/json");
-  pool.query(
-    `SELECT * FROM Users WHERE userType = ?`,
-    [req.params.userType],
-    (err, results) => {
-      if (err) throw err;
-      res.send(results);
-    }
-  );
-});
+// app.get("/users/:userType", (req, res) => {
+//   console.log("Checking userType ");
+//   res.contentType("application/json");
+//   pool.query(
+//     `SELECT * FROM Users WHERE userType = ?`,
+//     [req.params.userType],
+//     (err, results) => {
+//       if (err) throw err;
+//       res.send(results);
+//     }
+//   );
+// });
 
 app.get("/users/mentors", (req, res) => {
   console.log("test test test test test test test");
