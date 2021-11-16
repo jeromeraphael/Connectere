@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User Search</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
 
     <!-- Later: Implement Nav bar-->
     <a href="..\dash.html">Connectere Dashboard</a>
-    <h1>Mentee/Mentor Search</h1>
+    <h1>User Search</h1>
     <form>
         <select name="searchInfo" id="xD">
             <option value="Security">Security</option>
@@ -59,7 +59,9 @@
         "use strict;"
 
         var userId = 3; 
-        var userType = 'mentor'; 
+        var userType = 'mentee';
+        var menteeId = 1;
+
         let invite = 2;
 
         const loadUsers = () => {
@@ -108,7 +110,7 @@
                   let mentor = mentors[i];
                   mentorRows += `<tr>
                     <th>${mentor.firstName} ${mentor.lastName} : ${mentor.department} Department<th>
-                        <th><button onclick='sendInvite(this.id)' id='${mentor.menteeId}' value='${mentor.menteeId}'>Connect</button></th></tr>
+                        <th><button onclick='sendInvite(this.id)' id='${mentor.mentorId}' value='${mentor.mentorId}'>Connect</button></th></tr>
                         <tr><td>${mentor.reasonForUse}<td></tr>`
                 }
     
@@ -145,12 +147,10 @@
                 document.getElementById(button).style.color = 'white';
                 document.getElementById(button).style.border = '2px solid white';
 
-
-  
-            console.log('The button is working, just need to post and change the database now :v)')
             let today = new Date()
             let todayText = '2021-11-06';
-                
+            
+            if(userType == 'mentor'){
             fetch('/send-invite', {
                 credentials: "same-origin",
                 method: "POST",
@@ -160,6 +160,35 @@
                 body: JSON.stringify({"inviteId": invite, "inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": 1, "menteeId": Number(button)})
             });
 
+            fetch('/updateLastMentorExtension', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify()
+            });
+
+            }
+            else if(userType == 'mentee'){
+            
+            fetch('/send-invite', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"inviteId": invite, "inviteContent": 'I would like to connect with you.', "inviteLifecycleStatus": 'Pending', "mentorId": Number(button), "menteeId": menteeId})
+            });
+
+            fetch('/updateLastMenteeExtension', {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify()
+
+            }).then(response => response.json());
+
+            }
             console.log('Test')
 
             
