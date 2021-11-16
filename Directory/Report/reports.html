@@ -37,6 +37,16 @@
 			margin: 0; 
 			font-size: 1.25rem; 
 		}
+		
+		#submit-popup {
+			visibility: hidden;
+		}
+
+		#submit-popup.show {
+			visibility: visible; 
+			background-color: lightgreen;
+		}
+
 
 	</style>
 </head>
@@ -95,7 +105,9 @@
 					<button onclick='sendFormData(this.form)'>Submit</button>
 				</fieldset>
 			</form>
-
+			<div id="submit-popup">
+				<p id="submit-msg">You have successfully submitted your report.</p>
+			</div>
 		</section>
 	
 	</div>
@@ -133,9 +145,17 @@
 					"comments": comments
 				})
 			})
-			.then(response => console.log(response));  
-
+			.then(response => console.log(response))
+			.then(response => {
+				let submitMsg = document.getElementById('submit-popup'); 
+				submitMsg.classList.add('show'); 
+				setTimeout( () => {
+					submitMsg.classList.remove('show'); 
+				}, 3000); 
+			}); 
 		}
+
+		
 
 
 		// const myForm = document.getElementById('myForm');
